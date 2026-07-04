@@ -132,8 +132,8 @@ spec:
           label: 邮箱
           value: ""
         - $formkit: url
-          name: twitter
-          label: Twitter / X
+          name: juejin
+          label: 掘金
           value: ""
         - $formkit: url
           name: rss
