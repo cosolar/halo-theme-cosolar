@@ -21,8 +21,9 @@
           <div class="carousel-track">
             <div class="featured-card card carousel-slide" th:each="featured, iter : ${featuredList}"
                  th:classappend="${iter.first ? ' active' : ''}"
-                 th:with="fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}">
-              <div class="featured-bg" style="background-image:url('https://oss.towao.com/proxy/plain/img/2026/84b68803c31a2d5de3fb68f528d8f463.png')"></div>
+                 th:with="fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : theme.config?.featured?.featured_cover}">
+              <div class="featured-bg" th:if="${fCover != null and !#strings.isEmpty(fCover)}" th:style="'background-image:url(' + ${fCover} + ')'"></div>
+              <div class="featured-bg--fallback" th:unless="${fCover != null and !#strings.isEmpty(fCover)}"></div>
               <div class="featured-overlay"></div>
               <div class="featured-content">
                 <span class="featured-badge">

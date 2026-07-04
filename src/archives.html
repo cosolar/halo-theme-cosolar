@@ -5,34 +5,42 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <div class="page-header-card">
-        <h1>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
-            <path d="M3 6h18M3 12h18M3 18h18"/>
-          </svg>
-          文章归档
-        </h1>
-        <p class="page-desc">共 <span th:text="${archives.total}"></span> 篇文章，按时间归档</p>
-      </div>
-
-      <div class="archive-section" th:each="archive : ${archives.items}">
-        <div class="archive-year-header">
-          <h2 th:text="${archive.year}"></h2>
-          <span class="archive-count" th:text="${#lists.size(archive.months) + ' 个月' }"></span>
+      <section class="page-hero"
+               th:with="cover = ${theme.config?.archive?.archives_cover}">
+        <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
+          <img th:src="${cover}" alt="" loading="lazy" />
         </div>
+        <div class="page-hero-bg--fallback" th:unless="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="page-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="page-hero-inner">
+          <span class="page-hero-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M3 12h18M3 18h18"/>
+            </svg>
+            <span>归档</span>
+          </span>
+          <h1>文章归档</h1>
+          <p class="page-hero-desc">共 <span th:text="${archives.total}"></span> 篇文章，按时间归档</p>
+        </div>
+      </section>
+
+      <div class="archive-timeline" th:each="archive : ${archives.items}">
+        <div class="archive-year-dot"></div>
+        <div class="archive-year-label" th:text="${archive.year}"></div>
         <th:block th:each="month : ${archive.months}">
-          <div class="archive-month-header">
-            <span th:text="${month.month + ' 月'}"></span>
+          <div class="archive-month-group">
+            <div class="archive-month-dot"></div>
+            <div class="archive-month-label" th:text="${month.month + ' 月'}"></div>
+            <ul class="archive-post-list">
+              <li th:each="post : ${month.posts}">
+                <span class="archive-post-date"
+                      th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}"></span>
+                <a class="archive-post-title"
+                   th:href="@{${post.status.permalink}}"
+                   th:text="${post.spec.title}"></a>
+              </li>
+            </ul>
           </div>
-          <ul class="archive-post-list">
-            <li th:each="post : ${month.posts}">
-              <span class="archive-post-date"
-                    th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}"></span>
-              <a class="archive-post-title"
-                 th:href="@{${post.status.permalink}}"
-                 th:text="${post.spec.title}"></a>
-            </li>
-          </ul>
         </th:block>
       </div>
 
@@ -44,7 +52,6 @@
         <p>暂无文章归档</p>
       </div>
 
-      <!-- Pagination -->
       <nav class="pagination" th:if="${archives.hasPrevious() || archives.hasNext()}">
         <a th:if="${archives.hasPrevious()}" th:href="@{${archives.prevUrl}}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">

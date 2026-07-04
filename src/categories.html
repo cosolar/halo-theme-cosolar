@@ -5,28 +5,46 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <div class="page-header-card">
-        <h1>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-          </svg>
-          文章分类
-        </h1>
-        <p class="page-desc">共 <span th:text="${#lists.size(categories)}"></span> 个分类</p>
-      </div>
+      <section class="page-hero"
+               th:with="cover = ${theme.config?.category?.categories_cover}">
+        <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
+          <img th:src="${cover}" alt="" loading="lazy" />
+        </div>
+        <div class="page-hero-bg--fallback" th:unless="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="page-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="page-hero-inner">
+          <span class="page-hero-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>分类</span>
+          </span>
+          <h1>文章分类</h1>
+          <p class="page-hero-desc">共 <span th:text="${#lists.size(categories)}"></span> 个分类</p>
+        </div>
+      </section>
 
       <div class="category-cards" th:if="${not #lists.isEmpty(categories)}">
         <a th:each="cat : ${categories}"
            th:href="@{${cat.status.permalink}}"
-           class="category-card">
-          <div class="cat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-            </svg>
+           th:class="${cat.spec.cover} ? 'category-card has-cover' : 'category-card'">
+          <div class="cat-cover" th:if="${cat.spec.cover}">
+            <img th:src="${cat.spec.cover}" alt="" loading="lazy" />
           </div>
-          <div class="cat-name" th:text="${cat.spec.displayName}"></div>
-          <div class="cat-count" th:text="${cat.postCount + ' 篇文章'}"></div>
-          <div class="cat-desc" th:if="${cat.spec.description}" th:text="${cat.spec.description}"></div>
+          <div class="cat-body">
+            <div class="cat-info">
+              <div class="cat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div class="cat-text">
+                <div class="cat-name" th:text="${cat.spec.displayName}"></div>
+                <div class="cat-count" th:text="${cat.postCount + ' 篇文章'}"></div>
+              </div>
+            </div>
+            <div class="cat-desc" th:if="${cat.spec.description}" th:text="${cat.spec.description}"></div>
+          </div>
         </a>
       </div>
 

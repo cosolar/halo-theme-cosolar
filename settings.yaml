@@ -149,6 +149,16 @@ spec:
           label: 启用精选文章
           value: true
           help: 在首页顶部显示精选文章轮播卡片
+        - $formkit: attachment
+          name: featured_cover
+          label: 轮播默认背景图
+          value: ""
+          help: 精选文章轮播卡片的背景封面图，留空则显示默认渐变背景；若文章本身有封面图则优先使用
+        - $formkit: switch
+          name: featured_cover_fallback
+          label: 优先使用文章封面
+          value: true
+          help: 开启后，若文章本身设置了封面图则优先使用，否则使用上方配置的默认背景图
         - $formkit: postSelect
           name: featured_posts
           label: 精选文章列表
@@ -186,10 +196,6 @@ spec:
           value: true
           help: 在首页和列表页显示右侧侧边栏；小屏（≤768px）下自动隐藏
         - $formkit: switch
-          name: show_search
-          label: 显示搜索框
-          value: true
-        - $formkit: switch
           name: show_hot_tags
           label: 显示热门标签
           value: true
@@ -214,3 +220,31 @@ spec:
           name: recent_count
           label: 近期更新数量
           value: 4
+
+    - group: category
+      label: 分类页设置
+      formSchema:
+        - $formkit: attachment
+          name: categories_cover
+          label: 分类列表页封面图
+          value: ""
+          help: 分类列表页顶部 Header 区域的背景封面图，留空则显示默认渐变背景
+        - $formkit: attachment
+          name: category_cover
+          label: 分类详情页封面图
+          value: ""
+          help: 分类详情页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景
+        - $formkit: switch
+          name: category_cover_fallback
+          label: 优先使用分类自带封面
+          value: true
+          help: 开启后，若分类本身设置了封面图则优先使用，否则使用上方配置的默认封面图
+
+    - group: archive
+      label: 归档页设置
+      formSchema:
+        - $formkit: attachment
+          name: archives_cover
+          label: 归档页封面图
+          value: ""
+          help: 归档页顶部 Header 区域的背景封面图，留空则显示默认渐变背景

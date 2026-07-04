@@ -7,11 +7,13 @@
     <div class="content-area">
       <!-- 专题封面 Header -->
       <section class="topic-hero"
-               th:with="cover = ${category.spec.cover != null and !#strings.isEmpty(category.spec.cover) ? category.spec.cover : 'https://oss.towao.com/proxy/plain/img/2026/84b68803c31a2d5de3fb68f528d8f463.png'}">
-        <div class="topic-hero-bg">
+               th:with="defaultCover = ${theme.config?.category?.category_cover},
+                         useCategoryCover = ${theme.config?.category?.category_cover_fallback != false},
+                         cover = ${(useCategoryCover and category.spec.cover != null and !#strings.isEmpty(category.spec.cover)) ? category.spec.cover : defaultCover}">
+        <div class="topic-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>
-        <div class="topic-hero-overlay"></div>
+        <div class="topic-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
 
         <div class="topic-hero-inner">
           <span class="topic-eyebrow">
