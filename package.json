@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "build": "tsc && vp build && theme-package",
+    "build": "tsc && vp build && theme-package && node scripts/rename-zip.mjs",
     "build-only": "tsc && vp build",
     "dev": "vp build --watch",
     "check": "vp check --fix",

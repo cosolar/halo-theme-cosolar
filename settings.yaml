@@ -1,13 +1,216 @@
 apiVersion: v1alpha1
 kind: Setting
 metadata:
-  name: theme-vite-starter-setting
+  name: cosolar-setting
 spec:
   forms:
-    - group: styles
-      label: 样式
+    - group: basic
+      label: 基础设置
+      formSchema:
+        - $formkit: attachment
+          name: logo_image
+          label: Logo 图片
+          value: ""
+          help: 上传 Logo 图片，留空则显示默认的代码图标
+        - $formkit: number
+          name: logo_image_size
+          label: Logo 图片尺寸
+          value: 36
+          min: 20
+          max: 80
+          step: 2
+          help: Logo 图片的显示尺寸（像素），建议 20-80
+        - $formkit: text
+          name: logo_text
+          label: Logo 文字
+          value: 码迹志
+          help: 显示在头部导航栏的站点名称
+        - $formkit: text
+          name: tagline
+          label: 站点标语
+          value: 记录技术成长，分享解决方案
+          help: 显示在 Logo 下方的副标题
+        - $formkit: textarea
+          name: footer_text
+          label: 页脚版权文字
+          value: ""
+          help: 显示在页脚底部的版权信息，支持 HTML
+        - $formkit: text
+          name: icp
+          label: ICP 备案号
+          value: ""
+          help: 如：京ICP备XXXXXXXX号
+
+    - group: style
+      label: 样式设置
       formSchema:
         - $formkit: color
-          name: background_color
-          label: 背景颜色
-          value: "#f2f2f2"
+          name: primary_color
+          label: 主题色
+          value: "#10B981"
+          help: 主色调，用于按钮、链接、标签等强调元素
+        - $formkit: radio
+          name: color_scheme
+          label: 默认配色方案
+          value: auto
+          options:
+            - label: 跟随系统
+              value: auto
+            - label: 浅色
+              value: light
+            - label: 暗色
+              value: dark
+        - $formkit: number
+          name: posts_per_page
+          label: 每页文章数
+          value: 10
+          help: 首页和列表页每页显示的文章数量
+        - $formkit: number
+          name: content_width
+          label: 内容最大宽度
+          value: 1200
+          min: 960
+          max: 1920
+          step: 20
+          help: 页面内容区域的最大宽度（像素），建议 960-1920
+        - $formkit: number
+          name: sidebar_width
+          label: 侧边栏宽度
+          value: 320
+          min: 260
+          max: 400
+          step: 10
+          help: 右侧侧边栏的宽度（像素），建议 260-400
+        - $formkit: number
+          name: content_gap
+          label: 内容间距
+          value: 24
+          min: 12
+          max: 48
+          step: 2
+          help: 内容区与侧边栏之间的间距（像素）
+        - $formkit: number
+          name: toc_width
+          label: 文章目录宽度
+          value: 240
+          min: 180
+          max: 320
+          step: 10
+          help: 文章页右侧目录（TOC）的宽度（像素），建议 180-320
+        - $formkit: number
+          name: excerpt_length
+          label: 摘要长度
+          value: 120
+          help: 文章卡片摘要显示的字数
+        # 代码高亮主题由 Halo plugin-shiki 插件后台配置（亮色/暗色主题），主题不再提供此选项
+
+    - group: social
+      label: 社交链接
+      formSchema:
+        - $formkit: text
+          name: author_name
+          label: 博主昵称
+          value: ""
+          help: 显示在页脚博主卡片上的昵称，留空则使用站点标题
+        - $formkit: attachment
+          name: author_avatar
+          label: 博主头像
+          value: ""
+          help: 显示在页脚博主卡片的头像图片，建议 1:1 方形图
+        - $formkit: textarea
+          name: author_bio
+          label: 博主简介
+          value: ""
+          help: 显示在页脚博主卡片的一句话简介
+        - $formkit: url
+          name: github
+          label: GitHub
+          value: ""
+          help: GitHub 主页地址
+        - $formkit: email
+          name: email
+          label: 邮箱
+          value: ""
+        - $formkit: url
+          name: twitter
+          label: Twitter / X
+          value: ""
+        - $formkit: url
+          name: rss
+          label: RSS 订阅
+          value: ""
+          help: 留空则使用默认 RSS 地址
+
+    - group: featured
+      label: 精选文章
+      formSchema:
+        - $formkit: switch
+          name: show_featured
+          label: 启用精选文章
+          value: true
+          help: 在首页顶部显示精选文章轮播卡片
+        - $formkit: postSelect
+          name: featured_posts
+          label: 精选文章列表
+          value: []
+          multiple: true
+          help: 选择要在首页轮播展示的文章，可拖拽排序
+        - $formkit: switch
+          name: autoplay
+          label: 自动轮播
+          value: true
+          help: 开启后卡片自动切换
+        - $formkit: number
+          name: interval
+          label: 轮播间隔（毫秒）
+          value: 5000
+          help: 自动轮播的切换间隔时间，单位毫秒
+        - $formkit: radio
+          name: fallback
+          label: 无配置时的回退策略
+          value: latest
+          options:
+            - label: 显示最新文章
+              value: latest
+            - label: 显示置顶文章
+              value: pinned
+            - label: 不显示
+              value: none
+
+    - group: sidebar
+      label: 侧边栏设置
+      formSchema:
+        - $formkit: switch
+          name: show_sidebar
+          label: 显示侧边栏
+          value: true
+          help: 在首页和列表页显示右侧侧边栏；小屏（≤768px）下自动隐藏
+        - $formkit: switch
+          name: show_search
+          label: 显示搜索框
+          value: true
+        - $formkit: switch
+          name: show_hot_tags
+          label: 显示热门标签
+          value: true
+        - $formkit: number
+          name: hot_tags_count
+          label: 热门标签数量
+          value: 8
+        - $formkit: switch
+          name: show_categories
+          label: 显示分类导航
+          value: true
+        - $formkit: number
+          name: categories_count
+          label: 分类显示数量
+          value: 6
+          help: 侧边栏分类导航最多显示的分类数量
+        - $formkit: switch
+          name: show_recent
+          label: 显示近期更新
+          value: true
+        - $formkit: number
+          name: recent_count
+          label: 近期更新数量
+          value: 4

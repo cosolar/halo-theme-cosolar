@@ -1,18 +1,36 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|Tags - ${site.title}|">Tags</title>
+    <title th:text="|标签 - ${site.title}|">标签</title>
   </template>
 
-  <h1>Tags</h1>
-  <ul class="tag-list">
-    <li th:each="tag : ${tags.items}">
-      <a th:href="@{${tag.status.permalink}}" th:text="${tag.spec.displayName}" class="tag"></a>
-    </li>
-  </ul>
+  <div class="layout-grid no-sidebar">
+    <div class="content-area">
+      <div class="page-header-card">
+        <h1>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          文章标签
+        </h1>
+        <p class="page-desc">共 <span th:text="${#lists.size(tags)}"></span> 个标签</p>
+      </div>
 
-  <nav class="pagination" th:if="${tags.hasPrevious() || tags.hasNext()}">
-    <a th:if="${tags.hasPrevious()}" th:href="@{${tags.prevUrl}}">Previous</a>
-    <span th:text="|${tags.page} / ${tags.totalPages}|"></span>
-    <a th:if="${tags.hasNext()}" th:href="@{${tags.nextUrl}}">Next</a>
-  </nav>
+      <div class="archive-section" th:if="${not #lists.isEmpty(tags)}">
+        <div class="tag-cloud">
+          <a th:each="tag : ${tags}"
+             th:href="@{${tag.status.permalink}}"
+             th:text="${tag.spec.displayName}"
+             class="tag"></a>
+        </div>
+      </div>
+
+      <div class="empty-state" th:if="${#lists.isEmpty(tags)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+        </svg>
+        <p>暂无标签</p>
+      </div>
+    </div>
+  </div>
 </include>

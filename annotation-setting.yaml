@@ -1,0 +1,29 @@
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: theme-cosolar-menuitem-x7r2k
+spec:
+  targetRef:
+    group: ""
+    kind: MenuItem
+  formSchema:
+    - $formkit: text
+      name: icon
+      label: 导航图标
+      value: ""
+      help: 输入 iconfont 图标类名（如 icon-shouye），留空不显示图标。完整图标列表见 https://www.iconfont.cn
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: theme-cosolar-post-r9k3m
+spec:
+  targetRef:
+    group: content.halo.run
+    kind: Post
+  formSchema:
+    - $formkit: text
+      name: reading_url
+      label: 自定义阅读地址
+      value: ""
+      help: 设置后，文章卡片的"阅读全文"链接将跳转到此地址（如外部博客、第三方平台），留空则使用默认文章链接

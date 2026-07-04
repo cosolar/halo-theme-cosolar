@@ -1,20 +1,24 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|${singlePage.spec.title} - ${site.title}|">Page Title</title>
+    <title th:text="|${singlePage.spec.title} - ${site.title}|">页面标题</title>
   </template>
 
-  <article>
-    <header class="article-header">
-      <h1 class="article-title" th:text="${singlePage.spec.title}"></h1>
-    </header>
-    <div class="article-content" th:utext="${singlePage.content.content}"></div>
-  </article>
+  <div class="layout-grid no-sidebar">
+    <div class="content-area">
+      <article class="article-detail">
+        <header class="article-detail-header">
+          <h1 class="article-detail-title" th:text="${singlePage.spec.title}"></h1>
+        </header>
+        <div class="prose" th:utext="${singlePage.content.content}"></div>
+      </article>
 
-  <div th:if="${haloCommentEnabled}">
-    <halo:comment
-      group="content.halo.run"
-      kind="SinglePage"
-      th:attr="name=${singlePage.metadata.name}"
-    />
+      <div th:if="${haloCommentEnabled}" style="margin-top:24px;">
+        <halo:comment
+          group="content.halo.run"
+          kind="SinglePage"
+          th:attr="name=${singlePage.metadata.name}"
+        />
+      </div>
+    </div>
   </div>
 </include>

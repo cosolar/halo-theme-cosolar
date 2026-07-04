@@ -1,32 +1,64 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|Archives - ${site.title}|">Archives</title>
+    <title th:text="|归档 - ${site.title}|">归档</title>
   </template>
 
-  <h1>Archives</h1>
+  <div class="layout-grid no-sidebar">
+    <div class="content-area">
+      <div class="page-header-card">
+        <h1>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+          文章归档
+        </h1>
+        <p class="page-desc">共 <span th:text="${archives.total}"></span> 篇文章，按时间归档</p>
+      </div>
 
-  <th:block th:each="archive : ${archives.items}">
-    <div class="archive-year">
-      <h2 th:text="${archive.year}"></h2>
-      <th:block th:each="month : ${archive.months}">
-        <h3 th:text="|${archive.year}-${month.month}|"></h3>
-        <ul class="post-list">
-          <li class="post-item" th:each="post : ${month.posts}">
-            <h2 class="post-title">
-              <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
-            </h2>
-            <p class="post-meta">
-              <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
-            </p>
-          </li>
-        </ul>
-      </th:block>
+      <div class="archive-section" th:each="archive : ${archives.items}">
+        <div class="archive-year-header">
+          <h2 th:text="${archive.year}"></h2>
+          <span class="archive-count" th:text="${#lists.size(archive.months) + ' 个月' }"></span>
+        </div>
+        <th:block th:each="month : ${archive.months}">
+          <div class="archive-month-header">
+            <span th:text="${month.month + ' 月'}"></span>
+          </div>
+          <ul class="archive-post-list">
+            <li th:each="post : ${month.posts}">
+              <span class="archive-post-date"
+                    th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}"></span>
+              <a class="archive-post-title"
+                 th:href="@{${post.status.permalink}}"
+                 th:text="${post.spec.title}"></a>
+            </li>
+          </ul>
+        </th:block>
+      </div>
+
+      <div class="empty-state" th:if="${#lists.isEmpty(archives.items)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <p>暂无文章归档</p>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="pagination" th:if="${archives.hasPrevious() || archives.hasNext()}">
+        <a th:if="${archives.hasPrevious()}" th:href="@{${archives.prevUrl}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </a>
+        <span class="current" th:text="${archives.page}"></span>
+        <span style="border:none;background:none;color:var(--color-text-muted);" th:text="'/' + ${archives.totalPages}"></span>
+        <a th:if="${archives.hasNext()}" th:href="@{${archives.nextUrl}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+      </nav>
     </div>
-  </th:block>
-
-  <nav class="pagination" th:if="${archives.hasPrevious() || archives.hasNext()}">
-    <a th:if="${archives.hasPrevious()}" th:href="@{${archives.prevUrl}}">Previous</a>
-    <span th:text="|${archives.page} / ${archives.totalPages}|"></span>
-    <a th:if="${archives.hasNext()}" th:href="@{${archives.nextUrl}}">Next</a>
-  </nav>
+  </div>
 </include>

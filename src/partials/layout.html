@@ -1,42 +1,190 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      th:data-color-scheme="${theme.config?.style?.color_scheme ?: 'auto'}">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <slot name="head">
       <title th:text="${site.title}">Site Title</title>
     </slot>
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_5164390_yseog81u5r.css" />
+    <link rel="stylesheet" href="//npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'" />
+    <link rel="icon" th:if="${site.favicon}" th:href="${site.favicon}" />
+    <th:block th:if="${theme.config?.style?.primary_color != null or theme.config?.style?.content_width != null or theme.config?.style?.sidebar_width != null or theme.config?.style?.content_gap != null or theme.config?.style?.toc_width != null}">
+      <style th:inline="text">
+        :root {
+          [(${theme.config?.style?.primary_color != null ? '--color-primary: ' + theme.config.style.primary_color + ' !important;' : ''})]
+          [(${theme.config?.style?.content_width != null ? '--container-max: ' + theme.config.style.content_width + 'px !important;' : ''})]
+          [(${theme.config?.style?.sidebar_width != null ? '--sidebar-width: ' + theme.config.style.sidebar_width + 'px !important;' : ''})]
+          [(${theme.config?.style?.content_gap != null ? '--content-gap: ' + theme.config.style.content_gap + 'px !important;' : ''})]
+          [(${theme.config?.style?.toc_width != null ? '--toc-width: ' + theme.config.style.toc_width + 'px !important;' : ''})]
+        }
+      </style>
+    </th:block>
+    <!-- 代码高亮由 Halo plugin-shiki (shiki-code Web Component) 负责，主题不再加载 Prism -->
+    <!-- 主题色防闪烁：必须在 head 同步执行，仅读 data-color-scheme 设 data-theme，auto 时跟随系统 -->
+    <script>
+      (function () {
+        var saved = localStorage.getItem("cosolar-theme");
+        var scheme = document.documentElement.getAttribute("data-color-scheme") || "auto";
+        var theme = saved || (scheme === "auto" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : scheme);
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.setAttribute("data-color-scheme", theme);
+      })();
+    </script>
     <script type="module" src="./js/main.ts"></script>
   </head>
   <body>
+    <!-- ===== Header ===== -->
     <header class="site-header">
-      <div class="container">
-        <a class="site-title" th:href="@{/}" th:text="${site.title}">Site Title</a>
-        <nav class="site-nav" th:with="menu = ${menuFinder.getPrimary()}">
-          <ul>
-            <li th:each="item : ${menu.menuItems}">
-              <a
-                th:href="@{${item.status.href}}"
-                th:text="${item.status.displayName}"
-                th:target="${item.spec.target?.value}"
-              ></a>
-            </li>
-          </ul>
+      <div class="container header-inner">
+        <!-- Logo -->
+        <a class="header-logo" th:href="@{/}">
+          <img class="logo-image" th:if="${theme.config?.basic?.logo_image}"
+               th:src="${theme.config.basic.logo_image}"
+               th:width="${theme.config?.basic?.logo_image_size ?: 36}"
+               th:height="${theme.config?.basic?.logo_image_size ?: 36}"
+               alt="Logo" />
+          <span class="logo-icon" th:unless="${theme.config?.basic?.logo_image}">&lt;/&gt;</span>
+          <span class="logo-text">
+            <span class="logo-name" th:text="${theme.config?.basic?.logo_text ?: ''}">
+              码迹志
+            </span>
+            <span class="logo-tagline" th:text="${theme.config?.basic?.tagline ?: site.subtitle}">
+              记录技术成长，分享解决方案
+            </span>
+          </span>
+        </a>
+
+        <!-- Navigation -->
+        <nav class="header-nav" id="headerNav" th:with="menu = ${menuFinder.getPrimary()}">
+          <a th:if="${menu != null and not #lists.isEmpty(menu.menuItems)}"
+             th:each="item : ${menu.menuItems}"
+             th:href="@{${item.status.href}}"
+             th:target="${item.spec.target?.value}">
+            <i th:if="${#annotations.get(item, 'icon') != null and #annotations.get(item, 'icon') != ''}"
+               th:class="'iconfont ' + ${#annotations.get(item, 'icon')}"></i>
+            <span th:text="${item.status.displayName}"></span>
+          </a>
+          <a th:unless="${menu != null and not #lists.isEmpty(menu.menuItems)}"
+             th:href="@{/}"><i class="iconfont icon-shouye"></i><span>首页</span></a>
+          <a th:unless="${menu != null and not #lists.isEmpty(menu.menuItems)}"
+             th:href="@{${site.routes.categoriesUri}}"><i class="iconfont icon-fengfuduoyuan"></i><span>分类</span></a>
+          <a th:unless="${menu != null and not #lists.isEmpty(menu.menuItems)}"
+             th:href="@{${site.routes.tagsUri}}"><i class="iconfont icon-bokexinwen"></i><span>标签</span></a>
+          <a th:unless="${menu != null and not #lists.isEmpty(menu.menuItems)}"
+             th:href="@{${site.routes.archivesUri}}"><i class="iconfont icon-jishufuwu"></i><span>归档</span></a>
         </nav>
+
+        <!-- Actions -->
+        <div class="header-actions">
+          <!-- Search -->
+          <div class="search-box"
+               th:if="${pluginFinder.available('PluginSearchWidget')}"
+               onclick="javascript:SearchWidget.open()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span class="search-placeholder">搜索文章</span>
+            <span class="search-kbd">Ctrl K</span>
+          </div>
+          <a class="search-box" th:unless="${pluginFinder.available('PluginSearchWidget')}" th:href="@{${site.routes.archivesUri}}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span class="search-placeholder">搜索文章</span>
+          </a>
+
+          <!-- Theme Toggle -->
+          <button class="icon-btn" id="themeToggle" aria-label="切换主题">
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </button>
+
+          <!-- Mobile Menu Toggle -->
+          <button class="menu-toggle" id="menuToggle" aria-label="菜单">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </div>
     </header>
 
+    <!-- ===== Main Content ===== -->
     <main class="site-main">
       <div class="container">
         <slot />
       </div>
     </main>
 
-    <footer class="site-footer">
+    <!-- ===== Footer ===== -->
+    <footer class="site-footer"
+            th:with="
+              authorName=${theme.config?.social?.author_name ?: site.title},
+              authorAvatar=${theme.config?.social?.author_avatar},
+              authorBio=${theme.config?.social?.author_bio},
+              githubUrl=${theme.config?.social?.github},
+              emailAddr=${theme.config?.social?.email},
+              twitterUrl=${theme.config?.social?.twitter},
+              rssUrl=${theme.config?.social?.rss}">
       <div class="container">
-        <p th:text="${theme.config.basic.custom_footer ?: site.title}"></p>
-        <halo:footer />
+        <!-- 博主信息卡片 -->
+        <div class="footer-author">
+          <div class="author-avatar">
+            <img th:if="${authorAvatar}" th:src="${authorAvatar}" th:alt="${authorName}" />
+            <span th:unless="${authorAvatar}" class="author-avatar-fallback" th:text="${#strings.length(authorName) > 0 ? authorName.substring(0,1) : 'B'}"></span>
+          </div>
+          <div class="author-info">
+            <h3 class="author-name" th:text="${authorName}"></h3>
+            <p class="author-bio" th:if="${authorBio}" th:text="${authorBio}"></p>
+            <div class="author-meta">
+              <a th:if="${githubUrl}" th:href="${githubUrl}" target="_blank" rel="noopener" aria-label="GitHub" class="author-link">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>GitHub</span>
+              </a>
+              <a th:if="${emailAddr}" th:href="'mailto:' + ${emailAddr}" aria-label="Email" class="author-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>邮箱</span>
+              </a>
+              <a th:if="${twitterUrl}" th:href="${twitterUrl}" target="_blank" rel="noopener" aria-label="Twitter" class="author-link">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span>Twitter</span>
+              </a>
+              <a th:if="${rssUrl}" th:href="${rssUrl}" aria-label="RSS" class="author-link">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/></svg>
+                <span>RSS</span>
+              </a>
+              <a th:unless="${rssUrl}" th:href="@{/feed.xml}" aria-label="RSS" class="author-link">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/></svg>
+                <span>RSS</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>
+            <span th:utext="${theme.config?.basic?.footer_text ?: #strings.defaultString(site.title, '')}"></span>
+            <span th:if="${theme.config?.basic?.icp}">
+              &nbsp;·&nbsp;
+              <a th:href="'https://beian.miit.gov.cn/'" th:text="${theme.config.basic.icp}" target="_blank" rel="noopener"></a>
+            </span>
+          </div>
+          <div class="footer-powered">
+            <span>Powered by <a href="https://halo.run" target="_blank" rel="noopener">Halo</a></span>
+            <span>· Theme <a th:href="${theme.spec?.homepage ?: '#'}" target="_blank" rel="noopener" th:text="${theme.spec?.displayName}"></a></span>
+          </div>
+        </div>
       </div>
+      <halo:footer />
     </footer>
   </body>
 </html>

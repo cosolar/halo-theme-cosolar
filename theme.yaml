@@ -1,21 +1,21 @@
 apiVersion: theme.halo.run/v1alpha1
 kind: Theme
 metadata:
-  name: theme-vite-starter
+  name: cosolar
 spec:
-  displayName: Vite Starter
+  displayName: Cosolar
   author:
-    name: Halo
-    website: https://github.com/halo-dev
-  description: A development starter theme with Vite Ecosystem for Halo
-  logo: https://www.halo.run/logo
-  homepage: https://github.com/halo-dev/theme-vite-starter#readme
-  repo: https://github.com/halo-dev/theme-vite-starter
-  issues: https://github.com/halo-dev/theme-vite-starter/issues
-  settingName: "theme-vite-starter-setting"
-  configMapName: "theme-vite-starter-configMap"
+    name: Cosolar
+    website: https://note.minims.cn
+  description: 极简不简单 — 面向开发者的现代博客主题，青绿美学 × 暗色模式 × 精选轮播 × 分类导航 × 全局搜索，让技术写作回归纯粹。
+  logo: https://oss.towao.com/proxy/plain/img/2026/983f2475d8fff92d91499ac752062e30.png
+  homepage: https://github.com/cosolar/halo-theme-cosolar
+  repo: https://github.com/cosolar/halo-theme-cosolar
+  issues: https://github.com/cosolar/halo-theme-cosolar/issues
+  settingName: "cosolar-setting"
+  configMapName: "cosolar-configMap"
   version: 1.0.0
-  requires: ">=2.0.0"
+  requires: ">=2.20.0"
   license:
     - name: "GPL-3.0"
-      url: "https://github.com/halo-dev/theme-vite-starter/blob/main/LICENSE"
+      url: "https://github.com/cosolar/halo-theme-cosolar/blob/main/LICENSE"

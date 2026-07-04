@@ -1,14 +1,108 @@
-<include src="layout.html">
+<include src="layout.html" xmlns:th="http://www.w3.org/1999/xhtml">
   <template name="head">
-    <title th:text="|${category.spec.displayName} - ${site.title}|">Category Archive</title>
+    <title th:text="|${category.spec.displayName} - ${site.title}|">分类</title>
   </template>
 
-  <h1 th:text="|Category: ${category.spec.displayName}|"></h1>
-  <p th:if="${category.spec.description}" th:text="${category.spec.description}"></p>
+  <div class="layout-grid" th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}">
+    <div class="content-area">
+      <!-- 专题封面 Header -->
+      <section class="topic-hero"
+               th:with="cover = ${category.spec.cover != null and !#strings.isEmpty(category.spec.cover) ? category.spec.cover : 'https://oss.towao.com/proxy/plain/img/2026/84b68803c31a2d5de3fb68f528d8f463.png'}">
+        <div class="topic-hero-bg">
+          <img th:src="${cover}" alt="" loading="lazy" />
+        </div>
+        <div class="topic-hero-overlay"></div>
 
-  <ul class="post-list">
-    <include src="post-card.html"></include>
-  </ul>
+        <div class="topic-hero-inner">
+          <span class="topic-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>专题</span>
+          </span>
 
-  <include src="pagination.html"></include>
+          <h1 class="topic-title" th:text="${category.spec.displayName}">分类名称</h1>
+
+          <p class="topic-desc" th:if="${category.spec.description}" th:text="${category.spec.description}"></p>
+          <p class="topic-desc" th:unless="${category.spec.description}">记录此分类下的每一次思考与沉淀</p>
+
+          <div class="topic-stats">
+            <span class="topic-stat">
+              <span class="topic-stat-num" th:text="${posts.total}">0</span>
+              <span class="topic-stat-label">篇文章</span>
+            </span>
+            <span class="topic-stat-divider"></span>
+            <span class="topic-stat">
+              <span class="topic-stat-num" th:text="${category.postCount ?: posts.total}">0</span>
+              <span class="topic-stat-label">累计收录</span>
+            </span>
+            <span class="topic-stat-divider"></span>
+            <span class="topic-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="topic-stat-icon">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span class="topic-stat-label">专题归档</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-header">
+        <h2 class="section-title">文章列表</h2>
+      </div>
+
+      <th:block th:each="post : ${posts.items}">
+        <article class="article-card">
+          <a class="article-thumb" th:href="@{${post.status.permalink}}">
+            <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" alt="" loading="lazy" />
+            <span class="article-thumb-placeholder" th:unless="${post.spec.cover}">&lt;/&gt;</span>
+          </a>
+          <div class="article-body">
+            <h3 class="article-card-title">
+              <span class="pinned-badge" th:if="${post.spec.pinned}">置顶</span>
+              <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
+            </h3>
+            <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
+            <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
+              <a th:each="tag : ${post.tags}"
+                 th:href="@{${tag.status.permalink}}"
+                 th:text="${tag.spec.displayName}"
+                 class="tag"></a>
+            </div>
+            <div class="article-card-meta">
+              <span class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
+              </span>
+              <span class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span th:text="${post.stats?.visit ?: 0}"></span>
+              </span>
+            </div>
+          </div>
+        </article>
+      </th:block>
+
+      <div class="empty-state" th:if="${#lists.isEmpty(posts.items)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <p>该分类下暂无文章</p>
+      </div>
+
+      <include src="pagination.html"></include>
+    </div>
+
+    <th:block th:if="${theme.config?.sidebar?.show_sidebar != false}">
+      <include src="sidebar.html"></include>
+    </th:block>
+  </div>
 </include>

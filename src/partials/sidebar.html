@@ -1,0 +1,75 @@
+<aside class="sidebar" th:fragment="sidebar"
+       th:with="catIconsStr = 'icon-fengfuduoyuan,icon-bokexinwen,icon-jishufuwu,icon-qianduan,icon-houduankaifa,icon-kaiyuan,icon-blog,icon-web,icon-jisuanjikaifa,icon-fuwuqi', catIcons = ${#strings.arraySplit(catIconsStr, ',')}">
+  <!-- Hot Tags -->
+  <div class="widget" th:if="${theme.config?.sidebar?.show_hot_tags != false}"
+       th:with="hotTags = ${tagFinder.list(1, theme.config?.sidebar?.hot_tags_count ?: 8)}">
+    <div class="widget-title">
+      <span class="title-text">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+        热门搜索
+      </span>
+    </div>
+    <div class="hot-tags">
+      <a th:each="tag : ${hotTags.items}"
+         th:href="@{${tag.status.permalink}}"
+         th:text="${tag.spec.displayName}"
+         class="tag tag-gray"></a>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="widget" th:if="${theme.config?.sidebar?.show_categories != false}"
+       th:with="catResult = ${categoryFinder.list(1, theme.config?.sidebar?.categories_count ?: 6)}">
+    <div class="widget-title">
+      <span class="title-text">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        文章分类
+      </span>
+      <a class="widget-link" th:href="@{${site.routes.categoriesUri}}">全部分类 →</a>
+    </div>
+    <div class="category-grid" th:if="${not #lists.isEmpty(catResult.items)}">
+      <a th:each="cat, iter : ${catResult.items}"
+         th:href="@{${cat.status.permalink}}"
+         class="category-item"
+         th:with="iconIndex = ${iter.index % 10}, catIcon = ${catIcons[iconIndex]}">
+        <span class="category-icon">
+          <i th:class="'iconfont ' + ${catIcon}"></i>
+        </span>
+        <span class="category-info">
+          <span class="category-name" th:text="${cat.spec.displayName}"></span>
+          <span class="category-count" th:text="${cat.postCount + ' 篇文章'}"></span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Updates -->
+  <div class="widget" th:if="${theme.config?.sidebar?.show_recent != false}"
+       th:with="recentPosts = ${postFinder.list({page: 1, size: theme.config?.sidebar?.recent_count ?: 4, sort: {'spec.publishTime,desc'}})}">
+    <div class="widget-title">
+      <span class="title-text">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        近期更新
+      </span>
+      <a class="widget-link" th:href="@{${site.routes.archivesUri}}">查看全部 →</a>
+    </div>
+    <div class="recent-list">
+      <div class="recent-item" th:each="post : ${recentPosts.items}">
+        <span class="recent-badge">NEW</span>
+        <div class="recent-info">
+          <div class="recent-title">
+            <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
+          </div>
+          <div class="recent-date" th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>

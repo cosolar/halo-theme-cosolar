@@ -27,3 +27,4 @@ dist-ssr
 .gradle
 build
 templates
+.atomcode

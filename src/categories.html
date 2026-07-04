@@ -1,22 +1,41 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|Categories - ${site.title}|">Categories</title>
+    <title th:text="|分类 - ${site.title}|">分类</title>
   </template>
 
-  <h1>Categories</h1>
-  <ul class="category-list">
-    <li th:each="cat : ${categories.items}">
-      <a
-        th:href="@{${cat.status.permalink}}"
-        th:text="|${cat.spec.displayName} (${cat.postCount})|"
-        class="category"
-      ></a>
-    </li>
-  </ul>
+  <div class="layout-grid no-sidebar">
+    <div class="content-area">
+      <div class="page-header-card">
+        <h1>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          文章分类
+        </h1>
+        <p class="page-desc">共 <span th:text="${#lists.size(categories)}"></span> 个分类</p>
+      </div>
 
-  <nav class="pagination" th:if="${categories.hasPrevious() || categories.hasNext()}">
-    <a th:if="${categories.hasPrevious()}" th:href="@{${categories.prevUrl}}">Previous</a>
-    <span th:text="|${categories.page} / ${categories.totalPages}|"></span>
-    <a th:if="${categories.hasNext()}" th:href="@{${categories.nextUrl}}">Next</a>
-  </nav>
+      <div class="category-cards" th:if="${not #lists.isEmpty(categories)}">
+        <a th:each="cat : ${categories}"
+           th:href="@{${cat.status.permalink}}"
+           class="category-card">
+          <div class="cat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="cat-name" th:text="${cat.spec.displayName}"></div>
+          <div class="cat-count" th:text="${cat.postCount + ' 篇文章'}"></div>
+          <div class="cat-desc" th:if="${cat.spec.description}" th:text="${cat.spec.description}"></div>
+        </a>
+      </div>
+
+      <div class="empty-state" th:if="${#lists.isEmpty(categories)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        <p>暂无分类</p>
+      </div>
+    </div>
+  </div>
 </include>

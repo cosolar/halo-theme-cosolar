@@ -1,5 +1,14 @@
 <nav class="pagination" th:if="${posts.hasPrevious() || posts.hasNext()}">
-  <a th:if="${posts.hasPrevious()}" th:href="@{${posts.prevUrl}}">Previous</a>
-  <span th:text="|${posts.page} / ${posts.totalPages}|"></span>
-  <a th:if="${posts.hasNext()}" th:href="@{${posts.nextUrl}}">Next</a>
+  <a th:if="${posts.hasPrevious()}" th:href="@{${posts.prevUrl}}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+  </a>
+  <span class="current" th:text="${posts.page}"></span>
+  <span style="border:none;background:none;color:var(--color-text-muted);" th:text="'/' + ${posts.totalPages}"></span>
+  <a th:if="${posts.hasNext()}" th:href="@{${posts.nextUrl}}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  </a>
 </nav>
