@@ -1,14 +1,14 @@
 apiVersion: theme.halo.run/v1alpha1
 kind: Theme
 metadata:
-  name: cosolar
+  name: halo-theme-cosolar
 spec:
-  displayName: Cosolar
+  displayName: halo-theme-cosolar
   author:
     name: Cosolar
     website: https://note.minims.cn
-  description: 极简不简单 — 面向开发者的现代博客主题，青绿美学 × 暗色模式 × 精选轮播 × 分类导航 × 全局搜索，让技术写作回归纯粹。
-  logo: https://oss.towao.com/proxy/plain/img/2026/983f2475d8fff92d91499ac752062e30.png
+  description: 清风徐来，码迹自留 — 一款为开发者打造的现代博客主题，青绿美学、明暗双模、精选轮播、动态背景，让每一篇技术沉淀都赏心悦目。
+  logo: /themes/halo-theme-cosolar/assets/images/logo.png
   homepage: https://github.com/cosolar/halo-theme-cosolar
   repo: https://github.com/cosolar/halo-theme-cosolar
   issues: https://github.com/cosolar/halo-theme-cosolar/issues

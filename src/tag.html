@@ -5,16 +5,54 @@
 
   <div class="layout-grid" th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}">
     <div class="content-area">
-      <div class="page-header-card">
-        <h1>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-            <line x1="7" y1="7" x2="7.01" y2="7"/>
-          </svg>
-          <span th:text="${tag.spec.displayName}"></span>
-        </h1>
-        <p class="page-desc">共 <span th:text="${posts.total}"></span> 篇文章</p>
-      </div>
+      <section class="topic-hero"
+               th:with="defaultCover = ${theme.config?.tag?.tag_cover},
+                         cover = ${tag.spec.cover != null and !#strings.isEmpty(tag.spec.cover) ? tag.spec.cover : defaultCover}">
+        <div class="topic-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
+          <img th:src="${cover}" alt="" loading="lazy" />
+        </div>
+        <div class="topic-hero-bg--fallback" th:unless="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="topic-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
+
+        <div class="topic-hero-inner">
+          <span class="topic-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+            <span>标签</span>
+          </span>
+
+          <h1 class="topic-title" th:text="${tag.spec.displayName}">标签名称</h1>
+
+          <p class="topic-desc" th:if="${tag.spec.description != null and !#strings.isEmpty(tag.spec.description)}" th:text="${tag.spec.description}"></p>
+          <p class="topic-desc" th:unless="${tag.spec.description != null and !#strings.isEmpty(tag.spec.description)}">探索此标签下的所有文章</p>
+
+          <div class="topic-stats">
+            <span class="topic-stat">
+              <span class="topic-stat-num" th:text="${posts.total}">0</span>
+              <span class="topic-stat-label">篇文章</span>
+            </span>
+            <span class="topic-stat-divider"></span>
+            <span class="topic-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="topic-stat-icon">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+              <span class="topic-stat-label">标签归档</span>
+            </span>
+            <span class="topic-stat-divider"></span>
+            <span class="topic-stat">
+              <a th:href="@{${site.routes.tagsUri}}" class="topic-back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
+                  <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                <span>全部标签</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </section>
 
       <div class="section-header">
         <h2 class="section-title">文章列表</h2>
@@ -28,9 +66,16 @@
           </a>
           <div class="article-body">
             <h3 class="article-card-title">
+              <span class="pinned-badge" th:if="${post.spec.pinned}">置顶</span>
               <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
             </h3>
             <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
+            <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
+              <a th:each="postTag : ${post.tags}"
+                 th:href="@{${postTag.status.permalink}}"
+                 th:text="${postTag.spec.displayName}"
+                 class="tag"></a>
+            </div>
             <div class="article-card-meta">
               <span class="meta-item" th:if="${not #lists.isEmpty(post.categories)}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

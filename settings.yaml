@@ -1,4 +1,4 @@
-apiVersion: v1alpha1
+﻿apiVersion: v1alpha1
 kind: Setting
 metadata:
   name: cosolar-setting
@@ -61,11 +61,6 @@ spec:
             - label: 暗色
               value: dark
         - $formkit: number
-          name: posts_per_page
-          label: 每页文章数
-          value: 10
-          help: 首页和列表页每页显示的文章数量
-        - $formkit: number
           name: content_width
           label: 内容最大宽度
           value: 1200
@@ -97,16 +92,54 @@ spec:
           max: 320
           step: 10
           help: 文章页右侧目录（TOC）的宽度（像素），建议 180-320
-        - $formkit: number
-          name: excerpt_length
-          label: 摘要长度
-          value: 120
-          help: 文章卡片摘要显示的字数
         # 代码高亮主题由 Halo plugin-shiki 插件后台配置（亮色/暗色主题），主题不再提供此选项
+
+    - group: font
+      label: 字体设置
+      formSchema:
+        - $formkit: text
+          name: font_family
+          label: 正文字体族
+          value: ""
+          help: 自定义正文字体族（CSS font-family 语法），留空使用默认霞鹜文楷。例如 "Noto Sans SC", sans-serif 或 "LXGW WenKai", serif
+        - $formkit: url
+          name: font_css_url
+          label: 字体 CSS 地址
+          value: ""
+          help: 第三方字体 CSS 链接（如 Google Fonts、字节跳动 FontAPI 等），留空则使用默认霞鹜文楷 CDN。例如 https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap
+        - $formkit: text
+          name: mono_family
+          label: 等宽字体族
+          value: ""
+          help: 自定义代码/等宽字体族，留空使用默认 JetBrains Mono。例如 "Source Code Pro", monospace
+        - $formkit: url
+          name: mono_css_url
+          label: 等宽字体 CSS 地址
+          value: ""
+          help: 第三方等宽字体 CSS 链接，留空则不额外加载
+
+    - group: icon
+      label: 图标设置
+      formSchema:
+        - $formkit: url
+          name: icon_css_url
+          label: 图标字体 CSS 地址
+          value: ""
+          help: 第三方图标库 CSS 链接（如 Font Awesome、Remix Icon、Lucide 等），留空则使用主题内置 iconfont。例如 https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css
+        - $formkit: text
+          name: icon_prefix
+          label: 图标类名前缀
+          value: "iconfont"
+          help: 图标 CSS 类名前缀，用于导航菜单图标。内置 iconfont 使用 iconfont，Font Awesome 使用 fa-solid/fas，Remix Icon 使用 ri，Lucide 使用 lucide
 
     - group: social
       label: 社交链接
       formSchema:
+        - $formkit: switch
+          name: show_footer_author
+          label: 显示页脚博主信息
+          value: true
+          help: 在页脚显示博主头像、昵称、简介和社交链接卡片
         - $formkit: text
           name: author_name
           label: 博主昵称
@@ -136,6 +169,16 @@ spec:
           label: 掘金
           value: ""
         - $formkit: url
+          name: csdn
+          label: CSDN
+          value: ""
+          help: CSDN 博客主页地址
+        - $formkit: url
+          name: zhihu
+          label: 知乎
+          value: ""
+          help: 知乎个人主页地址
+        - $formkit: url
           name: rss
           label: RSS 订阅
           value: ""
@@ -153,7 +196,7 @@ spec:
           name: featured_cover
           label: 轮播默认背景图
           value: ""
-          help: 精选文章轮播卡片的背景封面图，留空则显示默认渐变背景；若文章本身有封面图则优先使用
+          help: 精选文章轮播卡片的背景封面图，留空则使用主题自带的默认背景图；若文章本身有封面图则优先使用
         - $formkit: switch
           name: featured_cover_fallback
           label: 优先使用文章封面
@@ -174,7 +217,17 @@ spec:
           name: interval
           label: 轮播间隔（毫秒）
           value: 5000
-          help: 自动轮播的切换间隔时间，单位毫秒
+          min: 1000
+          step: 500
+          help: 自动轮播的切换间隔时间，单位毫秒，最小 1000
+        - $formkit: number
+          name: featured_max_count
+          label: 轮播最大文章数
+          value: 5
+          min: 1
+          max: 10
+          step: 1
+          help: 回退模式下轮播最多显示的文章数量
         - $formkit: radio
           name: fallback
           label: 无配置时的回退策略
@@ -196,6 +249,21 @@ spec:
           value: true
           help: 在首页和列表页显示右侧侧边栏；小屏（≤768px）下自动隐藏
         - $formkit: switch
+          name: show_author
+          label: 显示博主展示
+          value: true
+          help: 在侧边栏顶部显示博主个人信息卡片
+        - $formkit: attachment
+          name: author_bg_image
+          label: 博主背景图
+          value: ""
+          help: 博主展示模块的背景封面图，建议深色图片配合文字效果更佳。与"博主背景色"二选一，同时设置时背景图优先
+        - $formkit: color
+          name: author_bg_color
+          label: 博主背景色
+          value: ""
+          help: 博主展示模块的背景色，与"博主背景图"二选一，同时设置时背景图优先；留空则使用默认卡片样式
+        - $formkit: switch
           name: show_hot_tags
           label: 显示热门标签
           value: true
@@ -203,6 +271,8 @@ spec:
           name: hot_tags_count
           label: 热门标签数量
           value: 8
+          min: 1
+          max: 30
         - $formkit: switch
           name: show_categories
           label: 显示分类导航
@@ -211,6 +281,8 @@ spec:
           name: categories_count
           label: 分类显示数量
           value: 6
+          min: 1
+          max: 30
           help: 侧边栏分类导航最多显示的分类数量
         - $formkit: switch
           name: show_recent
@@ -220,6 +292,8 @@ spec:
           name: recent_count
           label: 近期更新数量
           value: 4
+          min: 1
+          max: 30
 
     - group: category
       label: 分类页设置
@@ -240,6 +314,20 @@ spec:
           value: true
           help: 开启后，若分类本身设置了封面图则优先使用，否则使用上方配置的默认封面图
 
+    - group: tag
+      label: 标签页设置
+      formSchema:
+        - $formkit: attachment
+          name: tags_cover
+          label: 标签列表页封面图
+          value: ""
+          help: 标签列表页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景
+        - $formkit: attachment
+          name: tag_cover
+          label: 标签详情页封面图
+          value: ""
+          help: 标签详情页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景；若标签本身设置了封面图则优先使用
+    
     - group: archive
       label: 归档页设置
       formSchema:
@@ -248,3 +336,129 @@ spec:
           label: 归档页封面图
           value: ""
           help: 归档页顶部 Header 区域的背景封面图，留空则显示默认渐变背景
+          
+    - group: background_light
+      label: 页面背景 · 浅色模式
+      formSchema:
+        - $formkit: select
+          name: bg_type
+          label: 背景类型
+          value: none
+          options:
+            - label: 无（默认纯色）
+              value: none
+            - label: 自定义背景图
+              value: image
+            - label: 动态渲染背景
+              value: dynamic
+          help: 浅色模式下的页面背景类型
+        - $formkit: attachment
+          name: bg_image
+          label: 背景图
+          value: ""
+          help: 浅色模式下显示的背景图，建议使用浅色调、低饱和度图片以免影响内容阅读
+        - $formkit: range
+          name: bg_image_opacity
+          label: 背景图透明度
+          value: 0.2
+          min: 0.05
+          max: 1
+          step: 0.05
+          help: 背景图的不透明度，值越小越淡，避免影响内容阅读
+        - $formkit: select
+          name: bg_dynamic_type
+          label: 动态背景类型
+          value: particles
+          options:
+            - label: 粒子连线
+              value: particles
+            - label: 渐变流光
+              value: gradient
+            - label: 气泡漂浮
+              value: bubbles
+            - label: 星空闪烁
+              value: stars
+            - label: 网格波纹
+              value: mesh
+          help: 浅色模式下的动态渲染背景效果
+        - $formkit: color
+          name: bg_dynamic_color1
+          label: 动态背景主色
+          value: "#10B981"
+          help: 动态背景的主要颜色
+        - $formkit: color
+          name: bg_dynamic_color2
+          label: 动态背景辅色
+          value: "#3B82F6"
+          help: 动态背景的辅助颜色，用于渐变和混合效果
+        - $formkit: range
+          name: bg_dynamic_opacity
+          label: 动态背景透明度
+          value: 0.15
+          min: 0.05
+          max: 0.5
+          step: 0.05
+          help: 动态背景的不透明度，值越小越淡
+
+    - group: background_dark
+      label: 页面背景 · 深色模式
+      formSchema:
+        - $formkit: select
+          name: bg_type
+          label: 背景类型
+          value: none
+          options:
+            - label: 无（默认纯色）
+              value: none
+            - label: 自定义背景图
+              value: image
+            - label: 动态渲染背景
+              value: dynamic
+          help: 深色模式下的页面背景类型
+        - $formkit: attachment
+          name: bg_image
+          label: 背景图
+          value: ""
+          help: 深色模式下显示的背景图，建议使用深色调图片
+        - $formkit: range
+          name: bg_image_opacity
+          label: 背景图透明度
+          value: 0.2
+          min: 0.05
+          max: 1
+          step: 0.05
+          help: 背景图的不透明度，值越小越淡，避免影响内容阅读
+        - $formkit: select
+          name: bg_dynamic_type
+          label: 动态背景类型
+          value: stars
+          options:
+            - label: 粒子连线
+              value: particles
+            - label: 渐变流光
+              value: gradient
+            - label: 气泡漂浮
+              value: bubbles
+            - label: 星空闪烁
+              value: stars
+            - label: 网格波纹
+              value: mesh
+          help: 深色模式下的动态渲染背景效果，默认星空闪烁
+        - $formkit: color
+          name: bg_dynamic_color1
+          label: 动态背景主色
+          value: "#10B981"
+          help: 动态背景的主要颜色
+        - $formkit: color
+          name: bg_dynamic_color2
+          label: 动态背景辅色
+          value: "#3B82F6"
+          help: 动态背景的辅助颜色，用于渐变和混合效果
+        - $formkit: range
+          name: bg_dynamic_opacity
+          label: 动态背景透明度
+          value: 0.15
+          min: 0.05
+          max: 0.5
+          step: 0.05
+          help: 动态背景的不透明度，值越小越淡

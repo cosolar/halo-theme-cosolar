@@ -5,24 +5,45 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <div class="page-header-card">
-        <h1>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;display:inline;vertical-align:middle;color:var(--color-primary);margin-right:4px;">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-            <line x1="7" y1="7" x2="7.01" y2="7"/>
-          </svg>
-          文章标签
-        </h1>
-        <p class="page-desc">共 <span th:text="${#lists.size(tags)}"></span> 个标签</p>
-      </div>
-
-      <div class="archive-section" th:if="${not #lists.isEmpty(tags)}">
-        <div class="tag-cloud">
-          <a th:each="tag : ${tags}"
-             th:href="@{${tag.status.permalink}}"
-             th:text="${tag.spec.displayName}"
-             class="tag"></a>
+      <section class="page-hero"
+               th:with="cover = ${theme.config?.tag?.tags_cover}">
+        <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
+          <img th:src="${cover}" alt="" loading="lazy" />
         </div>
+        <div class="page-hero-bg--fallback" th:unless="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="page-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div class="page-hero-inner">
+          <span class="page-hero-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+            <span>标签</span>
+          </span>
+          <h1>文章标签</h1>
+          <p class="page-hero-desc">共 <span th:text="${#lists.size(tags)}"></span> 个标签</p>
+        </div>
+      </section>
+
+      <div class="tag-cards" th:if="${not #lists.isEmpty(tags)}">
+        <a th:each="tag : ${tags}"
+           th:href="@{${tag.status.permalink}}"
+           class="tag-card">
+          <div class="tag-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+          </div>
+          <div class="tag-card-text">
+            <div class="tag-card-name" th:text="${tag.spec.displayName}"></div>
+            <div class="tag-card-count" th:text="${tag.postCount + ' 篇文章'}"></div>
+          </div>
+          <div class="tag-card-desc" th:if="${tag.spec.description != null and !#strings.isEmpty(tag.spec.description)}" th:text="${tag.spec.description}"></div>
+          <svg class="tag-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
       </div>
 
       <div class="empty-state" th:if="${#lists.isEmpty(tags)}">

@@ -10,7 +10,39 @@
   const prevBtn = carousel.querySelector(".carousel-prev") as HTMLElement | null;
   const nextBtn = carousel.querySelector(".carousel-next") as HTMLElement | null;
 
-  if (slides.length <= 1) return;
+  // 根据 featured_max_count 限制实际显示的 slide 数量
+  const maxSlides = parseInt(carousel.dataset.maxSlides || "5", 10);
+  if (slides.length > maxSlides) {
+    slides.forEach((slide, i) => {
+      if (i >= maxSlides) {
+        (slide as HTMLElement).remove();
+      }
+    });
+  }
+
+  // 重新获取清理后的 slides 列表
+  const actualSlides = carousel.querySelectorAll(".carousel-slide");
+
+  // 置顶模式下列表长度可能大于实际 slide 数，移除多余的圆点
+  if (dots.length > actualSlides.length) {
+    dots.forEach((dot, i) => {
+      if (i >= actualSlides.length) {
+        (dot as HTMLElement).remove();
+      }
+    });
+  }
+
+  // 实际 slide 数量小于 2 时隐藏箭头
+  if (actualSlides.length <= 1) {
+    prevBtn?.remove();
+    nextBtn?.remove();
+    const dotsContainer = carousel.querySelector(".carousel-dots");
+    dotsContainer?.remove();
+    return;
+  }
+
+  // 重新获取清理后的圆点列表
+  const actualDots = carousel.querySelectorAll(".carousel-dot");
 
   const autoplay = carousel.dataset.autoplay === "true";
   const interval = parseInt(carousel.dataset.interval || "5000", 10);
@@ -18,11 +50,11 @@
   let timer: ReturnType<typeof setInterval> | null = null;
 
   function showSlide(index: number): void {
-    currentIndex = (index + slides.length) % slides.length;
-    slides.forEach((slide, i) => {
+    currentIndex = (index + actualSlides.length) % actualSlides.length;
+    actualSlides.forEach((slide, i) => {
       slide.classList.toggle("active", i === currentIndex);
     });
-    dots.forEach((dot, i) => {
+    actualDots.forEach((dot, i) => {
       dot.classList.toggle("active", i === currentIndex);
     });
   }
@@ -59,7 +91,7 @@
     startAutoplay();
   });
 
-  dots.forEach((dot, i) => {
+  actualDots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
       showSlide(i);
       startAutoplay();

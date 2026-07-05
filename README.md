@@ -1,6 +1,6 @@
-<div align="center">
+﻿<div align="center">
 
-<img src="https://oss.towao.com/proxy/plain/img/2026/983f2475d8fff92d91499ac752062e30.png" width="150" height="100" alt="Cosolar Logo" />
+<img src="./public/assets/images/logo.png" width="150" height="100" alt="halo-theme-cosolar Logo" />
 
 # halo-theme-cosolar
 
@@ -8,11 +8,7 @@
 
 **青绿美学** · **暗色模式** · **精选轮播** · **分类导航** · **全局搜索** · **完美移动端适配**
 
-[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run)
-[![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE)
-[![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 
 **🚀 [在线预览 →](https://note.minims.cn)**
 
@@ -20,13 +16,13 @@
 
 ---
 
-## ✨ 为什么选择 theme-cosolar？
+## ✨ 为什么选择 halo-theme-cosolar？
 
 > 把「内容」放回舞台中央 —— 干净的排版、克制的动效、合理的留白，让代码与文字都能舒适呼吸。
 
-市面上 Halo 主题很多，但专为**技术写作者**量身打造的却很少。Cosolar 从开发者的真实阅读场景出发，打磨了每一个交互细节：
+市面上 Halo 主题很多，但专为**技术写作者**量身打造的却很少。halo-theme-cosolar 从开发者的真实阅读场景出发，打磨了每一个交互细节：
 
-| 🤔 痛点 | ✅ theme-cosolar 的解法 |
+| 🤔 痛点 | ✅ halo-theme-cosolar 的解法 |
 |---|---|
 | 长文阅读找不到方向 | 阅读进度条 + 悬浮目录（TOC），随时知道"在哪、还有多远" |
 | 代码块在暗色模式下刺眼 | 三档配色切换 + 毛玻璃导航栏，深夜码字也舒适 |
@@ -43,12 +39,12 @@
 - **青绿美学** — 默认主色 `#10B981`，后台一键换色，全站联动
 - **暗色模式** — 跟随系统 / 强制浅色 / 强制暗色三档可切
 - **毛玻璃风格** — 导航栏与操作栏 `backdrop-filter` 毛玻璃质感
-- **CSS 变量驱动** — 无 Tailwind 依赖，原生 CSS + 变量体系，轻量可控
+- **页面背景** — 支持自定义背景图（浅色/深色分别配置）和 5 种动态渲染背景
 
 ### 🖼️ 首页体验
 - **精选轮播** — 首页顶部卡片轮播，手动指定文章、自动播放、置顶回退
 - **文章卡片** — 封面图 + 标题 + 摘要 + 分类标签 + 时间，信息密度恰到好处
-- **侧边栏** — 热门标签 / 分类导航 / 近期更新 / 全局搜索，模块化可单独开关
+- **侧边栏** — 博主信息 / 热门标签 / 分类导航 / 近期更新，模块化可单独开关
 
 ### 📖 阅读体验
 - **文章目录（TOC）** — 桌面端右侧悬浮跟随，移动端抽屉式弹出，1px 极细滚动条
@@ -61,10 +57,11 @@
 - **≤480px** — 小屏进一步紧凑，按钮间距收窄
 - **769–1024px** — 平板隐藏 TOC 列，保留内容 + 侧边栏双栏
 
-### ⚡ 工程化
-- **Vite 构建** — TypeScript + `vite-plugin-halo-theme`，产物精简，按模板分块
-- **Thymeleaf 3.1** — Halo 原生模板引擎，无额外运行时依赖
-- **FormKit 配置** — 后台设置表单全部 FormKit 声明式定义
+### 🔧 个性化
+- **自定义字体** — 支持引入第三方字体 CSS，一键切换全局字体
+- **自定义图标** — 支持 Remix Icon、Font Awesome 等第三方图标库
+- **自定义背景** — 背景图浅色/深色分别配置，5 种 Canvas 动态背景可选
+- **封面图配置** — 分类页、标签页、归档页 Hero 区域均可自定义封面图
 
 ---
 
@@ -74,14 +71,12 @@
 
 <table>
 <tr>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/e298d593380afee655b78d9c754e88c4.png" alt="首页" /></td>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/f172b5437e47aa91f20dc6a77b0632fe.png" alt="暗色模式" /></td>
+<td><img src="https://oss.towao.com/proxy/plain/img/2026/c7ed5768fe18abc9e2eb78e7758fecb6.png" alt="首页" /></td>
+<td><img src="https://oss.towao.com/proxy/plain/img/2026/140534612338bec5ab805f0ae3c559ff.png" alt="暗色模式" /></td>
 </tr>
 <tr>
-<td>
-  <img src="https://oss.towao.com/proxy/plain/img/2026/f3b0d6a6b6771f3f061bd47327b2ec41.png" alt="f3b0d6a6b6771f3f061bd47327b2ec41.png">
-</td>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/6c0b7a3d95b9450d5c3fed86d0b51bc6.png" alt="文章页" /></td>
+<td><img src="https://oss.towao.com/proxy/plain/img/2026/cbe45d9ceb3945c68c7fa619e0ec1da8.png" alt="文章卡片" /></td>
+<td><img src="https://oss.towao.com/proxy/plain/img/2026/d937c99a23b2f9271cb3e5ae31a1f205.png" alt="文章页" /></td>
 </tr>
 <tr>
 <td><img src="https://oss.towao.com/proxy/plain/img/2026/0a5adf875585795d1a77ad82fe3a1d20.png" alt="暗色模式" /></td>
@@ -91,23 +86,23 @@
 
 ---
 
-## 🚀 快速开始
+## 🚀 安装与启用
 
 ### 环境要求
 
 | 项目 | 版本 |
 |---|---|
 | Halo | `>=2.20.0` |
-| Node.js | `>=18`（仅构建时需要） |
-| pnpm | `10+`（仅构建时需要） |
 
 ### 方式一：直接安装（推荐）
 
 1. 前往 [Releases](https://github.com/cosolar/halo-theme-cosolar/releases) 下载最新 `cosolar-<version>.zip`
-2. 进入 **Halo Console → 主题管理 → 安装主题** → 上传 ZIP
+2. 登录 Halo 后台，进入 **主题管理 → 安装主题** → 上传 ZIP
 3. 安装完成后点击 **启用** 🎉
 
 ### 方式二：从源码构建
+
+> 适用于需要二次开发或自定义修改的场景。
 
 ```bash
 git clone https://github.com/cosolar/halo-theme-cosolar.git
@@ -116,7 +111,254 @@ pnpm install
 pnpm build            # 产物：templates/ + cosolar-<version>.zip
 ```
 
-将生成的 ZIP 上传到 Halo，或将整个目录放入 Halo 工作目录的 `themes/cosolar/` 下（目录名须与 `theme.yaml` 中 `metadata.name` 一致）。
+将生成的 ZIP 上传到 Halo，或将整个目录放入 Halo 工作目录的 `themes/cosolar/` 下。
+
+---
+
+## 📖 使用教程
+
+主题启用后，进入 **Halo 后台 → 主题管理 → halo-theme-cosolar → 设置** 进行配置。以下按使用场景分步讲解。
+
+### 1️⃣ 基础配置：让你的博客「像你的」
+
+打开 **基础设置** 分组，配置站点身份信息：
+
+| 配置项 | 说明 | 建议 |
+|---|---|---|
+| Logo 图片 | 导航栏左侧的 Logo，留空则显示 `</>` 代码图标 | 建议使用透明背景的 PNG，尺寸 36–80px |
+| Logo 文字 | Logo 旁边的站点名称 | 简短有力，2–6 个字最佳 |
+| 站点标语 | Logo 下方的小字副标题 | 一句话说明博客定位 |
+| 页脚版权文字 | 页脚底部的版权信息，支持 HTML | 如 `© 2026 我的博客 · All rights reserved` |
+| ICP 备案号 | 国内站点备案号，留空不显示 | 填写后会自动链接到工信部网站 |
+
+### 2️⃣ 视觉风格：打造专属配色
+
+打开 **样式设置** 分组：
+
+**换一个主题色**：点击「主题色」颜色选择器，选一个你喜欢的颜色。全站的按钮、链接、标签、进度条、选中态等都会联动变化。推荐色值参考：
+
+| 风格 | 色值 | 预览 |
+|---|---|---|
+| 青绿（默认） | `#10B981` | 🟢 |
+| 蓝色 | `#3B82F6` | 🔵 |
+| 紫色 | `#8B5CF6` | 🟣 |
+| 橙色 | `#F59E0B` | 🟠 |
+| 玫红 | `#EC4899` | 🔴 |
+| 靛蓝 | `#6366F1` | 🟣 |
+
+**配色方案**：选择默认的明暗模式：
+- **跟随系统** — 根据用户操作系统的深浅色设置自动切换
+- **浅色 / 暗色** — 强制使用指定模式，用户仍可通过导航栏月亮/太阳按钮手动切换
+
+**布局微调**：根据你的内容类型调整宽度参数：
+- `内容最大宽度`：文字类博客建议 1100–1200，图片类可加大到 1400
+- `侧边栏宽度`：默认 320px，内容多可调到 360
+- `内容间距`：内容区与侧边栏之间的间距，默认 24px
+
+### 3️⃣ 字体与图标：个性化排版
+
+#### 切换全局字体
+
+打开 **字体设置** 分组。默认使用霞鹜文楷（中文）+ JetBrains Mono（代码），如果你想换字体：
+
+**示例：切换为思源黑体**
+
+1. 在「字体 CSS 地址」填入：`https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap`
+2. 在「正文字体族」填入：`"Noto Sans SC", sans-serif`
+3. 保存即可生效
+
+> 💡 留空任何字段都会使用默认值，不需要全部填写。
+
+**常用中文字体 CSS 地址**：
+
+| 字体 | CSS 地址 | font-family |
+|---|---|---|
+| 思源黑体 | `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap` | `"Noto Sans SC", sans-serif` |
+| 思源宋体 | `https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap` | `"Noto Serif SC", serif` |
+| LXGW WenKai | `https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css` | `"LXGW WenKai", serif` |
+
+> 💡 如需完全离线部署，可自行下载字体文件并上传到 Halo 附件管理，然后在「字体 CSS 地址」填入本地路径。
+
+#### 切换图标库
+
+打开 **图标设置** 分组。默认使用内置 iconfont 图标，如需更丰富的图标：
+
+**示例：切换为 Remix Icon**
+
+1. 在「图标字体 CSS 地址」填入：`https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css`
+2. 在「图标类名前缀」填入：`ri`
+3. 在 **菜单管理** 中，给菜单项添加注解 `icon`，值为 Remix Icon 图标类名（如 `ri-home-line`、`ri-article-line`）
+
+**常用图标库**：
+
+| 图标库 | CSS 地址 | 前缀 | 图标查阅 |
+|---|---|---|---|
+| [Remix Icon](https://remixicon.com/) | `https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css` | `ri` | remixicon.com |
+| [Font Awesome 6](https://fontawesome.com/icons) | `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css` | `fa-solid` | fontawesome.com/icons |
+
+### 4️⃣ 页面背景：让博客更有氛围
+
+背景设置分为 **浅色模式** 和 **深色模式** 两个独立分组，可以分别配置不同效果，切换主题时自动切换对应背景。
+
+#### 浅色模式背景
+
+打开 **页面背景 · 浅色模式** 分组，支持三种类型：
+
+- **无（默认纯色）** — 使用浅色背景色 `#F8FAFC`
+- **自定义背景图** — 上传一张浅色调背景图，调整透明度（建议 0.1–0.3）
+- **动态渲染背景** — 选择动态效果类型，自定义颜色和透明度
+
+#### 深色模式背景
+
+打开 **页面背景 · 深色模式** 分组，配置方式与浅色模式相同：
+
+- **无（默认纯色）** — 使用深色背景色 `#0F172A`
+- **自定义背景图** — 上传一张深色调背景图，调整透明度
+- **动态渲染背景** — 默认推荐「星空闪烁」，与深色背景更搭配
+
+#### 动态背景效果
+
+浅色和深色模式均可独立选择以下 5 种动态效果：
+
+| 类型 | 效果描述 | 适合场景 |
+|---|---|---|
+| **粒子连线** | 随机运动的粒子，相近粒子间绘制连线 | 科技博客、开发者主页 |
+| **渐变流光** | 多个径向渐变光斑缓慢漂移 | 个人博客、文艺风格 |
+| **气泡漂浮** | 半透明气泡从底部缓缓上升，带高光 | 轻松活泼的风格 |
+| **星空闪烁** | 随机分布的星点明暗交替，大星加光晕 | 深色模式、夜间阅读 |
+| **网格波纹** | 规则网格点阵 + 波纹扩散动画 | 极简几何风格 |
+
+每种动态效果都可以自定义主色、辅色和透明度，透明度建议 0.05–0.3。
+
+> 💡 两种模式的背景完全独立：浅色模式可以用粒子连线，深色模式用星空闪烁，互不影响。切换主题时背景平滑淡入淡出。
+
+### 5️⃣ 首页精选轮播：展示你的最佳内容
+
+打开 **精选文章** 分组：
+
+**手动指定模式**（推荐）：
+1. 开启「启用精选文章」
+2. 在「精选文章列表」中点击添加，选择要展示的文章
+3. 可拖拽排序，最上面的文章显示在第一张
+4. 开启「自动轮播」并设置间隔时间（默认 5 秒）
+
+**自动回退模式**：
+如果未指定精选文章，主题会根据「无配置时的回退策略」自动处理：
+- **显示最新文章** — 自动选取最新发布的 N 篇文章
+- **显示置顶文章** — 自动选取置顶文章
+- **不显示** — 不展示轮播区域
+
+**封面图逻辑**：
+- 默认开启「优先使用文章封面」— 如果文章本身有封面图则使用，否则使用「轮播默认背景图」
+- 如果两者都没有，使用主题自带的渐变背景
+
+### 6️⃣ 侧边栏：按需展示信息
+
+打开 **侧边栏设置** 分组：
+
+**博主信息卡片**：
+- 开启「显示博主展示」后，侧边栏顶部会显示博主头像、昵称、简介、文章/分类/标签统计和社交链接
+- 可设置博主背景图或背景色（二选一，背景图优先），让卡片更有视觉冲击力
+- 社交链接支持 GitHub、邮箱、掘金、RSS
+
+**其他模块**：每个模块都可独立开关：
+- 热门标签 — 显示最热门的 N 个标签，可配置数量
+- 分类导航 — 显示分类列表，可配置数量
+- 近期更新 — 显示最新发布的 N 篇文章
+
+### 7️⃣ 分类与标签页：自定义封面
+
+#### 分类页设置
+
+打开 **分类页设置** 分组：
+- **分类列表页封面图** — 分类汇总页顶部 Hero 区域的背景图
+- **分类详情页封面图** — 进入某个分类后的页面顶部背景图
+- 开启「优先使用分类自带封面」— 如果你在 Halo 后台给分类设置了封面图，会优先使用
+
+#### 标签页设置
+
+打开 **标签页设置** 分组：
+- **标签列表页封面图** — 标签汇总页顶部 Hero 区域的背景图
+- **标签详情页封面图** — 进入某个标签后的页面顶部背景图
+- 如果标签本身设置了封面图，会优先使用
+
+#### 归档页设置
+
+打开 **归档页设置** 分组：
+- **归档页封面图** — 归档页顶部 Hero 区域的背景图
+
+> 💡 所有封面图留空时，都会显示主题默认的青绿渐变动画背景，效果同样出色。
+
+### 8️⃣ 社交与页脚：展示你的身份
+
+打开 **社交链接** 分组：
+
+- **显示页脚博主信息** — 控制页脚博主卡片的显示/隐藏
+- 填写博主昵称、头像、简介 — 留空则使用站点标题和默认头像
+- 配置社交链接 — GitHub、邮箱、掘金、RSS（RSS 留空则使用默认地址）
+
+页脚底部还会显示版权文字和 `Powered by Halo · Theme Cosolar` 信息。
+
+### 9️⃣ 导航菜单：配置图标与链接
+
+1. 进入 **Halo 后台 → 菜单管理**，创建或编辑菜单
+2. 添加菜单项，填写名称和链接
+3. 如需显示图标，在菜单项的 **注解** 中添加 `icon` 字段，值为图标类名
+
+**内置 iconfont 图标类名参考**：
+
+| 页面 | 图标类名 |
+|---|---|
+| 首页 | `icon-shouye` |
+| 分类 | `icon-fengfuduoyuan` |
+| 标签 | `icon-bokexinwen` |
+| 归档 | `icon-jishufuwu` |
+
+> 💡 如果切换了第三方图标库（如 Remix Icon），则使用对应图标库的类名（如 `ri-home-line`）。
+
+### 🔟 搜索功能
+
+主题已适配 Halo 官方搜索插件：
+
+1. 在 Halo 后台安装 **PluginSearchWidget** 插件
+2. 导航栏会自动显示搜索框，支持 `Ctrl+K` 快捷键
+3. 如果未安装搜索插件，搜索框会降级为归档页链接
+
+---
+
+## ❓ 常见问题
+
+### 如何关闭模板缓存以便开发调试？
+
+- **Docker 部署**：添加环境变量 `SPRING_THYMELEAF_CACHE=false`
+- **源码部署**：在 `application.yaml` 中设置 `spring.thymeleaf.cache: false`
+
+### 代码高亮如何配置？
+
+代码高亮由 Halo 的 `plugin-shiki` 插件负责，在 **Halo 后台 → 插件管理 → Shiki → 设置** 中配置亮色/暗色主题，主题本身不再提供代码高亮选项。
+
+### 如何完全离线部署？
+
+1. 下载 [lxgw-wenkai-screen-webfont](https://github.com/lxgw-wenkai-webfont) 字体文件
+2. 上传到 Halo 附件管理
+3. 在 **字体设置** 中将「字体 CSS 地址」替换为上传后的本地路径
+4. 图标字体已内置在主题中，无需额外处理
+
+### 动态背景会影响性能吗？
+
+动态背景使用 Canvas 2D 渲染，粒子数量会根据屏幕尺寸自动调整（最多 80 个粒子 / 150 颗星星），对现代设备几乎无性能影响。如仍有顾虑，可降低透明度或切换为静态背景图。
+
+### 如何让文章出现在精选轮播中？
+
+两种方式：
+1. **手动指定**：在「精选文章」设置中直接选择文章
+2. **自动回退**：将文章设为置顶，然后选择回退策略为「显示置顶文章」
+
+### 博主信息卡片的背景图和背景色有什么区别？
+
+- **背景图**：适合使用深色图片，文字会自动变为白色，并添加半透明遮罩确保可读性
+- **背景色**：适合使用纯色或渐变色，效果更简洁
+- 两者同时设置时，背景图优先
 
 ---
 
@@ -127,84 +369,8 @@ pnpm install
 pnpm dev              # 监听文件变化，实时构建到 templates/
 pnpm check            # 检查模板与配置
 pnpm build-only       # 仅构建（不打 ZIP），用于本地联调
+pnpm build            # 完整构建 + 打 ZIP 包
 ```
-
-> 💡 开发时建议关闭 Halo 模板缓存：
-> - **Docker**：环境变量 `SPRING_THYMELEAF_CACHE=false`
-> - **源码**：`application.yaml` 设 `spring.thymeleaf.cache: false`
-
----
-
-## ⚙️ 配置项
-
-主题安装后，在 **Halo Console → 主题管理 → Cosolar → 设置** 中配置，共 7 个分组：
-
-### 基础设置 (`basic`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `logo_image` | Logo 图片，留空显示默认代码图标 | — |
-| `logo_image_size` | Logo 显示尺寸 | `36` |
-| `logo_text` | 头部站点名称 | `码迹志` |
-| `tagline` | Logo 下方副标题 | `记录技术成长，分享解决方案` |
-| `footer_text` | 页脚版权文字（支持 HTML） | — |
-| `icp` | ICP 备案号 | — |
-
-### 样式设置 (`style`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `primary_color` | 主题色 | `#10B981` |
-| `color_scheme` | 默认配色：跟随系统 / 浅色 / 暗色 | `auto` |
-| `posts_per_page` | 每页文章数 | `10` |
-| `content_width` | 内容最大宽度 | `1200` |
-| `sidebar_width` | 侧边栏宽度 | `320` |
-| `content_gap` | 内容区与侧边栏间距 | `24` |
-| `toc_width` | 文章目录宽度 | `240` |
-| `excerpt_length` | 文章卡片摘要字数 | `120` |
-
-> 💡 代码高亮主题由 Halo `plugin-shiki` 插件后台统一配置（亮色/暗色），主题不再单独提供该选项。
-
-### 精选文章 (`featured`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `show_featured` | 启用首页轮播 | `true` |
-| `featured_posts` | 指定精选文章（可拖拽排序） | `[]` |
-| `autoplay` | 自动轮播 | `true` |
-| `interval` | 轮播间隔（ms） | `5000` |
-| `fallback` | 未配置时回退：最新 / 置顶 / 不显示 | `latest` |
-
-### 侧边栏设置 (`sidebar`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `show_sidebar` | 显示侧边栏（≤768px 自动隐藏） | `true` |
-| `show_search` | 显示搜索 | `true` |
-| `show_hot_tags` | 显示热门标签 | `true` |
-| `show_categories` | 显示分类导航 | `true` |
-| `show_recent` | 显示近期更新 | `true` |
-
-### 分类页设置 (`category`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `categories_cover` | 分类列表页封面图 | — |
-| `category_cover` | 分类详情页封面图 | — |
-| `category_cover_fallback` | 优先使用分类自带封面 | `true` |
-
-### 归档页设置 (`archive`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `archives_cover` | 归档页封面图 | — |
-
-### 社交链接 (`social`)
-
-| 字段 | 说明 | 默认值 |
-|---|---|---|
-| `author_name` / `author_avatar` / `author_bio` | 页脚博主卡片 | — |
-| `github` / `email` / `juejin` / `rss` | 社交链接 | — |
 
 ---
 
@@ -219,52 +385,8 @@ pnpm build-only       # 仅构建（不打 ZIP），用于本地联调
 
 ---
 
-## 📂 目录结构
-
-```
-halo-theme-cosolar/
-├── theme.yaml                 # 主题元数据
-├── settings.yaml              # 后台配置表单（FormKit）
-├── annotation-setting.yaml    # 菜单/分类/文章自定义注解字段
-├── package.json               # 构建脚本与依赖
-├── src/                       # 源码（开发目录）
-│   ├── index.html             # 首页：精选轮播 + 文章列表 + 侧边栏
-│   ├── post.html              # 文章页：正文 + TOC + 底部操作栏
-│   ├── page.html              # 自定义页面
-│   ├── archives.html          # 归档页
-│   ├── categories.html        # 分类汇总
-│   ├── category.html          # 分类列表（带侧边栏）
-│   ├── tags.html              # 标签云
-│   ├── tag.html               # 标签列表（带侧边栏）
-│   ├── partials/              # 复用片段
-│   │   ├── layout.html        # 全局布局：head / nav / footer / CSS 变量注入
-│   │   ├── sidebar.html       # 侧边栏组件
-│   │   ├── post-card.html     # 文章卡片
-│   │   └── pagination.html    # 分页
-│   ├── css/main.css           # 全局样式 + 响应式断点
-│   └── js/                    # TypeScript 入口
-│       ├── main.ts            # 全局交互（汉堡菜单 / 主题切换 / 滚动阴影 / 导航激活）
-│       ├── index.ts           # 首页轮播逻辑
-│       └── post.ts            # TOC / 点赞 / 评论 / 分享 / 回顶 / 阅读进度 / 图片查看器
-└── templates/                 # 构建产物（提交时被 .gitignore 忽略，发布包内含）
-```
-
----
-
-## 🔌 兼容的 Halo API
-
-主题使用以下 Finder / 全局变量，均已对齐 Halo 2.20+ 接口：
-
-- **Finder**：`postFinder` / `categoryFinder` / `tagFinder` / `singlePageFinder` / `menuFinder`
-- **点赞**：`POST /apis/api.halo.run/v1alpha1/trackers/upvote`，body `{group, plural, name}`
-- **评论**：渲染后挂载 `<halo-comment-widget>` 自定义元素
-- **全局变量**：`site`、`theme`、`theme.config.*`
-
----
-
 ## 🗺️ 路线图
 
-- [ ] 主题管理页首屏截图
 - [ ] i18n 多语言（中 / 英）
 - [ ] 搜索结果页模板
 - [ ] 404 / 500 错误页美化
@@ -275,14 +397,28 @@ halo-theme-cosolar/
 
 ## 🤝 贡献
 
-欢迎提 Issue 与 PR！无论是 Bug 反馈、功能建议还是代码贡献，都让 Cosolar 变得更好。
+欢迎提 Issue 与 PR！无论是 Bug 反馈、功能建议还是代码贡献，都让 halo-theme-cosolar 变得更好。
 
 1. Fork 本仓库
 2. 新建分支：`git checkout -b feat/your-feature`
 3. 提交：`git commit -m "feat: ..."`（遵循 [Conventional Commits](https://www.conventionalcommits.org/)）
 4. 推送并提交 Pull Request
 
-> 开发前请先 `pnpm install && pnpm dev` 跑通本地构建。
+---
+
+## 🔒 第三方服务资源
+
+本主题在页面加载时可能请求以下第三方资源：
+
+| 服务商 | 资源 | 用途 | 触发条件 |
+|---|---|---|---|
+| npm.elemecdn.com | [LXGW WenKai Screen](https://github.com/lxgw-wenkai-webfont) 中文字体 | 页面中文排版 | 仅默认字体配置时加载 |
+| 自定义 CDN | 第三方字体 / 图标库 | 自定义排版和图标 | 用户主动配置后加载 |
+
+> **说明**：
+> - 默认配置下，iconfont 图标字体已完全本地化，霞鹜文楷字体通过 elemecdn 公共 CDN 按需加载
+> - 如需完全离线部署，可在后台 **字体设置** 中将字体 CSS 地址替换为本地路径
+> - 如配置了第三方图标库（如 Font Awesome、Remix Icon），浏览器将向对应 CDN 请求资源
 
 ---
 
@@ -301,6 +437,6 @@ halo-theme-cosolar/
 
 <div align="center">
 
-**如果 Cosolar 对你有帮助，给个 ⭐ Star 吧！**
+**如果 halo-theme-cosolar 对你有帮助，给个 ⭐ Star 吧！**
 
 </div>
