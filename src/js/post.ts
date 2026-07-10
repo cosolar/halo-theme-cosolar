@@ -28,8 +28,13 @@
   headings.forEach((heading, index) => {
     if (!heading.id) {
       heading.id =
-        "heading-" + index + "-" +
-        heading.textContent!.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9\u4e00-\u9fa5-]/g, "").slice(0, 30);
+        "heading-" +
+        index +
+        "-" +
+        heading
+          .textContent!.replace(/\s+/g, "-")
+          .replace(/[^a-zA-Z0-9\u4e00-\u9fa5-]/g, "")
+          .slice(0, 30);
     }
     const level = parseInt(heading.tagName.substring(1), 10);
     headingList.push({
@@ -161,7 +166,7 @@
     {
       rootMargin: "-80px 0px -70% 0px",
       threshold: 0,
-    }
+    },
   );
 
   // Store index on heading elements for observer callback
@@ -198,20 +203,17 @@
       // 官方接口：POST /apis/api.halo.run/v1alpha1/trackers/upvote
       // Body: { group, plural, name } —— 文章 group=content.halo.run，plural=posts
       try {
-        const response = await fetch(
-          "/apis/api.halo.run/v1alpha1/trackers/upvote",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              group: "content.halo.run",
-              plural: "posts",
-              name: postName,
-            }),
-          }
-        );
+        const response = await fetch("/apis/api.halo.run/v1alpha1/trackers/upvote", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            group: "content.halo.run",
+            plural: "posts",
+            name: postName,
+          }),
+        });
 
         if (!response.ok) {
           // Revert on failure
@@ -236,11 +238,10 @@
     commentBtn.addEventListener("click", function () {
       // 评论插件渲染后的容器：halo-comment-widget Web Component，或其外层包裹 div
       const commentSection = document.querySelector(
-        "halo-comment-widget, .halo-comment-widget, halo\\:comment, [data-comment]"
+        "halo-comment-widget, .halo-comment-widget, halo\\:comment, [data-comment]",
       ) as HTMLElement | null;
       if (commentSection) {
-        const targetPos =
-          commentSection.getBoundingClientRect().top + window.scrollY - 80;
+        const targetPos = commentSection.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top: targetPos, behavior: "smooth" });
       } else {
         // 兜底：评论尚未加载时，滚动到文章内容底部
@@ -285,7 +286,7 @@
               encodeURIComponent(shareUrl) +
               "&title=" +
               encodeURIComponent(shareTitle),
-            "_blank"
+            "_blank",
           );
         } else if (type === "wechat") {
           // For WeChat, copy the link and prompt
@@ -366,7 +367,8 @@
 
     const text = (articleContent as HTMLElement).innerText || articleContent.textContent || "";
     const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-    const englishWords = (text.replace(/[\u4e00-\u9fa5]/g, " ").match(/[A-Za-z0-9]+/g) || []).length;
+    const englishWords = (text.replace(/[\u4e00-\u9fa5]/g, " ").match(/[A-Za-z0-9]+/g) || [])
+      .length;
     const total = chineseChars + englishWords;
     if (total === 0) return;
 
@@ -389,7 +391,8 @@
     function updateReadingProgress(): void {
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrolled = window.scrollY;
-      const percent = docHeight > 0 ? Math.min(100, Math.max(0, Math.round((scrolled / docHeight) * 100))) : 0;
+      const percent =
+        docHeight > 0 ? Math.min(100, Math.max(0, Math.round((scrolled / docHeight) * 100))) : 0;
       tocPercent!.textContent = percent + "%";
       readingProgress!.style.width = percent + "%";
     }
@@ -404,7 +407,9 @@
   // 代码高亮由 Halo plugin-shiki (shiki-code Web Component) 负责，主题不再调用 Prism
 })();
 
-function initMobileTocDrawer(headingList: { el: Element; id: string; text: string; level: number }[]): void {
+function initMobileTocDrawer(
+  headingList: { el: Element; id: string; text: string; level: number }[],
+): void {
   const tocBtn = document.getElementById("tocBtn") as HTMLButtonElement | null;
   const drawer = document.getElementById("tocDrawer") as HTMLElement | null;
   const mask = document.getElementById("tocDrawerMask") as HTMLElement | null;
@@ -470,7 +475,8 @@ function initImageViewer(): void {
   // 创建查看器 DOM
   const viewer = document.createElement("div");
   viewer.className = "image-viewer";
-  viewer.innerHTML = '<div class="image-viewer-tip">滚轮缩放 · 拖动平移 · 双击复位 · 点击关闭</div>';
+  viewer.innerHTML =
+    '<div class="image-viewer-tip">滚轮缩放 · 拖动平移 · 双击复位 · 点击关闭</div>';
   const img = document.createElement("img");
   viewer.appendChild(img);
   document.body.appendChild(viewer);
@@ -491,7 +497,9 @@ function initImageViewer(): void {
 
   function open(src: string): void {
     img.src = src;
-    scale = 1; x = 0; y = 0;
+    scale = 1;
+    x = 0;
+    y = 0;
     applyTransform();
     viewer.classList.add("open");
     document.body.style.overflow = "hidden";
@@ -512,30 +520,42 @@ function initImageViewer(): void {
 
   // 点击查看器关闭（拖动后不关）
   viewer.addEventListener("click", function () {
-    if (moved) { moved = false; return; }
+    if (moved) {
+      moved = false;
+      return;
+    }
     close();
   });
 
   // 滚轮缩放
-  viewer.addEventListener("wheel", function (e) {
-    e.preventDefault();
-    const delta = e.deltaY < 0 ? 0.15 : -0.15;
-    scale = Math.min(5, Math.max(0.5, scale + delta));
-    applyTransform();
-  }, { passive: false });
+  viewer.addEventListener(
+    "wheel",
+    function (e) {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.15 : -0.15;
+      scale = Math.min(5, Math.max(0.5, scale + delta));
+      applyTransform();
+    },
+    { passive: false },
+  );
 
   // 双击复位
   viewer.addEventListener("dblclick", function (e) {
     e.preventDefault();
-    scale = 1; x = 0; y = 0;
+    scale = 1;
+    x = 0;
+    y = 0;
     applyTransform();
   });
 
   // 拖动平移
   viewer.addEventListener("mousedown", function (e) {
-    dragging = true; moved = false;
-    startX = e.clientX; startY = e.clientY;
-    startTX = x; startTY = y;
+    dragging = true;
+    moved = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    startTX = x;
+    startTY = y;
     e.preventDefault();
   });
   window.addEventListener("mousemove", function (e) {
@@ -547,7 +567,9 @@ function initImageViewer(): void {
     y = startTY + dy;
     applyTransform();
   });
-  window.addEventListener("mouseup", function () { dragging = false; });
+  window.addEventListener("mouseup", function () {
+    dragging = false;
+  });
 
   // ESC 关闭
   document.addEventListener("keydown", function (e) {

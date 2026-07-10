@@ -5,17 +5,21 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <section class="page-hero"
-               th:with="cover = ${theme.config?.category?.categories_cover}">
+      <section class="page-hero" th:with="cover = ${theme.config?.category?.categories_cover}">
         <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>
-        <div class="page-hero-bg--fallback" th:unless="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div
+          class="page-hero-bg--fallback"
+          th:unless="${cover != null and !#strings.isEmpty(cover)}"
+        ></div>
         <div class="page-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
         <div class="page-hero-inner">
           <span class="page-hero-eyebrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              <path
+                d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+              />
             </svg>
             <span>分类</span>
           </span>
@@ -25,9 +29,11 @@
       </section>
 
       <div class="category-cards" th:if="${not #lists.isEmpty(categories)}">
-        <a th:each="cat : ${categories}"
-           th:href="@{${cat.status.permalink}}"
-           th:class="${cat.spec.cover} ? 'category-card has-cover' : 'category-card'">
+        <a
+          th:each="cat : ${categories}"
+          th:href="@{${cat.status.permalink}}"
+          th:class="${cat.spec.cover} ? 'category-card has-cover' : 'category-card'"
+        >
           <div class="cat-cover" th:if="${cat.spec.cover}">
             <img th:src="${cat.spec.cover}" alt="" loading="lazy" />
           </div>
@@ -35,7 +41,9 @@
             <div class="cat-info">
               <div class="cat-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                  <path
+                    d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                  />
                 </svg>
               </div>
               <div class="cat-text">
@@ -43,14 +51,18 @@
                 <div class="cat-count" th:text="${cat.postCount + ' 篇文章'}"></div>
               </div>
             </div>
-            <div class="cat-desc" th:if="${cat.spec.description}" th:text="${cat.spec.description}"></div>
+            <div
+              class="cat-desc"
+              th:if="${cat.spec.description}"
+              th:text="${cat.spec.description}"
+            ></div>
           </div>
         </a>
       </div>
 
       <div class="empty-state" th:if="${#lists.isEmpty(categories)}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
         </svg>
         <p>暂无分类</p>
       </div>

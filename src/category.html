@@ -3,13 +3,18 @@
     <title th:text="|${category.spec.displayName} - ${site.title}|">分类</title>
   </template>
 
-  <div class="layout-grid" th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}">
+  <div
+    class="layout-grid"
+    th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}"
+  >
     <div class="content-area">
       <!-- 专题封面 Header -->
-      <section class="topic-hero"
-               th:with="defaultCover = ${theme.config?.category?.category_cover},
+      <section
+        class="topic-hero"
+        th:with="defaultCover = ${theme.config?.category?.category_cover},
                          useCategoryCover = ${theme.config?.category?.category_cover_fallback != false},
-                         cover = ${(useCategoryCover and category.spec.cover != null and !#strings.isEmpty(category.spec.cover)) ? category.spec.cover : defaultCover}">
+                         cover = ${(useCategoryCover and category.spec.cover != null and !#strings.isEmpty(category.spec.cover)) ? category.spec.cover : defaultCover}"
+      >
         <div class="topic-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>
@@ -18,15 +23,23 @@
         <div class="topic-hero-inner">
           <span class="topic-eyebrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              <path
+                d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+              />
             </svg>
             <span>专题</span>
           </span>
 
           <h1 class="topic-title" th:text="${category.spec.displayName}">分类名称</h1>
 
-          <p class="topic-desc" th:if="${category.spec.description}" th:text="${category.spec.description}"></p>
-          <p class="topic-desc" th:unless="${category.spec.description}">记录此分类下的每一次思考与沉淀</p>
+          <p
+            class="topic-desc"
+            th:if="${category.spec.description}"
+            th:text="${category.spec.description}"
+          ></p>
+          <p class="topic-desc" th:unless="${category.spec.description}">
+            记录此分类下的每一次思考与沉淀
+          </p>
 
           <div class="topic-stats">
             <span class="topic-stat">
@@ -40,8 +53,16 @@
             </span>
             <span class="topic-stat-divider"></span>
             <span class="topic-stat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="topic-stat-icon">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="topic-stat-icon"
+              >
+                <path
+                  d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                />
               </svg>
               <span class="topic-stat-label">专题归档</span>
             </span>
@@ -66,24 +87,27 @@
             </h3>
             <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
             <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
-              <a th:each="tag : ${post.tags}"
-                 th:href="@{${tag.status.permalink}}"
-                 th:text="${tag.spec.displayName}"
-                 class="tag"></a>
+              <a
+                th:each="tag : ${post.tags}"
+                th:href="@{${tag.status.permalink}}"
+                th:text="${tag.spec.displayName}"
+                class="tag"
+              ></a>
             </div>
             <div class="article-card-meta">
               <span class="meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                  <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                  <line x1="3" y1="10" x2="21" y2="10"/>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
                 <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
               </span>
               <span class="meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
                 </svg>
                 <span th:text="${post.stats?.visit ?: 0}"></span>
               </span>
@@ -94,8 +118,8 @@
 
       <div class="empty-state" th:if="${#lists.isEmpty(posts.items)}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
         </svg>
         <p>该分类下暂无文章</p>
       </div>

@@ -4,74 +4,129 @@
     <script type="module" src="./js/index.ts"></script>
   </template>
 
-  <div class="layout-grid"
-       th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}">
+  <div
+    class="layout-grid"
+    th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}"
+  >
     <!-- ===== Content Area ===== -->
     <div class="content-area">
       <!-- Featured Carousel (first page only) -->
-      <th:block th:if="${posts.first and theme.config?.featured?.show_featured != false}"
-                th:with="
+      <th:block
+        th:if="${posts.first and theme.config?.featured?.show_featured != false}"
+        th:with="
                   configuredPosts = ${theme.config?.featured?.featured_posts},
                   hasConfigured = ${configuredPosts != null and configuredPosts.size() > 0},
                   fallbackMode = ${theme.config?.featured?.fallback},
                   pinnedList = ${hasConfigured ? null : (fallbackMode == 'pinned' ? postFinder.list({page: 1, size: 100, sort: {'spec.publishTime,desc'}}).items : null)},
                   latestList = ${hasConfigured ? null : (fallbackMode == 'latest' ? postFinder.list({page: 1, size: theme.config?.featured?.featured_max_count ?: 5, sort: {'spec.publishTime,desc'}}).items : null)},
                   maxSlides = ${theme.config?.featured?.featured_max_count ?: 5}, slideCount = ${hasConfigured ? configuredPosts.size() : (fallbackMode == 'latest' ? (latestList.size() > maxSlides ? maxSlides : latestList.size()) : (fallbackMode == 'pinned' ? maxSlides : 0))}
-                ">
-        <div class="featured-carousel" th:if="${slideCount > 0}"
-             th:attr="data-autoplay=${theme.config?.featured?.autoplay}, data-interval=${theme.config?.featured?.interval ?: 5000}, data-max-slides=${theme.config?.featured?.featured_max_count ?: 5}">
+                "
+      >
+        <div
+          class="featured-carousel"
+          th:if="${slideCount > 0}"
+          th:attr="data-autoplay=${theme.config?.featured?.autoplay}, data-interval=${theme.config?.featured?.interval ?: 5000}, data-max-slides=${theme.config?.featured?.featured_max_count ?: 5}"
+        >
           <!-- Slides -->
           <div class="carousel-track">
             <!-- 手动指定文章：逐个调用 postFinder.getByName -->
-            <div class="featured-card card carousel-slide" th:each="postName, iter : ${configuredPosts}" th:if="${hasConfigured}"
-                 th:with="featured = ${postFinder.getByName(postName)}, defaultCover = @{/assets/images/featured-default.png}, fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : (theme.config?.featured?.featured_cover != null and !#strings.isEmpty(theme.config.featured.featured_cover)) ? theme.config.featured.featured_cover : defaultCover}"
-                 th:classappend="${iter.first ? ' active' : ''}">
-              <div class="featured-bg" th:if="${fCover != null and !#strings.isEmpty(fCover)}" th:style="'background-image:url(' + ${fCover} + ')'"></div>
-              <div class="featured-bg--fallback" th:unless="${fCover != null and !#strings.isEmpty(fCover)}"></div>
+            <div
+              class="featured-card card carousel-slide"
+              th:each="postName, iter : ${configuredPosts}"
+              th:if="${hasConfigured}"
+              th:with="featured = ${postFinder.getByName(postName)}, defaultCover = @{/assets/images/featured-default.png}, fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : (theme.config?.featured?.featured_cover != null and !#strings.isEmpty(theme.config.featured.featured_cover)) ? theme.config.featured.featured_cover : defaultCover}"
+              th:classappend="${iter.first ? ' active' : ''}"
+            >
+              <div
+                class="featured-bg"
+                th:if="${fCover != null and !#strings.isEmpty(fCover)}"
+                th:style="'background-image:url(' + ${fCover} + ')'"
+              ></div>
+              <div
+                class="featured-bg--fallback"
+                th:unless="${fCover != null and !#strings.isEmpty(fCover)}"
+              ></div>
               <div class="featured-overlay"></div>
               <div class="featured-content">
                 <span class="featured-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    style="width: 12px; height: 12px"
+                  >
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
                   <span>精选推荐</span>
                 </span>
                 <h2 class="featured-title">
-                  <a th:href="${fUrl}" th:target="${fExternal ? '_blank' : '_self'}" th:rel="${fExternal ? 'noopener' : ''}" th:text="${featured.spec.title}"></a>
+                  <a
+                    th:href="${fUrl}"
+                    th:target="${fExternal ? '_blank' : '_self'}"
+                    th:rel="${fExternal ? 'noopener' : ''}"
+                    th:text="${featured.spec.title}"
+                  ></a>
                 </h2>
                 <p class="featured-desc" th:text="${featured.status.excerpt}"></p>
                 <div class="featured-tags" th:if="${not #lists.isEmpty(featured.tags)}">
-                  <a th:each="tag : ${featured.tags}"
-                     th:href="@{${tag.status.permalink}}"
-                     th:text="${tag.spec.displayName}"
-                     class="tag"></a>
+                  <a
+                    th:each="tag : ${featured.tags}"
+                    th:href="@{${tag.status.permalink}}"
+                    th:text="${tag.spec.displayName}"
+                    class="tag"
+                  ></a>
                 </div>
-                <div style="display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap;">
-                  <a class="btn btn-primary btn-sm" th:href="${fUrl}" th:target="${fExternal ? '_blank' : '_self'}" th:rel="${fExternal ? 'noopener' : ''}">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    margin-top: 8px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <a
+                    class="btn btn-primary btn-sm"
+                    th:href="${fUrl}"
+                    th:target="${fExternal ? '_blank' : '_self'}"
+                    th:rel="${fExternal ? 'noopener' : ''}"
+                  >
                     阅读全文
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
-                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      style="width: 14px; height: 14px"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
                     </svg>
                   </a>
                   <div class="featured-meta">
                     <span class="meta-item" th:if="${featured.owner}">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                       </svg>
                       <span th:text="${featured.owner?.displayName}"></span>
                     </span>
                     <span class="meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
                       </svg>
-                      <time th:text="${#temporals.format(featured.spec.publishTime, 'yyyy-MM-dd')}"></time>
+                      <time
+                        th:text="${#temporals.format(featured.spec.publishTime, 'yyyy-MM-dd')}"
+                      ></time>
                     </span>
                     <span class="meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
                       <span th:text="${featured.stats?.visit ?: 0}"></span>
                     </span>
@@ -80,55 +135,103 @@
               </div>
             </div>
             <!-- 回退模式-置顶文章：只显示 spec.pinned 为 true 的文章 -->
-            <div class="featured-card card carousel-slide" th:each="featured, iter : ${pinnedList}" th:if="${not hasConfigured and pinnedList != null and featured.spec.pinned}"
-                 th:with="defaultCover = @{/assets/images/featured-default.png}, fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : (theme.config?.featured?.featured_cover != null and !#strings.isEmpty(theme.config.featured.featured_cover)) ? theme.config.featured.featured_cover : defaultCover}"
-                 th:classappend="${iter.index == 0 ? ' active' : ''}">
-              <div class="featured-bg" th:if="${fCover != null and !#strings.isEmpty(fCover)}" th:style="'background-image:url(' + ${fCover} + ')'"></div>
-              <div class="featured-bg--fallback" th:unless="${fCover != null and !#strings.isEmpty(fCover)}"></div>
+            <div
+              class="featured-card card carousel-slide"
+              th:each="featured, iter : ${pinnedList}"
+              th:if="${not hasConfigured and pinnedList != null and featured.spec.pinned}"
+              th:with="defaultCover = @{/assets/images/featured-default.png}, fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : (theme.config?.featured?.featured_cover != null and !#strings.isEmpty(theme.config.featured.featured_cover)) ? theme.config.featured.featured_cover : defaultCover}"
+              th:classappend="${iter.index == 0 ? ' active' : ''}"
+            >
+              <div
+                class="featured-bg"
+                th:if="${fCover != null and !#strings.isEmpty(fCover)}"
+                th:style="'background-image:url(' + ${fCover} + ')'"
+              ></div>
+              <div
+                class="featured-bg--fallback"
+                th:unless="${fCover != null and !#strings.isEmpty(fCover)}"
+              ></div>
               <div class="featured-overlay"></div>
               <div class="featured-content">
                 <span class="featured-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    style="width: 12px; height: 12px"
+                  >
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
                   <span>置顶推荐</span>
                 </span>
                 <h2 class="featured-title">
-                  <a th:href="${fUrl}" th:target="${fExternal ? '_blank' : '_self'}" th:rel="${fExternal ? 'noopener' : ''}" th:text="${featured.spec.title}"></a>
+                  <a
+                    th:href="${fUrl}"
+                    th:target="${fExternal ? '_blank' : '_self'}"
+                    th:rel="${fExternal ? 'noopener' : ''}"
+                    th:text="${featured.spec.title}"
+                  ></a>
                 </h2>
                 <p class="featured-desc" th:text="${featured.status.excerpt}"></p>
                 <div class="featured-tags" th:if="${not #lists.isEmpty(featured.tags)}">
-                  <a th:each="tag : ${featured.tags}"
-                     th:href="@{${tag.status.permalink}}"
-                     th:text="${tag.spec.displayName}"
-                     class="tag"></a>
+                  <a
+                    th:each="tag : ${featured.tags}"
+                    th:href="@{${tag.status.permalink}}"
+                    th:text="${tag.spec.displayName}"
+                    class="tag"
+                  ></a>
                 </div>
-                <div style="display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap;">
-                  <a class="btn btn-primary btn-sm" th:href="${fUrl}" th:target="${fExternal ? '_blank' : '_self'}" th:rel="${fExternal ? 'noopener' : ''}">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    margin-top: 8px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <a
+                    class="btn btn-primary btn-sm"
+                    th:href="${fUrl}"
+                    th:target="${fExternal ? '_blank' : '_self'}"
+                    th:rel="${fExternal ? 'noopener' : ''}"
+                  >
                     阅读全文
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
-                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      style="width: 14px; height: 14px"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
                     </svg>
                   </a>
                   <div class="featured-meta">
                     <span class="meta-item" th:if="${featured.owner}">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                       </svg>
                       <span th:text="${featured.owner?.displayName}"></span>
                     </span>
                     <span class="meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
                       </svg>
-                      <time th:text="${#temporals.format(featured.spec.publishTime, 'yyyy-MM-dd')}"></time>
+                      <time
+                        th:text="${#temporals.format(featured.spec.publishTime, 'yyyy-MM-dd')}"
+                      ></time>
                     </span>
                     <span class="meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
                       <span th:text="${featured.stats?.visit ?: 0}"></span>
                     </span>
@@ -137,55 +240,103 @@
               </div>
             </div>
             <!-- 回退模式-最新文章：显示最新发布的文章 -->
-            <div class="featured-card card carousel-slide" th:each="featured, iter : ${latestList}" th:if="${not hasConfigured and latestList != null}"
-                 th:with="defaultCover = @{/assets/images/featured-default.png}, fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : (theme.config?.featured?.featured_cover != null and !#strings.isEmpty(theme.config.featured.featured_cover)) ? theme.config.featured.featured_cover : defaultCover}"
-                 th:classappend="${iter.index == 0 ? ' active' : ''}">
-              <div class="featured-bg" th:if="${fCover != null and !#strings.isEmpty(fCover)}" th:style="'background-image:url(' + ${fCover} + ')'"></div>
-              <div class="featured-bg--fallback" th:unless="${fCover != null and !#strings.isEmpty(fCover)}"></div>
+            <div
+              class="featured-card card carousel-slide"
+              th:each="featured, iter : ${latestList}"
+              th:if="${not hasConfigured and latestList != null}"
+              th:with="defaultCover = @{/assets/images/featured-default.png}, fReadingUrl = ${#annotations.get(featured, 'reading_url')}, fUrl = ${fReadingUrl != null and fReadingUrl != '' ? fReadingUrl : featured.status.permalink}, fExternal = ${fReadingUrl != null and fReadingUrl != ''}, usePostCover = ${theme.config?.featured?.featured_cover_fallback != false}, fCover = ${(usePostCover and featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)) ? featured.spec.cover : (theme.config?.featured?.featured_cover != null and !#strings.isEmpty(theme.config.featured.featured_cover)) ? theme.config.featured.featured_cover : defaultCover}"
+              th:classappend="${iter.index == 0 ? ' active' : ''}"
+            >
+              <div
+                class="featured-bg"
+                th:if="${fCover != null and !#strings.isEmpty(fCover)}"
+                th:style="'background-image:url(' + ${fCover} + ')'"
+              ></div>
+              <div
+                class="featured-bg--fallback"
+                th:unless="${fCover != null and !#strings.isEmpty(fCover)}"
+              ></div>
               <div class="featured-overlay"></div>
               <div class="featured-content">
                 <span class="featured-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    style="width: 12px; height: 12px"
+                  >
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
                   <span>最新发布</span>
                 </span>
                 <h2 class="featured-title">
-                  <a th:href="${fUrl}" th:target="${fExternal ? '_blank' : '_self'}" th:rel="${fExternal ? 'noopener' : ''}" th:text="${featured.spec.title}"></a>
+                  <a
+                    th:href="${fUrl}"
+                    th:target="${fExternal ? '_blank' : '_self'}"
+                    th:rel="${fExternal ? 'noopener' : ''}"
+                    th:text="${featured.spec.title}"
+                  ></a>
                 </h2>
                 <p class="featured-desc" th:text="${featured.status.excerpt}"></p>
                 <div class="featured-tags" th:if="${not #lists.isEmpty(featured.tags)}">
-                  <a th:each="tag : ${featured.tags}"
-                     th:href="@{${tag.status.permalink}}"
-                     th:text="${tag.spec.displayName}"
-                     class="tag"></a>
+                  <a
+                    th:each="tag : ${featured.tags}"
+                    th:href="@{${tag.status.permalink}}"
+                    th:text="${tag.spec.displayName}"
+                    class="tag"
+                  ></a>
                 </div>
-                <div style="display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap;">
-                  <a class="btn btn-primary btn-sm" th:href="${fUrl}" th:target="${fExternal ? '_blank' : '_self'}" th:rel="${fExternal ? 'noopener' : ''}">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    margin-top: 8px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <a
+                    class="btn btn-primary btn-sm"
+                    th:href="${fUrl}"
+                    th:target="${fExternal ? '_blank' : '_self'}"
+                    th:rel="${fExternal ? 'noopener' : ''}"
+                  >
                     阅读全文
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
-                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      style="width: 14px; height: 14px"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
                     </svg>
                   </a>
                   <div class="featured-meta">
                     <span class="meta-item" th:if="${featured.owner}">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                       </svg>
                       <span th:text="${featured.owner?.displayName}"></span>
                     </span>
                     <span class="meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
                       </svg>
-                      <time th:text="${#temporals.format(featured.spec.publishTime, 'yyyy-MM-dd')}"></time>
+                      <time
+                        th:text="${#temporals.format(featured.spec.publishTime, 'yyyy-MM-dd')}"
+                      ></time>
                     </span>
                     <span class="meta-item">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </svg>
                       <span th:text="${featured.stats?.visit ?: 0}"></span>
                     </span>
@@ -196,23 +347,34 @@
           </div>
 
           <!-- Navigation Arrows -->
-          <button class="carousel-arrow carousel-prev" th:if="${slideCount > 1}" aria-label="上一篇">
+          <button
+            class="carousel-arrow carousel-prev"
+            th:if="${slideCount > 1}"
+            aria-label="上一篇"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"/>
+              <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          <button class="carousel-arrow carousel-next" th:if="${slideCount > 1}" aria-label="下一篇">
+          <button
+            class="carousel-arrow carousel-next"
+            th:if="${slideCount > 1}"
+            aria-label="下一篇"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"/>
+              <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
 
           <!-- Dots Indicator -->
           <div class="carousel-dots" th:if="${slideCount > 1}">
-            <button class="carousel-dot" th:each="dot, iter : ${hasConfigured ? configuredPosts : (fallbackMode == 'pinned' ? pinnedList : latestList)}"
-                    th:classappend="${iter.first ? ' active' : ''}"
-                    th:attr="data-index=${iter.index}"
-                    aria-label="切换到第 + ${iter.count} + 个"></button>
+            <button
+              class="carousel-dot"
+              th:each="dot, iter : ${hasConfigured ? configuredPosts : (fallbackMode == 'pinned' ? pinnedList : latestList)}"
+              th:classappend="${iter.first ? ' active' : ''}"
+              th:attr="data-index=${iter.index}"
+              aria-label="切换到第 + ${iter.count} + 个"
+            ></button>
           </div>
         </div>
       </th:block>
@@ -228,15 +390,35 @@
           </div>
           <div class="view-toggle" title="切换视图">
             <button class="view-toggle-btn active" data-view="list" aria-label="列表视图">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-                <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="8" y1="6" x2="21" y2="6" />
+                <line x1="8" y1="12" x2="21" y2="12" />
+                <line x1="8" y1="18" x2="21" y2="18" />
+                <line x1="3" y1="6" x2="3.01" y2="6" />
+                <line x1="3" y1="12" x2="3.01" y2="12" />
+                <line x1="3" y1="18" x2="3.01" y2="18" />
               </svg>
             </button>
             <button class="view-toggle-btn" data-view="grid" aria-label="卡片视图">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
               </svg>
             </button>
           </div>
@@ -246,11 +428,15 @@
       <!-- Article Cards -->
       <div class="article-list" th:if="${not #lists.isEmpty(posts.items)}">
         <th:block th:each="post : ${posts.items}">
-          <article class="article-card"
-                   th:attr="data-visit=${post.stats?.visit ?: 0}, data-upvote=${post.stats?.upvote ?: 0}, data-time=${#temporals.format(post.spec.publishTime, 'yyyyMMddHHmmss')}">
+          <article
+            class="article-card"
+            th:attr="data-visit=${post.stats?.visit ?: 0}, data-upvote=${post.stats?.upvote ?: 0}, data-time=${#temporals.format(post.spec.publishTime, 'yyyyMMddHHmmss')}"
+          >
             <a class="article-thumb" th:href="@{${post.status.permalink}}">
               <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" alt="" loading="lazy" />
-              <span class="article-thumb-placeholder" th:unless="${post.spec.cover}">&lt;/&gt;</span>
+              <span class="article-thumb-placeholder" th:unless="${post.spec.cover}"
+                >&lt;/&gt;</span
+              >
             </a>
             <div class="article-body">
               <h3 class="article-card-title">
@@ -259,38 +445,45 @@
               </h3>
               <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
               <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
-                <a th:each="tag : ${post.tags}"
-                   th:href="@{${tag.status.permalink}}"
-                   th:text="${tag.spec.displayName}"
-                   class="tag"></a>
+                <a
+                  th:each="tag : ${post.tags}"
+                  th:href="@{${tag.status.permalink}}"
+                  th:text="${tag.spec.displayName}"
+                  class="tag"
+                ></a>
               </div>
               <div class="article-card-meta">
                 <span class="meta-item" th:if="${not #lists.isEmpty(post.categories)}">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    <path
+                      d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                    />
                   </svg>
-                  <a th:href="@{${post.categories[0].status.permalink}}"
-                     th:text="${post.categories[0].spec.displayName}"
-                     style="color:inherit;"></a>
+                  <a
+                    th:href="@{${post.categories[0].status.permalink}}"
+                    th:text="${post.categories[0].spec.displayName}"
+                    style="color: inherit"
+                  ></a>
                 </span>
                 <span class="meta-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
                   </svg>
                   <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
                 </span>
                 <span class="meta-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                   <span th:text="${post.stats?.visit ?: 0}"></span>
                 </span>
                 <span class="meta-item" th:if="${post.stats?.comment}">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                   </svg>
                   <span th:text="${post.stats?.comment ?: 0}"></span>
                 </span>
@@ -303,18 +496,25 @@
       <!-- Empty State -->
       <div class="empty-state" th:if="${#lists.isEmpty(posts.items)}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
         </svg>
         <p>暂无文章，敬请期待</p>
       </div>
 
       <!-- View More Link -->
-      <div class="text-center mt-4" th:if="${posts.hasNext()}">
+      <div class="mt-4 text-center" th:if="${posts.hasNext()}">
         <a class="btn btn-outline" th:href="@{${posts.nextUrl}}">
           查看更多文章
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="width: 14px; height: 14px"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
           </svg>
         </a>
       </div>

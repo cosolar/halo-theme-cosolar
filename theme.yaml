@@ -14,7 +14,7 @@ spec:
   issues: https://github.com/cosolar/halo-theme-cosolar/issues
   settingName: "cosolar-setting"
   configMapName: "cosolar-configMap"
-  version: 1.0.0
+  version: 1.0.2
   requires: ">=2.20.0"
   license:
     - name: "GPL-3.0"

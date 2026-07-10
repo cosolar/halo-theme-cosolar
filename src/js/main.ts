@@ -22,16 +22,14 @@ import "../css/main.css";
     setTheme(current === "dark" ? "light" : "dark");
   });
 
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", function (e) {
-      if (!localStorage.getItem("cosolar-theme")) {
-        const config = html.getAttribute("data-color-scheme");
-        if (config === "auto" || (!config && !localStorage.getItem("cosolar-theme"))) {
-          setTheme(e.matches ? "dark" : "light");
-        }
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+    if (!localStorage.getItem("cosolar-theme")) {
+      const config = html.getAttribute("data-color-scheme");
+      if (config === "auto" || (!config && !localStorage.getItem("cosolar-theme"))) {
+        setTheme(e.matches ? "dark" : "light");
       }
-    });
+    }
+  });
 
   // ===== Mobile Menu Toggle =====
   const menuToggle = document.getElementById("menuToggle");
@@ -57,9 +55,7 @@ import "../css/main.css";
       if (searchWidget) {
         searchWidget.open();
       } else {
-        const searchBox = document.querySelector(
-          ".search-box"
-        ) as HTMLElement | null;
+        const searchBox = document.querySelector(".search-box") as HTMLElement | null;
         searchBox?.click();
       }
     }
@@ -84,10 +80,7 @@ import "../css/main.css";
     const href = link.getAttribute("href") || "";
     const linkPath = href.replace(/^(https?:\/\/[^/]+)?/, "");
 
-    if (
-      linkPath === currentPath ||
-      (linkPath !== "/" && currentPath.startsWith(linkPath))
-    ) {
+    if (linkPath === currentPath || (linkPath !== "/" && currentPath.startsWith(linkPath))) {
       link.classList.add("active");
     } else if (linkPath === "/" && currentPath === "/") {
       link.classList.add("active");
@@ -121,7 +114,7 @@ import "../css/main.css";
     dynamicType: string,
     color1Hex: string,
     color2Hex: string,
-    opacityVal: number
+    opacityVal: number,
   ): void {
     const canvas = document.querySelector(canvasSelector) as HTMLCanvasElement | null;
     if (!canvas) return;
@@ -143,7 +136,12 @@ import "../css/main.css";
     if (dynamicType === "particles") {
       const particleCount = Math.min(80, Math.floor((c.width * c.height) / 15000));
       const maxDist = 120;
-      interface Particle { x: number; y: number; vx: number; vy: number; }
+      interface Particle {
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+      }
       const particles: Particle[] = [];
 
       for (let i = 0; i < particleCount; i++) {
@@ -195,9 +193,21 @@ import "../css/main.css";
         time += 0.003;
         ctx.clearRect(0, 0, c.width, c.height);
         const blobs = [
-          { x: c.width * (0.3 + 0.2 * Math.sin(time * 0.7)), y: c.height * (0.3 + 0.2 * Math.cos(time * 0.5)), r: Math.max(1, c.width * 0.25) },
-          { x: c.width * (0.7 + 0.15 * Math.cos(time * 0.6)), y: c.height * (0.6 + 0.2 * Math.sin(time * 0.8)), r: Math.max(1, c.width * 0.2) },
-          { x: c.width * (0.5 + 0.25 * Math.sin(time * 0.4)), y: c.height * (0.5 + 0.15 * Math.cos(time * 0.9)), r: Math.max(1, c.width * 0.22) },
+          {
+            x: c.width * (0.3 + 0.2 * Math.sin(time * 0.7)),
+            y: c.height * (0.3 + 0.2 * Math.cos(time * 0.5)),
+            r: Math.max(1, c.width * 0.25),
+          },
+          {
+            x: c.width * (0.7 + 0.15 * Math.cos(time * 0.6)),
+            y: c.height * (0.6 + 0.2 * Math.sin(time * 0.8)),
+            r: Math.max(1, c.width * 0.2),
+          },
+          {
+            x: c.width * (0.5 + 0.25 * Math.sin(time * 0.4)),
+            y: c.height * (0.5 + 0.15 * Math.cos(time * 0.9)),
+            r: Math.max(1, c.width * 0.22),
+          },
         ];
         blobs.forEach(function (blob, i) {
           const rgb = i % 2 === 0 ? rgb1 : rgb2;
@@ -214,13 +224,23 @@ import "../css/main.css";
 
     if (dynamicType === "bubbles") {
       const bubbleCount = Math.min(30, Math.floor((c.width * c.height) / 40000));
-      interface Bubble { x: number; y: number; r: number; vy: number; vx: number; phase: number; }
+      interface Bubble {
+        x: number;
+        y: number;
+        r: number;
+        vy: number;
+        vx: number;
+        phase: number;
+      }
       const bubbles: Bubble[] = [];
       for (let i = 0; i < bubbleCount; i++) {
         bubbles.push({
-          x: Math.random() * c.width, y: Math.random() * c.height,
-          r: Math.max(4, Math.random() * 30 + 8), vy: -(Math.random() * 0.4 + 0.15),
-          vx: (Math.random() - 0.5) * 0.3, phase: Math.random() * Math.PI * 2,
+          x: Math.random() * c.width,
+          y: Math.random() * c.height,
+          r: Math.max(4, Math.random() * 30 + 8),
+          vy: -(Math.random() * 0.4 + 0.15),
+          vx: (Math.random() - 0.5) * 0.3,
+          phase: Math.random() * Math.PI * 2,
         });
       }
       function draw(): void {
@@ -230,7 +250,10 @@ import "../css/main.css";
           b.y += b.vy;
           b.x += b.vx + Math.sin(b.phase) * 0.2;
           b.phase += 0.01;
-          if (b.y + b.r < 0) { b.y = c.height + b.r; b.x = Math.random() * c.width; }
+          if (b.y + b.r < 0) {
+            b.y = c.height + b.r;
+            b.x = Math.random() * c.width;
+          }
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${rgb1.r}, ${rgb1.g}, ${rgb1.b}, ${opacityVal * 0.5})`;
@@ -250,12 +273,20 @@ import "../css/main.css";
 
     if (dynamicType === "stars") {
       const starCount = Math.min(150, Math.floor((c.width * c.height) / 8000));
-      interface Star { x: number; y: number; r: number; phase: number; speed: number; }
+      interface Star {
+        x: number;
+        y: number;
+        r: number;
+        phase: number;
+        speed: number;
+      }
       const stars: Star[] = [];
       for (let i = 0; i < starCount; i++) {
         stars.push({
-          x: Math.random() * c.width, y: Math.random() * c.height,
-          r: Math.max(0.5, Math.random() * 2), phase: Math.random() * Math.PI * 2,
+          x: Math.random() * c.width,
+          y: Math.random() * c.height,
+          r: Math.max(0.5, Math.random() * 2),
+          phase: Math.random() * Math.PI * 2,
           speed: Math.random() * 0.02 + 0.005,
         });
       }
@@ -303,7 +334,9 @@ import "../css/main.css";
             ctx.fill();
             if (i < cols - 1) {
               const nx = (i + 1) * gridSize;
-              const nDist = Math.sqrt(Math.pow(nx - c.width / 2, 2) + Math.pow(y - c.height / 2, 2));
+              const nDist = Math.sqrt(
+                Math.pow(nx - c.width / 2, 2) + Math.pow(y - c.height / 2, 2),
+              );
               const nWave = Math.sin(nDist * 0.01 - time) * 0.5 + 0.5;
               ctx.beginPath();
               ctx.moveTo(x, y);
@@ -314,7 +347,9 @@ import "../css/main.css";
             }
             if (j < rows - 1) {
               const ny = (j + 1) * gridSize;
-              const nDist = Math.sqrt(Math.pow(x - c.width / 2, 2) + Math.pow(ny - c.height / 2, 2));
+              const nDist = Math.sqrt(
+                Math.pow(x - c.width / 2, 2) + Math.pow(ny - c.height / 2, 2),
+              );
               const nWave = Math.sin(nDist * 0.01 - time) * 0.5 + 0.5;
               ctx.beginPath();
               ctx.moveTo(x, y);
@@ -341,7 +376,7 @@ import "../css/main.css";
         body.getAttribute("data-light-bg-dynamic-type") || "particles",
         body.getAttribute("data-light-bg-dynamic-color1") || "#10B981",
         body.getAttribute("data-light-bg-dynamic-color2") || "#3B82F6",
-        parseFloat(body.getAttribute("data-light-bg-dynamic-opacity") || "0.15")
+        parseFloat(body.getAttribute("data-light-bg-dynamic-opacity") || "0.15"),
       );
     }
 
@@ -352,7 +387,7 @@ import "../css/main.css";
         body.getAttribute("data-dark-bg-dynamic-type") || "stars",
         body.getAttribute("data-dark-bg-dynamic-color1") || "#10B981",
         body.getAttribute("data-dark-bg-dynamic-color2") || "#3B82F6",
-        parseFloat(body.getAttribute("data-dark-bg-dynamic-opacity") || "0.15")
+        parseFloat(body.getAttribute("data-dark-bg-dynamic-opacity") || "0.15"),
       );
     }
   }

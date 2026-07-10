@@ -327,7 +327,7 @@ spec:
           label: 标签详情页封面图
           value: ""
           help: 标签详情页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景；若标签本身设置了封面图则优先使用
-    
+
     - group: archive
       label: 归档页设置
       formSchema:
@@ -336,7 +336,7 @@ spec:
           label: 归档页封面图
           value: ""
           help: 归档页顶部 Header 区域的背景封面图，留空则显示默认渐变背景
-          
+
     - group: background_light
       label: 页面背景 · 浅色模式
       formSchema:

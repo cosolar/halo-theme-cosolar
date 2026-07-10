@@ -1,6 +1,6 @@
+import { existsSync } from "node:fs";
 // Rename the packaged zip to a fixed name: halo-theme-cosolar.zip
 import { readdir, rename, rm } from "node:fs/promises";
-import { existsSync } from "node:fs";
 import { join } from "node:path";
 
 const distDir = join(process.cwd(), "dist");

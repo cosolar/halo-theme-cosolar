@@ -188,9 +188,7 @@
   type SortMode = "latest" | "hot" | "recommend";
 
   function sortArticles(mode: SortMode): void {
-    const cards = Array.from(
-      listEl.querySelectorAll(".article-card")
-    ) as HTMLElement[];
+    const cards = Array.from(listEl.querySelectorAll(".article-card")) as HTMLElement[];
 
     const sorted = cards.sort((a, b) => {
       switch (mode) {

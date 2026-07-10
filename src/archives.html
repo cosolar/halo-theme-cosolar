@@ -5,22 +5,26 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <section class="page-hero"
-               th:with="cover = ${theme.config?.archive?.archives_cover}">
+      <section class="page-hero" th:with="cover = ${theme.config?.archive?.archives_cover}">
         <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>
-        <div class="page-hero-bg--fallback" th:unless="${cover != null and !#strings.isEmpty(cover)}"></div>
+        <div
+          class="page-hero-bg--fallback"
+          th:unless="${cover != null and !#strings.isEmpty(cover)}"
+        ></div>
         <div class="page-hero-overlay" th:if="${cover != null and !#strings.isEmpty(cover)}"></div>
         <div class="page-hero-inner">
           <span class="page-hero-eyebrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 6h18M3 12h18M3 18h18"/>
+              <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
             <span>归档</span>
           </span>
           <h1>文章归档</h1>
-          <p class="page-hero-desc">共 <span th:text="${archives.total}"></span> 篇文章，按时间归档</p>
+          <p class="page-hero-desc">
+            共 <span th:text="${archives.total}"></span> 篇文章，按时间归档
+          </p>
         </div>
       </section>
 
@@ -33,11 +37,15 @@
             <div class="archive-month-label" th:text="${month.month + ' 月'}"></div>
             <ul class="archive-post-list">
               <li th:each="post : ${month.posts}">
-                <span class="archive-post-date"
-                      th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}"></span>
-                <a class="archive-post-title"
-                   th:href="@{${post.status.permalink}}"
-                   th:text="${post.spec.title}"></a>
+                <span
+                  class="archive-post-date"
+                  th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}"
+                ></span>
+                <a
+                  class="archive-post-title"
+                  th:href="@{${post.status.permalink}}"
+                  th:text="${post.spec.title}"
+                ></a>
               </li>
             </ul>
           </div>
@@ -46,23 +54,38 @@
 
       <div class="empty-state" th:if="${#lists.isEmpty(archives.items)}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
         </svg>
         <p>暂无文章归档</p>
       </div>
 
       <nav class="pagination" th:if="${archives.hasPrevious() || archives.hasNext()}">
         <a th:if="${archives.hasPrevious()}" th:href="@{${archives.prevUrl}}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
-            <polyline points="15 18 9 12 15 6"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="width: 16px; height: 16px"
+          >
+            <polyline points="15 18 9 12 15 6" />
           </svg>
         </a>
         <span class="current" th:text="${archives.page}"></span>
-        <span style="border:none;background:none;color:var(--color-text-muted);" th:text="'/' + ${archives.totalPages}"></span>
+        <span
+          style="border: none; background: none; color: var(--color-text-muted)"
+          th:text="'/' + ${archives.totalPages}"
+        ></span>
         <a th:if="${archives.hasNext()}" th:href="@{${archives.nextUrl}}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
-            <polyline points="9 18 15 12 9 6"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="width: 16px; height: 16px"
+          >
+            <polyline points="9 18 15 12 9 6" />
           </svg>
         </a>
       </nav>
