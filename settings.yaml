@@ -263,16 +263,80 @@ spec:
           label: 博主背景色
           value: ""
           help: 博主展示模块的背景色，与"博主背景图"二选一，同时设置时背景图优先；留空则使用默认卡片样式
+        - $formkit: color
+          name: author_bg_overlay_color
+          label: 遮罩层颜色
+          value: "#000000"
+          help: 博主背景图上的遮罩层颜色，配合下方"遮罩层透明度"一起使用
+        - $formkit: range
+          name: author_bg_overlay_opacity
+          label: 遮罩层透明度
+          value: 0.35
+          min: 0
+          max: 1
+          step: 0.05
+          help: 遮罩层的不透明度，0 为完全透明，1 为完全不透明
+        - $formkit: color
+          name: author_bg_text_color
+          label: 博主栏文字颜色
+          value: "#FFFFFF"
+          help: 设置背景图/背景色后，博主卡片内所有文字和图标的颜色
+        - $formkit: color
+          name: author_bg_overlay_color_dark
+          label: 遮罩层颜色（深色模式）
+          value: "#000000"
+          help: 深色模式下博主背景图上的遮罩层颜色
+        - $formkit: range
+          name: author_bg_overlay_opacity_dark
+          label: 遮罩层透明度（深色模式）
+          value: 0.45
+          min: 0
+          max: 1
+          step: 0.05
+          help: 深色模式下遮罩层的不透明度，默认略高于浅色模式
+        - $formkit: color
+          name: author_bg_text_color_dark
+          label: 博主栏文字颜色（深色模式）
+          value: "#FFFFFF"
+          help: 深色模式下博主卡片内所有文字和图标的颜色
         - $formkit: switch
-          name: show_hot_tags
+          name: show_announcement
+          label: 显示公告栏
+          value: true
+          help: 在侧边栏博主信息下方显示公告栏
+        - $formkit: textarea
+          name: announcement_content
+          label: 公告内容
+          value: ""
+          help: 公告栏显示的文本内容，支持 HTML
+        - $formkit: switch
+          name: show_tag_cloud
           label: 显示热门标签
           value: true
+          help: 以词云形式展示标签，标签大小随文章数自动变化
         - $formkit: number
-          name: hot_tags_count
+          name: tag_cloud_count
           label: 热门标签数量
-          value: 8
-          min: 1
-          max: 30
+          value: 20
+          min: 5
+          max: 50
+          step: 1
+          help: 标签云中最多显示的标签数量
+        - $formkit: switch
+          name: show_wechat_qr
+          label: 显示公众号二维码
+          value: false
+          help: 在侧边栏显示微信公众号二维码图片
+        - $formkit: attachment
+          name: wechat_qr_image
+          label: 公众号二维码图片
+          value: ""
+          help: 上传微信公众号二维码图片，建议 1:1 正方形
+        - $formkit: text
+          name: wechat_qr_title
+          label: 公众号名称
+          value: ""
+          help: 显示在二维码下方的公众号名称，留空则显示"扫码关注"
         - $formkit: switch
           name: show_categories
           label: 显示分类导航

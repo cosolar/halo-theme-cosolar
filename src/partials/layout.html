@@ -44,7 +44,7 @@
     />
     <link rel="icon" th:if="${site.favicon}" th:href="${site.favicon}" />
     <th:block
-      th:if="${theme.config?.style?.primary_color != null or theme.config?.style?.content_width != null or theme.config?.style?.sidebar_width != null or theme.config?.style?.content_gap != null or theme.config?.style?.toc_width != null or (theme.config?.font?.font_family != null and !#strings.isEmpty(theme.config.font.font_family)) or (theme.config?.font?.mono_family != null and !#strings.isEmpty(theme.config.font.mono_family))}"
+      th:if="${theme.config?.style?.primary_color != null or theme.config?.style?.content_width != null or theme.config?.style?.sidebar_width != null or theme.config?.style?.content_gap != null or theme.config?.style?.toc_width != null or (theme.config?.font?.font_family != null and !#strings.isEmpty(theme.config.font.font_family)) or (theme.config?.font?.mono_family != null and !#strings.isEmpty(theme.config.font.mono_family)) or theme.config?.sidebar?.author_bg_overlay_color != null or theme.config?.sidebar?.author_bg_overlay_opacity != null or theme.config?.sidebar?.author_bg_text_color != null or theme.config?.sidebar?.author_bg_overlay_color_dark != null or theme.config?.sidebar?.author_bg_overlay_opacity_dark != null or theme.config?.sidebar?.author_bg_text_color_dark != null}"
     >
       <style th:inline="text">
         :root {
@@ -55,6 +55,14 @@
           [(${theme.config?.style?.toc_width != null ? '--toc-width: ' + theme.config.style.toc_width + 'px !important;' : ''})]
           [(${theme.config?.font?.font_family != null and !#strings.isEmpty(theme.config.font.font_family) ? '--font-sans: ' + theme.config.font.font_family + ' !important;' : ''})]
           [(${theme.config?.font?.mono_family != null and !#strings.isEmpty(theme.config.font.mono_family) ? '--font-mono: ' + theme.config.font.mono_family + ' !important;' : ''})]
+          [(${theme.config?.sidebar?.author_bg_overlay_color != null ? '--author-bg-overlay-color: ' + theme.config.sidebar.author_bg_overlay_color + ' !important;' : ''})]
+          [(${theme.config?.sidebar?.author_bg_overlay_opacity != null ? '--author-bg-overlay-opacity: ' + theme.config.sidebar.author_bg_overlay_opacity + ' !important;' : ''})]
+          [(${theme.config?.sidebar?.author_bg_text_color != null ? '--author-bg-text-color: ' + theme.config.sidebar.author_bg_text_color + ' !important;' : ''})]
+        }
+        [data-theme="dark"] {
+          [(${theme.config?.sidebar?.author_bg_overlay_color_dark != null ? '--author-bg-overlay-color: ' + theme.config.sidebar.author_bg_overlay_color_dark + ' !important;' : ''})]
+          [(${theme.config?.sidebar?.author_bg_overlay_opacity_dark != null ? '--author-bg-overlay-opacity: ' + theme.config.sidebar.author_bg_overlay_opacity_dark + ' !important;' : ''})]
+          [(${theme.config?.sidebar?.author_bg_text_color_dark != null ? '--author-bg-text-color: ' + theme.config.sidebar.author_bg_text_color_dark + ' !important;' : ''})]
         }
       </style>
     </th:block>

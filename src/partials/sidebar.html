@@ -142,11 +142,31 @@
     </div>
   </div>
 
-  <!-- Hot Tags -->
+  <!-- Announcement -->
   <div
-    class="widget"
-    th:if="${theme.config?.sidebar?.show_hot_tags != false}"
-    th:with="hotTags = ${tagFinder.list(1, theme.config?.sidebar?.hot_tags_count ?: 8)}"
+    class="widget widget-announcement"
+    th:if="${theme.config?.sidebar?.show_announcement != false and theme.config?.sidebar?.announcement_content != null and !#strings.isEmpty(theme.config.sidebar.announcement_content)}"
+  >
+    <div class="widget-title">
+      <span class="title-text">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        公告
+      </span>
+    </div>
+    <div
+      class="announcement-content"
+      th:utext="${theme.config?.sidebar?.announcement_content}"
+    ></div>
+  </div>
+
+  <!-- Tag Cloud -->
+  <div
+    class="widget widget-tag-cloud"
+    th:if="${theme.config?.sidebar?.show_tag_cloud == true}"
+    th:with="tagCloud = ${tagFinder.list(1, theme.config?.sidebar?.tag_cloud_count ?: 20)}"
   >
     <div class="widget-title">
       <span class="title-text">
@@ -160,13 +180,42 @@
       </span>
       <a class="widget-link" th:href="@{${site.routes.tagsUri}}">全部标签 →</a>
     </div>
-    <div class="hot-tags">
+    <div class="tag-cloud-body">
       <a
-        th:each="tag : ${hotTags.items}"
+        th:each="tag, iter : ${tagCloud.items}"
         th:href="@{${tag.status.permalink}}"
         th:text="${tag.spec.displayName}"
-        class="tag"
+        th:with="weight = ${tag.postCount != null ? tag.postCount : 1}, size = ${weight >= 30 ? 16 : 11 + weight * 0.16}"
+        th:style="'font-size: ' + ${size} + 'px; animation-delay: ' + (${iter.index} * 0.12) + 's;'"
+        class="tag-cloud-item"
       ></a>
+    </div>
+  </div>
+
+  <!-- WeChat QR -->
+  <div
+    class="widget widget-wechat"
+    th:if="${theme.config?.sidebar?.show_wechat_qr == true and theme.config?.sidebar?.wechat_qr_image != null and !#strings.isEmpty(theme.config.sidebar.wechat_qr_image)}"
+    th:with="qrTitle = ${theme.config?.sidebar?.wechat_qr_title}"
+  >
+    <div class="widget-title">
+      <span class="title-text">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        公众号
+      </span>
+    </div>
+    <div class="wechat-qr-body">
+      <img
+        class="wechat-qr-img"
+        th:src="${theme.config?.sidebar?.wechat_qr_image}"
+        alt="公众号二维码"
+      />
+      <p
+        class="wechat-qr-text"
+        th:text="${qrTitle != null and !#strings.isEmpty(qrTitle) ? qrTitle : '扫码关注'}"
+      ></p>
     </div>
   </div>
 
