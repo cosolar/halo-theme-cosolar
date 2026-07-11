@@ -76,8 +76,11 @@
 
       <th:block th:each="post : ${posts.items}">
         <article class="article-card">
-          <a class="article-thumb" th:href="@{${post.status.permalink}}"
-             th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.style?.default_post_cover != null and !#strings.isEmpty(theme.config.style.default_post_cover) ? theme.config.style.default_post_cover : builtinCover)}">
+          <a
+            class="article-thumb"
+            th:href="@{${post.status.permalink}}"
+            th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.style?.default_post_cover != null and !#strings.isEmpty(theme.config.style.default_post_cover) ? theme.config.style.default_post_cover : builtinCover)}"
+          >
             <img th:if="${coverUrl != null}" th:src="${coverUrl}" alt="" loading="lazy" />
             <span class="article-thumb-placeholder" th:unless="${coverUrl != null}">&lt;/&gt;</span>
           </a>
@@ -96,6 +99,13 @@
               ></a>
             </div>
             <div class="article-card-meta">
+              <span class="meta-item" th:if="${post.owner}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span th:text="${post.owner?.displayName}"></span>
+              </span>
               <span class="meta-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
