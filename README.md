@@ -8,7 +8,7 @@
 
 **青绿美学** · **暗色模式** · **精选轮播** · **分类导航** · **全局搜索** · **完美移动端适配**
 
-[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.0.5](https://img.shields.io/badge/Version-1.0.5-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 
 **🚀 [在线预览 →](https://note.minims.cn)**
 
@@ -68,6 +68,26 @@
 - **自定义背景** — 背景图浅色/深色分别配置，5 种 Canvas 动态背景可选
 - **封面图配置** — 分类页、标签页、归档页 Hero 区域均可自定义封面图
 
+### 👤 账号体系（登录 / 注册 / 登出）
+
+- **登录页** — 青绿美学左右分栏布局，左侧品牌展示区 + 右侧表单卡片，支持本地账号登录、其他登录方式、社交登录，含「记住我」「忘记密码」入口
+- **注册页 / 登出页** — 复用同一套分栏布局，提供账号注册与退出确认
+- **登录页可定制** — 后台可配置左侧品牌区占比、遮罩层开关与渐变主色/透明度（明暗双模各自可配）
+- **主题色防闪烁** — 明暗切换时自动应用已保存的主题，避免白屏闪烁
+
+### 🔗 友情链接页面
+
+- **独立友链页** — Hero 双栏 + 友链/分组统计，展示所有友情链接
+- **分组筛选 + 实时搜索** — 前端即时筛选，无需整页跳转
+- **链接状态徽章** — 在线 / 离线 / 检测中、已回链 / 未回链一目了然
+- **申请友链 CTA** — 一键邮件申请交换友链
+
+### 📰 RSS 资讯页面
+
+- **聚合订阅动态** — 三栏布局：左频道导航、中资讯流、右统计面板（资讯概览 / 活跃频道 / 抓取状态）
+- **筛选与分页** — 支持按订阅源 / 分组筛选、分页「加载更多」
+- **依赖友情链接插件的 RSS** — 未启用时给出友好引导提示
+
 ---
 
 ## 📸 预览
@@ -76,8 +96,8 @@
 
 <table>
 <tr>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/c7ed5768fe18abc9e2eb78e7758fecb6.png" alt="首页" /></td>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/140534612338bec5ab805f0ae3c559ff.png" alt="暗色模式" /></td>
+<td><img src="https://oss.towao.com/proxy/plain/img/2026/067822d60b6058d4b30fb6813b57b3c8.png" alt="首页" /></td>
+<td><img src="https://oss.towao.com/proxy/plain/img/2026/a92b4b950731be7d7f6c46a08c8338b5.png" alt="暗色模式" /></td>
 </tr>
 <tr>
 <td><img src="https://oss.towao.com/proxy/plain/img/2026/cbe45d9ceb3945c68c7fa619e0ec1da8.png" alt="文章卡片" /></td>
@@ -98,6 +118,24 @@
 | 项目 | 版本       |
 | ---- | ---------- |
 | Halo | `>=2.20.0` |
+
+### 依赖插件
+
+本主题的**友情链接页面**与 **RSS 资讯页面**依赖 Halo 官方链接管理插件 **plugin-links**（Halo 2.0 的链接管理插件，用于管理友情链接、检查链接状态，并将链接站点的 RSS / Atom 动态聚合到 Halo Console 中）。
+
+| 插件             | 用途                                                                                         | 必需度                                  |
+| ---------------- | -------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `plugin-links`   | 管理友情链接、检测链接可访问性与回链状态、聚合友站 RSS / Atom 动态到 Halo Console            | 友情链接页、侧边栏友链/订阅模块、RSS 资讯页**必需** |
+
+> ⚠️ **未安装 `plugin-links` 时的表现**：
+>
+> - 友情链接页仍可访问，但列表为空（无数据可展示）
+> - 侧边栏「友情链接」「订阅资讯」模块不显示
+> - RSS 资讯页会显示「RSS 资讯功能未启用」的引导提示
+>
+> 安装并启用插件后，需在插件设置的「RSS 订阅」中开启「公开 RSS 订阅动态」，RSS 资讯页与侧边栏订阅模块才会有内容。
+
+此外，搜索功能依赖官方搜索插件（详见下文「搜索功能」一节）。
 
 ### 方式一：直接安装（推荐）
 
@@ -298,6 +336,14 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 
 - 分类导航 — 显示分类列表，可配置数量
 - 近期更新 — 显示最新发布的 N 篇文章
+- 友情链接 — 展示随机友链，可配置**显示数量**（默认 10）
+- 订阅资讯 — 展示友站 RSS 最新动态（依赖 `plugin-links`），可配置**显示数量**（默认 10）
+
+**模块顺序**：在「侧边栏模块顺序」设置中，以列表形式管理各模块的上下排列：
+
+- **拖拽排序** — 直接拖动每行调整模块先后顺序
+- **删除即隐藏** — 删除某一行即可隐藏对应模块；点击「添加模块」可重新加入
+- 各模块自身的「显示 XX 模块」开关，可在不破坏顺序的前提下临时显隐
 
 ### 7️⃣ 分类与标签页：自定义封面
 
@@ -360,6 +406,39 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 2. 导航栏会自动显示搜索框，支持 `Ctrl+K` 快捷键
 3. 如果未安装搜索插件，搜索框会降级为归档页链接
 
+### 1️⃣1️⃣ 友情链接页面
+
+> 前置条件：已安装并启用 `plugin-links` 插件（详见上文「依赖插件」）。
+
+1. 在 Halo 后台 **主题设置 → 友情链接** 分组，可配置页面标题、副标题与封面图
+2. 创建独立页面，页面类型选择 **友情链接**（或直接使用主题提供的 `/links` 路由）
+3. 页面展示所有友链，支持**分组筛选**与**关键词搜索**（前端实时筛选，不刷新整页）
+4. 每张友链卡片显示 Logo、在线/离线/检测中、已回链/未回链状态徽章
+5. 点击「申请友链」会通过邮件（站点邮箱）发起友链交换申请
+
+### 1️⃣2️⃣ RSS 资讯页面
+
+> 前置条件：已安装 `plugin-links`，并在插件设置「RSS 订阅」中开启「公开 RSS 订阅动态」。
+
+1. 在 Halo 后台 **主题设置 → RSS 资讯** 分组，可配置页面标题、副标题、封面图与每页条数
+2. 创建独立页面，页面类型选择 **RSS 资讯（feeds）**（已在 `theme.yaml` 注册为自定义页面模板）
+3. 页面采用三栏布局：
+   - **左栏** — 频道导航，按订阅源筛选资讯
+   - **中栏** — 资讯流，支持「加载更多」分页
+   - **右栏** — 资讯概览（累计条目 / 启用 RSS 数 / 分组数 / RSS 链接数）与活跃频道、抓取状态
+4. 若未启用 RSS 公开订阅，页面会显示启用引导提示
+
+### 1️⃣3️⃣ 登录 / 注册 / 登出页面
+
+主题内置适配 Halo 网关的登录、注册、登出页面，无需额外插件即可使用。
+
+1. 访问 `/login`、`/signup`、`/logout` 即可进入对应页面
+2. 在 **主题设置 → 登录页面** 分组可定制：
+   - **左侧品牌区占比**（20–60%）— 调整品牌展示区与表单区的宽度分配
+   - **遮罩层开关** — 是否在品牌区背景图上叠加渐变遮罩以保证文字可读
+   - **遮罩渐变主色 / 透明度** — 浅色与深色模式各自可配
+3. 页面自动应用站点 Logo、标语等基础配置，并随主题明暗模式切换
+
 ---
 
 ## ❓ 常见问题
@@ -396,6 +475,18 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 - **背景图**：适合使用深色图片，文字会自动变为白色，并添加半透明遮罩确保可读性
 - **背景色**：适合使用纯色或渐变色，效果更简洁
 - 两者同时设置时，背景图优先
+
+### 为什么友情链接 / RSS 资讯页面没有内容？
+
+这两个页面依赖 Halo 官方链接管理插件 **plugin-links**：
+
+1. 确认已在 Halo 后台 **插件管理** 中安装并启用 `plugin-links`
+2. 友情链接需在插件中添加链接数据；RSS 资讯还需在插件「RSS 订阅」设置中开启「公开 RSS 订阅动态」
+3. 未安装插件时，友情链接页列表为空、RSS 资讯页会显示「RSS 资讯功能未启用」提示；侧边栏的「友情链接」「订阅资讯」模块也会自动隐藏
+
+### 侧边栏模块顺序如何调整？
+
+在 **主题设置 → 侧边栏设置 → 侧边栏模块顺序** 中，以列表形式拖拽每行即可调整上下顺序；删除某行可隐藏该模块，点击「添加模块」可重新加入。各模块单独的「显示 XX 模块」开关用于临时显隐，不影响已设定的顺序。
 
 ---
 
