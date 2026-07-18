@@ -5,7 +5,7 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <section class="page-hero" th:with="cover = ${theme.config?.tag?.tags_cover}">
+      <section class="page-hero" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.tag?.tags_cover) ? theme.config.tag.tags_cover : defaultCover}">
         <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>

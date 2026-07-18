@@ -301,7 +301,7 @@
 
       <!-- 友情链接 -->
       <th:block th:case="'links'">
-        <div class="widget widget-sidebar-links" th:if="${theme.config?.sidebar?.show_sidebar_links != false}" th:with="randomLinks = ${linkFinder.random(theme.config?.sidebar?.sidebar_links_count ?: 10)}">
+        <div class="widget widget-sidebar-links" th:if="${theme.config?.sidebar?.show_sidebar_links != false and linkFinder != null}" th:with="randomLinks = ${linkFinder?.random(theme.config?.sidebar?.sidebar_links_count ?: 10) ?: {}}">
           <div class="widget-title">
             <span class="title-text">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

@@ -10,7 +10,9 @@
     <div class="content-area">
       <section
         class="topic-hero"
-        th:with="defaultCover = ${theme.config?.tag?.tag_cover},
+        th:with="builtinCover = @{/assets/images/featured-default.png},
+                         configCover = ${theme.config?.tag?.tag_cover},
+                         defaultCover = ${!#strings.isEmpty(configCover) ? configCover : builtinCover},
                          cover = ${tag.spec.cover != null and !#strings.isEmpty(tag.spec.cover) ? tag.spec.cover : defaultCover}"
       >
         <div class="topic-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">

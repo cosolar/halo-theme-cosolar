@@ -9,7 +9,8 @@
     th:with="
       feedsTitle = ${theme.config?.feeds?.feeds_title ?: 'RSS 资讯'},
       feedsSubtitle = ${theme.config?.feeds?.feeds_subtitle ?: '聚合优质信息源，掌握技术前沿动态'},
-      feedsCover = ${theme.config?.feeds?.feeds_cover},
+      defaultCover = @{/assets/images/featured-default.png},
+      feedsCover = ${!#strings.isEmpty(theme.config?.feeds?.feeds_cover) ? theme.config.feeds.feeds_cover : defaultCover},
       feedLimit = ${theme.config?.feeds?.feeds_page_size ?: 20},
       selectedGroup = ${param != null and param.group != null and param.group.length > 0 ? param.group[0] : null},
       selectedLink = ${param != null and param.link != null and param.link.length > 0 ? param.link[0] : null},
@@ -36,7 +37,7 @@
           </svg>
         </div>
         <h2>RSS 资讯功能未启用</h2>
-        <p>本页面需要安装并启用「友情链接插件」，并在插件设置的「RSS 订阅」中开启「公开 RSS 订阅动态」。</p>
+        <p>本页面需要安装并启用「友情链接插件plugin-links」，并在插件设置的「RSS 订阅」中开启「公开 RSS 订阅动态」。</p>
       </div>
 
       <!-- ===== Main Content ===== -->

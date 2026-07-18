@@ -15,7 +15,7 @@
   >
     <div class="content-area">
       <!-- ===== Links Hero (双栏：左内容+右插画) ===== -->
-      <section class="links-hero" th:with="cover = ${theme.config?.links?.links_cover}">
+      <section class="links-hero" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.links?.links_cover) ? theme.config.links.links_cover : defaultCover}">
         <div class="links-hero-bg" th:if="${!#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>

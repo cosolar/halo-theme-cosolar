@@ -71,7 +71,7 @@ spec:
         - $formkit: number
           name: content_width
           label: 内容最大宽度
-          value: 1200
+          value: 1600
           min: 960
           max: 1920
           step: 20
@@ -205,7 +205,7 @@ spec:
         - $formkit: switch
           name: featured_cover_fallback
           label: 优先使用文章封面
-          value: true
+          value: false
           help: 开启后，若文章本身设置了封面图则优先使用，否则使用上方配置的默认背景图
         - $formkit: postSelect
           name: featured_posts
@@ -371,7 +371,7 @@ spec:
         - $formkit: number
           name: sidebar_links_count
           label: 友情链接显示数量
-          value: 10
+          value: 5
           min: 1
           max: 30
           step: 1
@@ -384,7 +384,7 @@ spec:
         - $formkit: number
           name: sidebar_feeds_count
           label: 订阅资讯显示数量
-          value: 10
+          value: 5
           min: 1
           max: 30
           step: 1
@@ -442,10 +442,10 @@ spec:
           value: ""
           help: 分类详情页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景
         - $formkit: switch
-          name: category_cover_fallback
-          label: 优先使用分类自带封面
-          value: true
-          help: 开启后，若分类本身设置了封面图则优先使用，否则使用上方配置的默认封面图
+          name: category_own_cover_first
+          label: 优先使用自带封面
+          value: false
+          help: 开启后，分类详情页优先使用分类自身设置的封面图；关闭（默认）则优先使用上方配置的"分类详情页封面图"，分类自身封面作为兜底
 
     - group: tag
       label: 标签页设置
