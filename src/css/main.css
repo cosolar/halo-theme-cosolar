@@ -2294,7 +2294,7 @@ textarea {
 .sidebar-feed-title {
   display: block;
   font-size: 13px;
-  font-weight: 600;
+  /*font-weight: 600;*/
   color: var(--color-text);
   line-height: 1.5;
   display: -webkit-box;
@@ -4745,7 +4745,7 @@ textarea {
 /* 多栏页脚主体 */
 .footer-main {
   display: grid;
-  grid-template-columns: 1.3fr 1.8fr 1.1fr;
+  grid-template-columns: 1.0fr 1.8fr 1.1fr;
   gap: 10px 48px;
   padding-bottom: 10px;
 }
@@ -4955,24 +4955,128 @@ textarea {
   flex-shrink: 0;
 }
 
-/* Link columns */
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 10px 28px;
+/* ===== Footer Middle Section: 网站统计卡片 ===== */
+.footer-middle {
   min-width: 0;
 }
 
-.footer-link-item {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: color var(--transition);
+/* 统计卡片 */
+.footer-card.footer-profile-card {
+  padding: 0;
+  overflow: hidden;
 }
 
-.footer-link-item:hover {
-  color: var(--color-primary);
+/* 统计网格 */
+.footer-profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+}
+
+.footer-stat-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 9px 4px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--color-primary) 3%, var(--color-card));
+  border: 1px solid var(--color-border-light, var(--color-border));
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition);
+  min-width: 0;
+  text-align: center;
+}
+
+.footer-stat-cell:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-card));
+  transform: translateY(-2px);
+}
+
+.footer-stat-cell-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.footer-stat-cell-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+.footer-stat-cell-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.footer-stat-cell-value-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.footer-stat-cell-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* 统计图标配色 */
+.footer-stat-icon-post {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover, var(--color-primary)));
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+.footer-stat-icon-category {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+}
+.footer-stat-icon-tag {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+.footer-stat-icon-visit {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  box-shadow: 0 2px 6px rgba(6, 182, 212, 0.3);
+}
+.footer-stat-icon-like {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  box-shadow: 0 2px 6px rgba(236, 72, 153, 0.3);
+}
+.footer-stat-icon-comment {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
+}
+.footer-stat-icon-join {
+  background: linear-gradient(135deg, #64748b, #475569);
+  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.3);
+}
+.footer-stat-icon-location {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+/* 旧的链接列表样式保留为空类，避免兼容性问题（已无元素使用） */
+.footer-links {
+  display: none;
+}
+.footer-link-item {
+  display: none;
 }
 
 /* Subscribe */
@@ -5122,6 +5226,9 @@ textarea {
 }
 
 .footer-legal a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--color-text-secondary);
   text-decoration: none;
   transition: color var(--transition);
@@ -5258,6 +5365,12 @@ textarea {
   color: var(--color-primary);
 }
 
+@media (max-width: 1024px) {
+  .footer-profile-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 640px) {
   .footer-main {
     grid-template-columns: 1fr;
@@ -5278,8 +5391,8 @@ textarea {
     justify-content: center;
   }
 
-  .footer-links {
-    text-align: left;
+  .footer-profile-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .footer-subscribe {

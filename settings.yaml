@@ -52,6 +52,11 @@ spec:
     - group: footer
       label: 页脚设置
       formSchema:
+        - $formkit: switch
+          name: show_footer_main
+          label: 显示页脚主区域
+          value: true
+          help: 关闭后将隐藏页脚的品牌、统计与订阅主区域，仅保留底部版权信息
         - $formkit: attachment
           name: logo_image
           label: 页脚 Logo 图片
@@ -134,31 +139,16 @@ spec:
           label: 使用条款页面地址
           value: ""
           help: 留空则不显示页脚"使用条款"链接
-        - $formkit: array
-          name: links
-          label: 页脚链接
-          addLabel: 添加链接
-          min: 0
-          max: 30
-          help: 自定义页脚链接，配置显示名称和地址，按添加顺序遍历显示
-          value:
-            - name: 首页
-              url: /
-            - name: 关于我们
-              url: /about
-            - name: 友情链接
-              url: /links
-            - name: 标签
-              url: /tags
-          children:
-            - $formkit: text
-              name: name
-              label: 显示名称
-              value: ""
-            - $formkit: url
-              name: url
-              label: 链接地址
-              value: ""
+        - $formkit: url
+          name: links_url
+          label: 友情链接页面地址
+          value: "/links"
+          help: 留空则不显示页脚"友情链接"链接
+        - $formkit: url
+          name: about_url
+          label: 关于我们页面地址
+          value: "/about"
+          help: 留空则不显示页脚"关于我们"链接
 
     - group: style
       label: 主题样式
@@ -249,7 +239,7 @@ spec:
         # 代码高亮主题由 Halo plugin-shiki 插件后台配置（亮色/暗色主题），主题不再提供此选项
 
     - group: social
-      label: 社交链接
+      label: 博主信息
       formSchema:        
         - $formkit: text
           name: author_name
@@ -266,6 +256,21 @@ spec:
           label: 博主简介
           value: ""
           help: 显示在页脚博主卡片的一句话简介
+        - $formkit: text
+          name: author_location
+          label: 博主所在地
+          value: ""
+          help: 显示在页脚博主卡片的所在地，例如：中国·深圳
+        - $formkit: url
+          name: author_website
+          label: 博主个人网站
+          value: ""
+          help: 显示在页脚博主卡片的个人网站链接
+        - $formkit: text
+          name: author_join_date
+          label: 建站时间
+          value: ""
+          help: 显示在页脚博主卡片的建站时间，例如：2023-01-01
         - $formkit: url
           name: github
           label: GitHub
