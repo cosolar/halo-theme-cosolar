@@ -3,9 +3,6 @@
    青绿色技术博客主题设计系统
    ============================================ */
 
-/* ---------- 导航栏字体：小米 MiSans（通过 CDN 引入，见 layout.html） ---------- */
-/* MiSans 提供 Regular(400) 与 SemiBold(600) 两个字重 */
-
 /* ---------- CSS Variables: Light Mode ---------- */
 :root {
   /* Brand Colors */
@@ -354,9 +351,6 @@ textarea {
   flex: 1;
   justify-content: flex-start;
   margin-left: 8px;
-  font-family:
-    "MiSans", "Source Han Sans SC", "Source Han Sans CN",
-    "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 .header-nav a {
@@ -366,8 +360,14 @@ textarea {
   gap: 6px;
   padding: 7px 16px;
   font-family:
-    "MiSans", "Source Han Sans SC", "Source Han Sans CN",
-    "PingFang SC", "Microsoft YaHei", sans-serif;
+    "PingFang SC",
+    "Microsoft YaHei",
+    "Hiragino Sans GB",
+    "Source Han Sans CN",
+    "Noto Sans CJK SC",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
@@ -397,7 +397,7 @@ textarea {
   font-weight: 600;
 }
 
-.header-nav > .nav-item > a.active::after {
+.header-nav a.active::after {
   content: "";
   position: absolute;
   bottom: -22px;
@@ -408,153 +408,6 @@ textarea {
   background: var(--color-primary);
   border-radius: 2px;
   transition: width var(--transition);
-}
-
-/* ========== 导航多级菜单（级联下拉 / 飞出菜单） ========== */
-.nav-item {
-  position: relative;
-}
-
-/* 箭头 */
-.nav-caret {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-  transition: transform var(--transition), color var(--transition);
-  color: var(--color-text-muted);
-  opacity: 0.7;
-}
-
-/* 顶层项：箭头向下 ∨ */
-.header-nav > .nav-item.has-children > a .nav-caret {
-  transform: rotate(90deg);
-}
-
-.header-nav > .nav-item.has-children:hover > a .nav-caret {
-  color: var(--color-primary);
-  opacity: 1;
-}
-
-/* ==================== 子菜单面板（统一样式） ==================== */
-.nav-submenu {
-  position: absolute;
-  min-width: 200px;
-  padding: 6px;
-  background: var(--color-card);
-  border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
-  border-radius: 10px;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.03);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  opacity: 0;
-  visibility: hidden;
-  z-index: 100;
-  transition:
-    opacity 0.15s ease,
-    visibility 0.15s ease,
-    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* 桥接区 */
-.nav-submenu::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 0;
-  right: 0;
-  height: 10px;
-}
-
-/* ---- 顶层子菜单：向下展开 ---- */
-.header-nav > .nav-item > .nav-submenu {
-  top: calc(100% + 8px);
-  left: 0;
-  transform: translateY(-4px);
-}
-
-.header-nav > .nav-item.has-children:hover > .nav-submenu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-/* ---- 嵌套子菜单（三级+）：向右飞出，紧贴父面板 ---- */
-.nav-submenu .nav-item > .nav-submenu {
-  top: -6px;
-  left: calc(100% + 3px);
-  transform: translateX(-4px);
-}
-
-.nav-submenu .nav-item.has-children:hover > .nav-submenu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-}
-
-/* 嵌套桥接区在左侧 */
-.nav-submenu .nav-item > .nav-submenu::before {
-  top: 0;
-  bottom: 0;
-  left: -14px;
-  right: auto;
-  width: 14px;
-  height: auto;
-}
-
-/* ==================== 子菜单项（统一风格） ==================== */
-.nav-submenu .nav-item > a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  color: var(--color-text);
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-}
-
-/* 图标：主色 + 浅色圆底，更醒目好看 */
-.nav-submenu .nav-item > a .iconfont {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  font-size: 15px;
-  color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: 7px;
-  flex-shrink: 0;
-  transition: all 0.18s ease;
-}
-
-/* 带下级的项：箭头推到最右 */
-.nav-submenu .nav-item.has-children > a .nav-caret {
-  margin-left: auto;
-}
-
-/* ---- hover 状态：统一高亮 ---- */
-.nav-submenu .nav-item:hover > a {
-  color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 7%, transparent);
-}
-
-.nav-submenu .nav-item:hover > a .iconfont {
-  color: #fff;
-  background: var(--color-primary);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-primary) 30%, transparent);
-}
-
-/* hover 时箭头微右移 + 变主色 */
-.nav-submenu .nav-item.has-children:hover > a .nav-caret {
-  color: var(--color-primary);
-  opacity: 1;
-  transform: translateX(3px);
 }
 
 /* Action Login Button */
@@ -601,287 +454,89 @@ textarea {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  min-width: 200px;
-  padding: 8px;
-  /* 白色容器，圆角包裹 */
-  background: color-mix(in srgb, var(--color-card) 99%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  min-width: 184px;
+  padding: 10px;
+  /* 毛玻璃效果 */
+  background: color-mix(in srgb, var(--color-card) 68%, transparent);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
   border: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg), 0 12px 40px rgba(0, 0, 0, 0.16);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg), 0 8px 32px rgba(0, 0, 0, 0.14);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px) scale(0.96);
-  transform-origin: top right;
-  transition: opacity var(--transition),
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility var(--transition);
+  transform: translateY(-8px);
+  transition: opacity var(--transition), transform var(--transition),
+    visibility var(--transition);
   z-index: 100;
-}
-
-/* 顶部指向按钮的气泡小箭头 */
-.user-dropdown::after {
-  content: "";
-  position: absolute;
-  top: -7px;
-  right: 24px;
-  width: 14px;
-  height: 14px;
-  /* 与下拉框顶部同色 */
-  background: color-mix(in srgb, var(--color-card) 99%, transparent);
-  border-left: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
-  border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
-  border-radius: 3px 0 0 0;
-  transform: rotate(45deg);
 }
 
 .user-menu:hover .user-dropdown,
 .user-menu:focus-within .user-dropdown {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
 }
 
-/* 透明桥接区 */
+/* 透明桥接区，避免鼠标移动到下拉框时因间隙丢失 hover */
 .user-dropdown::before {
   content: "";
   position: absolute;
-  top: -14px;
+  top: -10px;
   left: 0;
   right: 0;
-  height: 14px;
+  height: 10px;
 }
 
-/* ========== 用户信息区（与下方用分割线区分） ========== */
 .user-dropdown-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 4px 2px 10px;
-  margin-bottom: 4px;
+  padding: 8px 12px 10px;
+  margin-bottom: 6px;
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
 }
 
-.user-dropdown-info > * {
-  position: relative;
-  z-index: 1;
-}
-
-.user-avatar {
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-  color: #fff;
-  font-weight: 700;
-  font-size: 17px;
-  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-primary) 30%, transparent);
-}
-
-.user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-full);
-}
-
-.user-info-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
 .user-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
-  line-height: 1.3;
 }
 
-.user-bio {
-  font-size: 11px;
-  color: var(--color-text-muted);
-  line-height: 1.3;
-}
-
-/* ========== 菜单项 ========== */
 .user-dropdown-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 10px;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  font-family:
-    "MiSans", "Source Han Sans SC", "Source Han Sans CN",
-    "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--color-text-secondary);
   transition: all var(--transition);
 }
 
 .user-dropdown-item:hover {
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-}
-
-/* 图标容器（默认绿色 - 发布文章） */
-.item-icon {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, #22c55e 14%, transparent);
-  color: #22c55e;
-  transition: all var(--transition);
-}
-
-.item-icon svg {
-  width: 15px;
-  height: 15px;
-  stroke-width: 2;
-}
-
-.user-dropdown-item:hover .item-icon {
-  background: #22c55e;
-  color: #fff;
-}
-
-.user-dropdown-item:hover {
-  background: color-mix(in srgb, #22c55e 8%, transparent);
-}
-
-.user-dropdown-item:hover .item-title,
-.user-dropdown-item:hover .item-arrow {
-  color: #22c55e;
-}
-
-/* 个人中心 - 蓝色 */
-.user-dropdown-item:nth-of-type(2) .item-icon {
-  background: color-mix(in srgb, #3b82f6 14%, transparent);
-  color: #3b82f6;
-}
-.user-dropdown-item:nth-of-type(2):hover .item-icon {
-  background: #3b82f6;
-  color: #fff;
-}
-.user-dropdown-item:nth-of-type(2):hover {
-  background: color-mix(in srgb, #3b82f6 8%, transparent);
-}
-.user-dropdown-item:nth-of-type(2):hover .item-title,
-.user-dropdown-item:nth-of-type(2):hover .item-arrow {
-  color: #3b82f6;
-}
-
-/* 控制台 - 紫色 */
-.user-dropdown-item:nth-of-type(3) .item-icon {
-  background: color-mix(in srgb, #8b5cf6 14%, transparent);
-  color: #8b5cf6;
-}
-.user-dropdown-item:nth-of-type(3):hover .item-icon {
-  background: #8b5cf6;
-  color: #fff;
-}
-.user-dropdown-item:nth-of-type(3):hover {
-  background: color-mix(in srgb, #8b5cf6 8%, transparent);
-}
-.user-dropdown-item:nth-of-type(3):hover .item-title,
-.user-dropdown-item:nth-of-type(3):hover .item-arrow {
-  color: #8b5cf6;
-}
-
-/* 文字区域 */
-.item-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1;
-  min-width: 0;
-}
-
-.item-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.3;
-}
-
-.item-desc {
-  font-size: 11px;
-  color: var(--color-text-muted);
-  line-height: 1.3;
-}
-
-/* item-title / item-arrow hover 颜色已由各 nth-of-type 规则控制 */
-
-/* 右箭头 */
-.item-arrow {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-  color: var(--color-text-muted);
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: all var(--transition);
-}
-
-.user-dropdown-item:hover .item-arrow {
-  opacity: 1;
-  transform: translateX(0);
   color: var(--color-primary);
+  transform: translateX(2px);
 }
 
-/* 分割线 */
+.user-dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .user-dropdown-divider {
   height: 1px;
-  margin: 4px 2px;
-  background: color-mix(in srgb, var(--color-border) 50%, transparent);
+  margin: 6px 4px;
+  background: color-mix(in srgb, var(--color-border) 55%, transparent);
 }
 
-/* ========== 危险项（退出登录）========== */
-.user-dropdown-item-danger .item-icon {
-  background: color-mix(in srgb, #e5484d 12%, transparent);
+.user-dropdown-item-danger {
   color: #e5484d;
-}
-
-.user-dropdown-item-danger:hover .item-icon {
-  background: #e5484d;
-  color: #fff;
 }
 
 .user-dropdown-item-danger:hover {
-  background: color-mix(in srgb, #e5484d 10%, transparent);
-}
-
-.user-dropdown-item-danger:hover .item-title {
+  background: color-mix(in srgb, #e5484d 12%, transparent);
   color: #e5484d;
-}
-
-.user-dropdown-item-danger:hover .item-arrow {
-  color: #e5484d;
-}
-
-/* ========== 深色模式微调 ========== */
-[data-theme="dark"] .item-icon {
-  background: color-mix(in srgb, #22c55e 22%, transparent);
-}
-
-[data-theme="dark"] .user-dropdown-item:nth-of-type(2) .item-icon {
-  background: color-mix(in srgb, #3b82f6 22%, transparent);
-}
-
-[data-theme="dark"] .user-dropdown-item:nth-of-type(3) .item-icon {
-  background: color-mix(in srgb, #8b5cf6 22%, transparent);
-}
-
-[data-theme="dark"] .user-dropdown-item-danger .item-icon {
-  background: color-mix(in srgb, #e5484d 24%, transparent);
+  transform: translateX(2px);
 }
 
 /* Header Actions */
@@ -5675,50 +5330,33 @@ textarea {
 
 /* Powered by / Theme */
 .footer-powered {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px 12px;
+  gap: 8px 10px;
   font-size: 13px;
-  color: var(--color-text-muted);
 }
 
 .footer-powered-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .footer-powered-icon {
-  width: 14px;
-  height: 14px;
-  color: #ef4444;
-  animation: footer-heart-beat 1.6s ease-in-out infinite;
+  width: 13px;
+  height: 13px;
+  color: var(--color-primary);
 }
 
-@keyframes footer-heart-beat {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  15% {
-    transform: scale(1.25);
-  }
-  30% {
-    transform: scale(1);
-  }
-}
-
-.footer-powered-divider {
-  width: 1px;
-  height: 12px;
-  background: color-mix(in srgb, var(--color-text-muted) 60%, transparent);
+.footer-powered-dot {
+  color: var(--color-border);
   user-select: none;
 }
 
 .footer-powered a {
   color: var(--color-text-secondary);
-  font-weight: 400;
+  font-weight: 500;
   text-decoration: none;
   transition: color var(--transition);
 }
@@ -6255,62 +5893,6 @@ textarea {
   /* 清除桌面端 active 下划线伪元素的冲突 */
   .header-nav a.active::after {
     display: none;
-  }
-
-  /* ====== 移动端：级联菜单变为静态手风琴（全部展开、逐级缩进） ====== */
-  .nav-submenu {
-    position: static !important;
-    transform: none !important;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: auto;
-    max-width: none;
-    padding: 4px 0 4px 16px;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-
-  /* 所有嵌套子菜单同样静态、逐级缩进 */
-  .nav-submenu .nav-submenu {
-    padding-left: 14px;
-  }
-
-  .nav-submenu::before,
-  .nav-submenu .nav-submenu::before {
-    display: none !important;
-  }
-
-  /* 子菜单项 */
-  .nav-submenu .nav-item > a {
-    padding: 11px 14px;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-text);
-    background: transparent;
-    border: none;
-    border-radius: 8px;
-  }
-
-  .nav-submenu .nav-item > a:hover,
-  .nav-submenu .nav-item > a:active {
-    color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 7%, transparent);
-  }
-
-  /* 带下级的项：箭头推到右侧 */
-  .nav-submenu .nav-item.has-children > a .nav-caret {
-    margin-left: auto;
-  }
-
-  /* 箭头在移动端不旋转、不位移 */
-  .nav-caret {
-    transform: none !important;
-    color: var(--color-text-muted);
   }
 
   .header-logo .logo-tagline {

@@ -57,11 +57,6 @@ spec:
           label: 显示页脚主区域
           value: true
           help: 关闭后将隐藏页脚的品牌、统计与订阅主区域，仅保留底部版权信息
-        - $formkit: switch
-          name: show_footer_powered
-          label: 显示 Powered by 信息
-          value: true
-          help: 关闭后将隐藏页脚底部的"Powered by Halo"与主题信息
         - $formkit: attachment
           name: logo_image
           label: 页脚 Logo 图片
