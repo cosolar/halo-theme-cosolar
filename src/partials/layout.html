@@ -35,6 +35,13 @@
       media="print"
       onload="this.media = 'all'"
     />
+    <!-- 导航栏字体：小米 MiSans（CDN 异步加载，Regular 400；粗体由浏览器合成） -->
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/misans-webfont@4.3.1/misans/misans-regular/result.min.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
     <link
       rel="stylesheet"
       th:if="${theme.config?.style?.mono_css_url != null and !#strings.isEmpty(theme.config.style.mono_css_url)}"
@@ -169,18 +176,57 @@
           id="headerNav"
           th:with="menu = ${menuFinder.getPrimary()}, iconPrefix = ${theme.config?.style?.icon_prefix ?: 'iconfont'}"
         >
-          <a
+          <!-- 多级菜单递归片段（内联定义，随 layout 被 include 进各页面，支持任意层级） -->
+          <th:block
+            th:fragment="navItem"
+            th:with="item=${item}, level=${level ?: 1}, iconPrefix=${iconPrefix ?: 'iconfont'}"
+          >
+            <th:block th:if="${item != null}">
+              <div
+                class="nav-item"
+                th:classappend="${item.children != null and not #lists.isEmpty(item.children)} ? ' has-children'"
+              >
+                <a th:href="@{${item.status.href}}" th:target="${item.spec.target?.value}">
+                  <i
+                    th:if="${#annotations.get(item, 'icon') != null and #annotations.get(item, 'icon') != ''}"
+                    th:class="${iconPrefix} + ' ' + ${#annotations.get(item, 'icon')}"
+                  ></i>
+                  <span th:text="${item.status.displayName}"></span>
+                  <svg
+                    class="nav-caret"
+                    th:if="${item.children != null and not #lists.isEmpty(item.children)}"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ><polyline points="9 6 15 12 9 18"/></svg>
+                </a>
+                <div
+                  class="nav-submenu"
+                  th:if="${item.children != null and not #lists.isEmpty(item.children)}"
+                  th:classappend="'nav-submenu-l' + ${level + 1}"
+                >
+                  <th:block th:each="child : ${item.children}">
+                    <th:block
+                      th:replace="~{this :: navItem(item=${child}, level=${level + 1}, iconPrefix=${iconPrefix})}"
+                    ></th:block>
+                  </th:block>
+                </div>
+              </div>
+            </th:block>
+          </th:block>
+
+          <!-- 顶层菜单项 -->
+          <th:block
             th:if="${menu != null and not #lists.isEmpty(menu.menuItems)}"
             th:each="item : ${menu.menuItems}"
-            th:href="@{${item.status.href}}"
-            th:target="${item.spec.target?.value}"
           >
-            <i
-              th:if="${#annotations.get(item, 'icon') != null and #annotations.get(item, 'icon') != ''}"
-              th:class="${iconPrefix} + ' ' + ${#annotations.get(item, 'icon')}"
-            ></i>
-            <span th:text="${item.status.displayName}"></span>
-          </a>
+            <th:block
+              th:replace="~{this :: navItem(item=${item}, level=1, iconPrefix=${iconPrefix})}"
+            ></th:block>
+          </th:block>
           <a th:unless="${menu != null and not #lists.isEmpty(menu.menuItems)}" th:href="@{/}"
             ><i class="iconfont icon-shouye"></i><span>首页</span></a
           >
@@ -267,24 +313,63 @@
               </button>
               <div class="user-dropdown" role="menu">
                 <div class="user-dropdown-info">
-                  <span class="user-name" th:text="${currentUser.displayName}">用户名</span>
+                  <span class="user-avatar">
+                    <img
+                      th:if="${currentUser.avatar != null and !#strings.isEmpty(currentUser.avatar)}"
+                      th:src="${currentUser.avatar}"
+                      th:alt="${currentUser.displayName}"
+                    />
+                    <span
+                      th:unless="${currentUser.avatar != null and !#strings.isEmpty(currentUser.avatar)}"
+                      th:text="${#strings.substring(currentUser.displayName, 0, 1)}"
+                      >U</span
+                    >
+                  </span>
+                  <div class="user-info-text">
+                    <span class="user-name" th:text="${currentUser.displayName}">用户名</span>
+                    <span class="user-bio" th:text="${theme.config?.social?.author_bio ?: '专注技术，乐于分享'}">专注技术，乐于分享</span>
+                  </div>
                 </div>
                 <a class="user-dropdown-item" th:href="@{/console/posts/editor}" role="menuitem" target="_blank">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  <span>发布文章</span>
+                  <div class="item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </div>
+                  <div class="item-content">
+                    <span class="item-title">发布文章</span>
+                    <span class="item-desc">分享你的知识与见解</span>
+                  </div>
+                  <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
                 <a class="user-dropdown-item" th:href="@{/uc}" role="menuitem">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <span>个人中心</span>
-                </a>                
+                  <div class="item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div class="item-content">
+                    <span class="item-title">个人中心</span>
+                    <span class="item-desc">管理你的账号和资料</span>
+                  </div>
+                  <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
                 <a class="user-dropdown-item" th:href="@{/console}" role="menuitem">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                  <span>控制台</span>
-                </a>                
+                  <div class="item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  </div>
+                  <div class="item-content">
+                    <span class="item-title">控制台</span>
+                    <span class="item-desc">站点设置与数据管理</span>
+                  </div>
+                  <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
                 <div class="user-dropdown-divider"></div>
                 <a class="user-dropdown-item user-dropdown-item-danger" th:href="@{/logout}" role="menuitem">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                  <span>退出登录</span>
+                  <div class="item-icon item-icon-danger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  </div>
+                  <div class="item-content">
+                    <span class="item-title">退出登录</span>
+                    <span class="item-desc">安全退出当前账号</span>
+                  </div>
+                  <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
               </div>
             </div>
@@ -348,6 +433,7 @@
               footerHasBgImgDark=${footerBgImageDark != null and footerBgImageDark != ''},
               footerHasSocial=${footerSocialColor != null and footerSocialColor != ''},
               footerHasSocialDark=${footerSocialColorDark != null and footerSocialColorDark != ''},
+              showFooterPowered=${theme.config?.footer?.show_footer_powered ?: true},
               footerStyle=${(footerHasBgImg or footerHasBgImgDark or footerHasSocial or footerHasSocialDark) ? ('--footer-bg-image: url(''' + (footerHasBgImg ? footerBgImage : '') + '''); --footer-bg-img-opacity: ' + footerBgImageOpacity + '; --footer-bg-image-dark: url(''' + (footerHasBgImgDark ? footerBgImageDark : '') + '''); --footer-bg-img-opacity-dark: ' + footerBgImageOpacityDark + ';' + (footerHasSocial ? ' --footer-social-color: ' + footerSocialColor + ';' : '') + (footerHasSocialDark ? ' --footer-social-color-dark: ' + footerSocialColorDark + ';' : '')) : ''},
               authorJoinDate=${theme.config?.social?.author_join_date},
               authorLocation=${theme.config?.social?.author_location},
@@ -673,16 +759,17 @@
               <span th:text="${theme.config.basic.icp}"></span>
             </a>
           </div>
-          <div class="footer-powered">
+          <div class="footer-powered" th:if="${showFooterPowered}">
             <span class="footer-powered-item">
               <svg class="footer-powered-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
               </svg>
-              Powered by <a href="https://halo.run" target="_blank" rel="noopener">Halo</a>
+              <span>Powered by</span>
+              <a href="https://halo.run" target="_blank" rel="noopener">Halo</a>
             </span>
-            <span class="footer-powered-dot">·</span>
+            <span class="footer-powered-divider"></span>
             <span class="footer-powered-item">
-              Theme
+              <span>Theme</span>
               <a
                 th:href="${theme.spec?.homepage ?: '#'}"
                 target="_blank"
