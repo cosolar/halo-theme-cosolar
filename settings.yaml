@@ -57,6 +57,11 @@ spec:
           label: 显示页脚主区域
           value: true
           help: 关闭后将隐藏页脚的品牌、统计与订阅主区域，仅保留底部版权信息
+        - $formkit: switch
+          name: show_footer_powered
+          label: 显示 Powered by 信息
+          value: true
+          help: 关闭后将隐藏页脚底部的"Powered by Halo"与主题信息
         - $formkit: attachment
           name: logo_image
           label: 页脚 Logo 图片
@@ -647,6 +652,54 @@ spec:
           max: 50
           step: 5
           help: 每页显示的 RSS 资讯条目数量，建议 10-30
+
+    - group: moments
+      label: 瞬间页设置
+      formSchema:
+        - $formkit: text
+          name: moments_title
+          label: 页面标题
+          value: "瞬间"
+          help: 瞬间页面的标题文字
+        - $formkit: text
+          name: moments_subtitle
+          label: 页面副标题
+          value: "记录生活点滴，分享此刻灵感"
+          help: 显示在标题下方的描述文字
+        - $formkit: attachment
+          name: moments_cover
+          label: 页面封面图
+          value: ""
+          help: 瞬间页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景
+        - $formkit: switch
+          name: show_sidebar
+          label: 显示侧边栏
+          value: true
+          help: 在瞬间列表页显示侧边栏（与首页一致的侧边栏组件）
+
+    - group: photos
+      label: 图库页设置
+      formSchema:
+        - $formkit: text
+          name: photos_title
+          label: 页面标题
+          value: "图库"
+          help: 图库页面的标题文字
+        - $formkit: text
+          name: photos_subtitle
+          label: 页面副标题
+          value: "记录光影瞬间，收藏每一份美好"
+          help: 显示在标题下方的描述文字
+        - $formkit: attachment
+          name: photos_cover
+          label: 页面封面图
+          value: ""
+          help: 图库页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景
+        - $formkit: switch
+          name: photos_show_sidebar
+          label: 显示侧边栏
+          value: true
+          help: 在图库列表页显示侧边栏（图库概览、分组导航、最近上传）
 
     - group: background_light
       label: 页面背景 · 浅色模式

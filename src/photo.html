@@ -1,0 +1,290 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${photo.spec.displayName ?: '照片详情'} - ${site.title}|">照片详情</title>
+    <link rel="stylesheet" href="./css/photos.css" />
+    <script type="module" src="./js/photos.ts"></script>
+  </template>
+
+  <div
+    class="layout-grid"
+    th:with="
+      imgUrl = ${photo.spec.url != null and !#strings.isEmpty(photo.spec.url) ? photo.spec.url : photo.spec.cover},
+      exif = ${photo.exif},
+      hasExif = ${exif != null},
+      tags = ${photo.spec.tags},
+      hasTags = ${tags != null and not #lists.isEmpty(tags)},
+      createTime = ${photo.metadata.creationTimestamp},
+      backHref = ${backUrl != null and !#strings.isEmpty(backUrl) ? backUrl : photoUrl.list(photo.spec.groupName)}
+    "
+  >
+    <div class="content-area">
+      <!-- ===== Back Link ===== -->
+      <a class="photo-back" th:href="${backHref}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+        <span>返回图库</span>
+      </a>
+
+      <!-- ===== Photo Viewer ===== -->
+      <figure class="photo-viewer">
+        <div class="photo-viewer-stage">
+          <img class="photo-viewer-img" th:src="${imgUrl}" th:alt="${photo.spec.displayName}" />
+          <button
+            type="button"
+            class="photo-zoom photo-zoom--stage"
+            data-lightbox
+            th:attr="data-lightbox-src=${imgUrl}, data-lightbox-title=${photo.spec.displayName}"
+            aria-label="查看大图"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </button>
+        </div>
+        <figcaption class="photo-viewer-caption" th:if="${photo.spec.displayName != null and !#strings.isEmpty(photo.spec.displayName)}">
+          <span th:text="${photo.spec.displayName}">照片标题</span>
+          <span class="photo-viewer-counter" th:if="${total > 1}" th:text="|${position} / ${total}|">1 / 1</span>
+        </figcaption>
+      </figure>
+
+      <!-- ===== Prev / Next ===== -->
+      <nav class="photo-prevnext" aria-label="照片导航">
+        <a
+          class="photo-prevnext-btn photo-prevnext-prev"
+          th:if="${prev != null}"
+          th:href="@{${photoUrl.detail(prev)}}"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          <span>上一张</span>
+        </a>
+        <span class="photo-prevnext-placeholder" th:if="${prev == null}"></span>
+        <a
+          class="photo-prevnext-btn photo-prevnext-next"
+          th:if="${next != null}"
+          th:href="@{${photoUrl.detail(next)}}"
+        >
+          <span>下一张</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </a>
+      </nav>
+
+      <!-- ===== Neighbors Strip ===== -->
+      <div
+        class="photo-neighbors"
+        th:if="${neighbors != null and not #lists.isEmpty(neighbors) and #lists.size(neighbors) > 1}"
+      >
+        <div class="photo-neighbors-title">同一分组</div>
+        <div class="photo-neighbors-strip">
+          <a
+            class="photo-neighbor"
+            th:each="n : ${neighbors}"
+            th:href="@{${photoUrl.detail(n)}}"
+            th:classappend="${n.metadata.name == photo.metadata.name} ? 'is-current'"
+            th:with="nUrl = ${n.spec.url != null and !#strings.isEmpty(n.spec.url) ? n.spec.url : n.spec.cover}"
+          >
+            <img th:src="${nUrl}" th:alt="${n.spec.displayName}" loading="lazy" />
+          </a>
+        </div>
+      </div>
+
+      <!-- ===== Comments ===== -->
+      <div th:if="${haloCommentEnabled}" style="margin-top: 28px">
+        <halo:comment group="core.halo.run" kind="Photo" th:attr="name=${photo.metadata.name}" />
+      </div>
+    </div>
+
+    <!-- ===== Sidebar (Meta) ===== -->
+    <aside class="sidebar">
+      <!-- 基础信息 -->
+      <div class="widget widget-photo-basic">
+        <div class="widget-title">
+          <span class="title-text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            基础信息
+          </span>
+        </div>
+        <dl class="widget-photo-basic-list">
+          <div
+            class="widget-photo-basic-row"
+            th:if="${photo.spec.url != null and !#strings.isEmpty(photo.spec.url)}"
+          >
+            <dt>地址</dt>
+            <dd class="widget-photo-basic-url">
+              <a
+                class="widget-photo-url"
+                th:href="${photo.spec.url}"
+                target="_blank"
+                rel="noopener"
+                th:attr="title=${photo.spec.url}"
+                th:text="${photo.spec.url}"
+                >图片地址</a
+              >
+              <button
+                type="button"
+                class="photo-copy-btn"
+                th:attr="data-copy=${photo.spec.url}"
+                aria-label="复制图片地址"
+                title="复制地址"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              </button>
+            </dd>
+          </div>
+          <div
+            class="widget-photo-basic-row"
+            th:with="
+              cleanUrl = ${photo.spec.url != null and !#strings.isEmpty(photo.spec.url) ? #strings.substringBefore(photo.spec.url, '?') : ''},
+              dotIdx = ${!#strings.isEmpty(cleanUrl) ? cleanUrl.lastIndexOf('.') : -1},
+              rawExt = ${dotIdx >= 0 ? #strings.substring(cleanUrl, dotIdx + 1) : ''},
+              fileExt = ${!#strings.isEmpty(rawExt) ? #strings.toUpperCase(rawExt) : '未知'}
+            "
+          >
+            <dt>类型</dt>
+            <dd th:text="${fileExt}">未知</dd>
+          </div>
+          <div
+            class="widget-photo-basic-row"
+            th:if="${hasExif and exif.imageWidth != null and exif.imageHeight != null}"
+          >
+            <dt>尺寸</dt>
+            <dd th:text="${exif.imageWidth + ' × ' + exif.imageHeight}">尺寸</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="widget widget-photo-meta">
+        <h2 class="widget-photo-meta-title" th:text="${photo.spec.displayName ?: '未命名照片'}">照片标题</h2>
+        <p class="widget-photo-meta-desc" th:if="${photo.spec.description != null and !#strings.isEmpty(photo.spec.description)}" th:text="${photo.spec.description}">
+          照片描述
+        </p>
+
+        <div class="widget-photo-meta-tags" th:if="${hasTags}">
+          <a
+            class="widget-photo-tag"
+            th:each="t : ${tags}"
+            th:href="@{${photoUrl.list(photo.spec.groupName)}}"
+            th:text="'#' + ${t}"
+            >#标签</a
+          >
+        </div>
+
+        <dl class="widget-photo-meta-list" th:if="${hasExif or createTime != null or (photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName))}">
+          <div class="widget-photo-meta-row" th:if="${photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName)}">
+            <dt>分组</dt>
+            <dd>
+              <a th:href="@{${photoUrl.list(photo.spec.groupName)}}" th:text="${photo.spec.groupName}">分组</a>
+            </dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${createTime != null and !#strings.isEmpty(createTime)}">
+            <dt>上传时间</dt>
+            <dd th:text="${#strings.replace(#strings.substring(createTime, 0, 16), 'T', ' ')}">时间</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.make != null and !#strings.isEmpty(exif.make)}">
+            <dt>相机</dt>
+            <dd th:text="${exif.make + (exif.model != null and !#strings.isEmpty(exif.model) ? ' ' + exif.model : '')}">相机</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.lensModel != null and !#strings.isEmpty(exif.lensModel)}">
+            <dt>镜头</dt>
+            <dd th:text="${exif.lensModel}">镜头</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.focalLength != null}">
+            <dt>焦距</dt>
+            <dd th:text="${exif.focalLength} + ' mm'">焦距</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.fNumber != null}">
+            <dt>光圈</dt>
+            <dd th:text="${'f/' + exif.fNumber}">光圈</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.exposureTime != null and !#strings.isEmpty(exif.exposureTime)}">
+            <dt>快门</dt>
+            <dd th:text="${exif.exposureTime} + ' s'">快门</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.iso != null}">
+            <dt>ISO</dt>
+            <dd th:text="${exif.iso}">ISO</dd>
+          </div>
+          <div class="widget-photo-meta-row" th:if="${hasExif and exif.dateTimeOriginal != null and !#strings.isEmpty(exif.dateTimeOriginal)}">
+            <dt>拍摄时间</dt>
+            <dd th:text="${#strings.replace(#strings.substring(exif.dateTimeOriginal, 0, 16), 'T', ' ')}">拍摄时间</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="widget widget-photo-nav">
+        <div class="widget-title">
+          <span class="title-text">浏览进度</span>
+        </div>
+        <div class="widget-photo-nav-progress">
+          <div class="widget-photo-nav-bar" th:if="${total > 1}" th:style="${'width:' + (position * 100 / total) + '%'}"></div>
+        </div>
+        <div class="widget-photo-nav-info">
+          <span>第 <strong th:text="${position}">1</strong> 张</span>
+          <span>共 <strong th:text="${total}">1</strong> 张</span>
+        </div>
+        <div class="widget-photo-nav-actions">
+          <a class="widget-photo-nav-link" th:if="${prev != null}" th:href="@{${photoUrl.detail(prev)}}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            <span>上一张</span>
+          </a>
+          <a class="widget-photo-nav-link widget-photo-nav-link--next" th:if="${next != null}" th:href="@{${photoUrl.detail(next)}}">
+            <span>下一张</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </a>
+        </div>
+        <a class="btn btn-primary widget-photo-back" th:href="${backHref}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>返回图库</span>
+        </a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===== Lightbox ===== -->
+  <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+    <button type="button" class="photo-lightbox-close" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+    <button type="button" class="photo-lightbox-nav photo-lightbox-prev" aria-label="上一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <figure class="photo-lightbox-figure">
+      <img class="photo-lightbox-img" src="" alt="" />
+      <figcaption class="photo-lightbox-caption"></figcaption>
+    </figure>
+    <button type="button" class="photo-lightbox-nav photo-lightbox-next" aria-label="下一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  </div>
+</include>

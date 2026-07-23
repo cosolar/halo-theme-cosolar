@@ -1,0 +1,362 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${theme.config?.photos?.photos_title ?: '图库'} - ${site.title}|">图库</title>
+    <link rel="stylesheet" href="./css/photos.css" />
+    <script type="module" src="./js/photos.ts"></script>
+  </template>
+
+  <div
+    class="layout-grid"
+    th:classappend="${showSidebar ? '' : 'no-sidebar'}"
+    th:with="
+      photosTitle = ${theme.config?.photos?.photos_title ?: '图库'},
+      photosSubtitle = ${theme.config?.photos?.photos_subtitle ?: '记录光影瞬间，收藏每一份美好'},
+      showSidebar = ${theme.config?.photos?.photos_show_sidebar ?: true},
+      pluginInstalled = ${photoFinder != null},
+      groups = ${pluginInstalled ? groups : null},
+      photos = ${pluginInstalled ? photos : null},
+      recentPhotos = ${pluginInstalled ? photoFinder.list(1, 6) : null},
+      activeGroup = ${param != null and param.group != null and param.group.length > 0 ? param.group[0] : null},
+      totalPhotos = ${groups != null and not #lists.isEmpty(groups) ? #aggregates.sum(groups.![status != null and status.photoCount != null ? status.photoCount : 0]) : (photos != null ? photos.total : 0)},
+      groupCount = ${groups != null ? #lists.size(groups) : 0},
+      currentCount = ${photos != null and photos.items != null ? #lists.size(photos.items) : 0},
+      hasPhotos = ${photos != null and photos.items != null and not #lists.isEmpty(photos.items)},
+      hasGroups = ${groups != null and not #lists.isEmpty(groups)}
+    "
+  >
+    <div class="content-area">
+      <!-- ===== Plugin Not Installed ===== -->
+      <div class="photo-notice" th:if="${!pluginInstalled}">
+        <div class="photo-notice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="M21 15l-5-5L5 21" />
+          </svg>
+        </div>
+        <h2>图库功能未启用</h2>
+        <p>本页面需要安装并启用「图库插件 plugin-photos」，启用后即可在 /photos 浏览和分享你的摄影作品。</p>
+      </div>
+
+      <th:block th:if="${pluginInstalled}">
+        <!-- ===== Page Hero ===== -->
+        <section
+          class="photo-hero"
+          th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.photos?.photos_cover) ? theme.config.photos.photos_cover : defaultCover}"
+        >
+          <div class="photo-hero-bg" th:if="${!#strings.isEmpty(cover)}">
+            <img th:src="${cover}" alt="" loading="lazy" />
+          </div>
+          <div class="photo-hero-bg--fallback" th:unless="${!#strings.isEmpty(cover)}"></div>
+          <div class="photo-hero-overlay" th:if="${!#strings.isEmpty(cover)}"></div>
+
+          <div class="photo-hero-content">
+            <div class="photo-hero-left">
+              <span class="photo-hero-eyebrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <path d="M21 15l-5-5L5 21" />
+                </svg>
+                <span th:text="${photosTitle}">图库</span>
+              </span>
+              <h1 th:text="${photosTitle}">图库</h1>
+              <p class="photo-hero-desc" th:text="${photosSubtitle}">
+                记录光影瞬间，收藏每一份美好
+              </p>
+
+              <!-- 统计栏 (集成在 Hero 内) -->
+              <div class="photo-hero-stats">
+                <div class="photo-hero-stat">
+                  <div class="photo-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <path d="M21 15l-5-5L5 21" />
+                    </svg>
+                  </div>
+                  <div class="photo-hero-stat-text">
+                    <span class="photo-hero-stat-num" th:text="${totalPhotos}" data-format-number>0</span>
+                    <span class="photo-hero-stat-label">照片总数</span>
+                  </div>
+                </div>
+                <span class="photo-hero-stat-divider"></span>
+                <div class="photo-hero-stat">
+                  <div class="photo-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <div class="photo-hero-stat-text">
+                    <span class="photo-hero-stat-num" th:text="${groupCount}" data-format-number>0</span>
+                    <span class="photo-hero-stat-label">分组数</span>
+                  </div>
+                </div>
+                <span class="photo-hero-stat-divider"></span>
+                <div class="photo-hero-stat">
+                  <div class="photo-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="3" width="7" height="7" rx="1" />
+                      <rect x="3" y="14" width="7" height="7" rx="1" />
+                      <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                  </div>
+                  <div class="photo-hero-stat-text">
+                    <span class="photo-hero-stat-num" th:text="${currentCount}" data-format-number>0</span>
+                    <span class="photo-hero-stat-label">本页展示</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Toolbar ===== -->
+        <div class="photo-toolbar">
+          <div class="photo-groups" th:if="${hasGroups}">
+            <a
+              class="photo-group"
+              th:href="@{${photoUrl.list()}}"
+              th:classappend="${activeGroup == null} ? 'active'"
+            >
+              全部
+              <small th:text="${totalPhotos}">0</small>
+            </a>
+            <a
+              class="photo-group"
+              th:each="g : ${groups}"
+              th:href="@{${photoUrl.list(g.metadata.name)}}"
+              th:classappend="${g.metadata.name == activeGroup} ? 'active'"
+            >
+              <span th:text="${g.spec.displayName}">分组</span>
+              <small th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}">0</small>
+            </a>
+          </div>
+
+          <div class="photo-toolbar-actions">
+            <div class="photo-view-toggle" role="group" aria-label="视图切换">
+              <button type="button" class="photo-view-btn active" data-view="masonry" title="瀑布流">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="9" rx="1" />
+                  <rect x="14" y="3" width="7" height="5" rx="1" />
+                  <rect x="14" y="12" width="7" height="9" rx="1" />
+                  <rect x="3" y="16" width="7" height="5" rx="1" />
+                </svg>
+              </button>
+              <button type="button" class="photo-view-btn" data-view="grid" title="网格">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+              </button>
+            </div>
+            <a class="btn btn-primary photo-upload" href="/console/photos" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>上传照片</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ===== Photo Grid ===== -->
+        <div class="photo-grid" id="photoGrid" th:if="${hasPhotos}">
+          <a
+            class="photo-card"
+            th:each="photo : ${photos.items}"
+            th:href="@{${photoUrl.detail(photo)}}"
+            th:with="imgUrl = ${photo.spec.url != null and !#strings.isEmpty(photo.spec.url) ? photo.spec.url : photo.spec.cover}"
+          >
+            <img
+              class="photo-card-img"
+              th:src="${imgUrl}"
+              th:alt="${photo.spec.displayName}"
+              loading="lazy"
+            />
+            <span
+              class="photo-zoom"
+              role="button"
+              tabindex="0"
+              data-lightbox
+              th:attr="data-lightbox-src=${imgUrl}, data-lightbox-title=${photo.spec.displayName}"
+              aria-label="查看大图"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                <line x1="11" y1="8" x2="11" y2="14" />
+                <line x1="8" y1="11" x2="14" y2="11" />
+              </svg>
+            </span>
+            <div class="photo-card-overlay">
+              <span class="photo-card-title" th:text="${photo.spec.displayName}">照片标题</span>
+              <span class="photo-card-meta" th:if="${photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName)}" th:text="${photo.spec.groupName}">分组</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- ===== Empty State ===== -->
+        <div class="empty-state" th:if="${!hasPhotos}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="M21 15l-5-5L5 21" />
+          </svg>
+          <p>暂无照片</p>
+          <small th:if="${activeGroup != null}">该分组下还没有照片，换个分组看看吧</small>
+          <small th:unless="${activeGroup != null}">前往控制台上传你的第一张照片吧</small>
+        </div>
+
+        <!-- ===== Load More ===== -->
+        <a
+          th:if="${photos != null and photos.hasNext()}"
+          th:href="${photos.nextUrl}"
+          class="photo-load-more"
+          id="photoLoadMore"
+          data-photo-load-more
+        >
+          <span>加载更多照片</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </a>
+
+        <!-- ===== Pager ===== -->
+        <div class="photo-pager" th:if="${photos != null and (photos.hasPrevious() or photos.hasNext())}">
+          <a
+            class="photo-pager-btn"
+            th:if="${photos.hasPrevious()}"
+            th:href="${photos.prevUrl}"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            <span>上一页</span>
+          </a>
+          <span class="photo-pager-info">
+            <strong th:text="${photos.page}">1</strong> / <span th:text="${photos.totalPages}">1</span>
+          </span>
+          <a
+            class="photo-pager-btn"
+            th:if="${photos.hasNext()}"
+            th:href="${photos.nextUrl}"
+          >
+            <span>下一页</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </a>
+        </div>
+      </th:block>
+    </div>
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar" th:if="${pluginInstalled and showSidebar}">
+      <!-- 图库统计 -->
+      <div class="widget widget-photo-stats">
+        <div class="widget-title">
+          <span class="title-text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" />
+            </svg>
+            图库概览
+          </span>
+        </div>
+        <div class="widget-photo-stats-grid">
+          <div class="widget-photo-stat">
+            <span class="widget-photo-stat-num" th:text="${totalPhotos}" data-format-number>0</span>
+            <span class="widget-photo-stat-label">照片</span>
+          </div>
+          <div class="widget-photo-stat">
+            <span class="widget-photo-stat-num" th:text="${groupCount}" data-format-number>0</span>
+            <span class="widget-photo-stat-label">分组</span>
+          </div>
+          <div class="widget-photo-stat">
+            <span class="widget-photo-stat-num" th:text="${currentCount}" data-format-number>0</span>
+            <span class="widget-photo-stat-label">本页</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分组导航 -->
+      <div class="widget widget-photo-groups" th:if="${hasGroups}">
+        <div class="widget-title">
+          <span class="title-text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+            </svg>
+            照片分组
+          </span>
+          <a th:href="@{${photoUrl.list()}}">全部</a>
+        </div>
+        <ul class="widget-photo-group-list">
+          <li th:each="g : ${groups}">
+            <a
+              class="widget-photo-group"
+              th:href="@{${photoUrl.list(g.metadata.name)}}"
+              th:classappend="${g.metadata.name == activeGroup} ? 'active'"
+            >
+              <span th:text="${g.spec.displayName}">分组</span>
+              <small th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}">0</small>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 最近上传 -->
+      <div class="widget widget-photo-recent" th:if="${recentPhotos != null and recentPhotos.items != null and not #lists.isEmpty(recentPhotos.items)}">
+        <div class="widget-title">
+          <span class="title-text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <polyline points="12 7 12 12 15 14" />
+            </svg>
+            最近上传
+          </span>
+          <a th:href="@{${photoUrl.list()}}">更多</a>
+        </div>
+        <div class="widget-photo-recent-grid">
+          <a
+            class="widget-photo-recent-item"
+            th:each="rp : ${recentPhotos.items}"
+            th:href="@{${photoUrl.detail(rp)}}"
+            th:with="rpUrl = ${rp.spec.url != null and !#strings.isEmpty(rp.spec.url) ? rp.spec.url : rp.spec.cover}"
+            th:title="${rp.spec.displayName}"
+          >
+            <img th:src="${rpUrl}" th:alt="${rp.spec.displayName}" loading="lazy" />
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===== Lightbox ===== -->
+  <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
+    <button type="button" class="photo-lightbox-close" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+    <button type="button" class="photo-lightbox-nav photo-lightbox-prev" aria-label="上一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <figure class="photo-lightbox-figure">
+      <img class="photo-lightbox-img" src="" alt="" />
+      <figcaption class="photo-lightbox-caption"></figcaption>
+    </figure>
+    <button type="button" class="photo-lightbox-nav photo-lightbox-next" aria-label="下一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  </div>
+</include>

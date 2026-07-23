@@ -1,0 +1,374 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|${theme.config?.moments?.moments_title ?: '瞬间'} - ${site.title}|">瞬间</title>
+    <link rel="stylesheet" href="./css/moments.css" />
+    <script type="module" src="./js/moments.ts"></script>
+  </template>
+
+  <div
+    class="layout-grid"
+    th:classappend="${theme.config?.moments?.show_sidebar == false ? ' no-sidebar' : ''}"
+    th:with="
+      momentsTitle = ${theme.config?.moments?.moments_title ?: '瞬间'},
+      momentsSubtitle = ${theme.config?.moments?.moments_subtitle ?: '记录生活灵感，分享点滴美好'},
+      pluginInstalled = ${momentFinder != null},
+      moments = ${pluginInstalled ? moments : null},
+      tags = ${pluginInstalled ? tags : null},
+      activeTag = ${param != null and param.tag != null and param.tag.length > 0 ? param.tag[0] : null},
+      activeSort = ${param != null and param.sort != null and param.sort.length > 0 ? param.sort[0] : 'newest'},
+      totalCount = ${moments != null ? moments.total : 0},
+      hasMoments = ${moments != null and moments.items != null and not #lists.isEmpty(moments.items)},
+      allForStats = ${pluginInstalled ? momentFinder.list({size: 200, sort: {'spec.releaseTime,desc'}}) : null},
+      allItems = ${allForStats != null ? allForStats.items : null},
+      todayCount = ${allItems != null ? #lists.size(allItems.?[(spec.releaseTime != null and #strings.startsWith(spec.releaseTime, #temporals.format(#temporals.createNow(), 'yyyy-MM-dd'))) or (spec.releaseTime == null and #strings.startsWith(metadata.creationTimestamp, #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')))]) : 0},
+      monthCount = ${allItems != null ? #lists.size(allItems.?[(spec.releaseTime != null and #strings.startsWith(spec.releaseTime, #temporals.format(#temporals.createNow(), 'yyyy-MM'))) or (spec.releaseTime == null and #strings.startsWith(metadata.creationTimestamp, #temporals.format(#temporals.createNow(), 'yyyy-MM')))]) : 0},
+      totalUpvote = ${allItems != null ? #aggregates.sum(allItems.![stats != null ? stats.upvote : 0]) : 0},
+      totalComment = ${allItems != null ? #aggregates.sum(allItems.![stats != null ? (stats.approvedComment != null ? stats.approvedComment : (stats.totalComment != null ? stats.totalComment : 0)) : 0]) : 0},
+      totalInteract = ${totalUpvote + totalComment}
+    "
+  >
+    <div class="content-area">
+      <!-- ===== Plugin Not Installed ===== -->
+      <div class="moment-notice" th:if="${!pluginInstalled}">
+        <div class="moment-notice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 8v4l3 3" />
+            <circle cx="12" cy="12" r="9" />
+          </svg>
+        </div>
+        <h2>瞬间功能未启用</h2>
+        <p>本页面需要安装并启用「瞬间插件 plugin-moments」，启用后即可在 /moments 浏览和发布瞬间动态。</p>
+      </div>
+
+      <th:block th:if="${pluginInstalled}">
+        <!-- ===== Page Hero (与 links.html 风格统一) ===== -->
+        <section class="moments-hero" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.moments?.moments_cover) ? theme.config.moments.moments_cover : defaultCover}">
+          <div class="moments-hero-bg" th:if="${!#strings.isEmpty(cover)}">
+            <img th:src="${cover}" alt="" loading="lazy" />
+          </div>
+          <div class="moments-hero-bg--fallback" th:unless="${!#strings.isEmpty(cover)}"></div>
+          <div class="moments-hero-overlay" th:if="${!#strings.isEmpty(cover)}"></div>
+
+          <div class="moments-hero-content">
+            <div class="moments-hero-left">
+              <span class="moments-hero-eyebrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8v4l3 3" />
+                </svg>
+                <span th:text="${momentsTitle}">瞬间</span>
+              </span>
+              <h1 th:text="${momentsTitle}">瞬间</h1>
+              <p class="moments-hero-desc" th:text="${momentsSubtitle}">
+                记录生活灵感，分享点滴美好
+              </p>
+
+              <!-- 统计栏 (集成在 Hero 内) -->
+              <div class="moments-hero-stats">
+                <div class="moments-hero-stat">
+                  <div class="moments-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  </div>
+                  <div class="moments-hero-stat-text">
+                    <span class="moments-hero-stat-num" th:text="${todayCount}" data-format-number>0</span>
+                    <span class="moments-hero-stat-label">今日瞬间</span>
+                  </div>
+                </div>
+                <span class="moments-hero-stat-divider"></span>
+                <div class="moments-hero-stat">
+                  <div class="moments-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                      <path d="M8 14h2M12 14h2M8 18h2M12 18h2" />
+                    </svg>
+                  </div>
+                  <div class="moments-hero-stat-text">
+                    <span class="moments-hero-stat-num" th:text="${monthCount}" data-format-number>0</span>
+                    <span class="moments-hero-stat-label">本月瞬间</span>
+                  </div>
+                </div>
+                <span class="moments-hero-stat-divider"></span>
+                <div class="moments-hero-stat">
+                  <div class="moments-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <div class="moments-hero-stat-text">
+                    <span class="moments-hero-stat-num" th:text="${totalCount}" data-format-number>0</span>
+                    <span class="moments-hero-stat-label">总瞬间数</span>
+                  </div>
+                </div>
+                <span class="moments-hero-stat-divider"></span>
+                <div class="moments-hero-stat">
+                  <div class="moments-hero-stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </div>
+                  <div class="moments-hero-stat-text">
+                    <span class="moments-hero-stat-num" th:text="${totalInteract}" data-format-number>0</span>
+                    <span class="moments-hero-stat-label">互动数</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Toolbar ===== -->
+        <div class="moments-toolbar">
+          <div class="moment-tags" th:if="${tags != null and not #lists.isEmpty(tags)}">
+            <a
+              class="moment-tag"
+              th:href="@{/moments}"
+              th:classappend="${activeTag == null} ? 'active'"
+            >
+              全部
+            </a>
+            <a
+              class="moment-tag"
+              th:each="tag : ${tags}"
+              th:href="@{|/moments?tag=${tag.name}|}"
+              th:classappend="${tag.name == activeTag} ? 'active'"
+            >
+              <span th:text="${tag.name}">标签</span>
+              <small th:text="${tag.momentCount}">0</small>
+            </a>
+          </div>
+
+          <div class="moments-toolbar-actions" th:if="${#lists.isEmpty(tags)}"></div>
+          <div class="moments-toolbar-actions" th:unless="${#lists.isEmpty(tags)}">
+            <div class="moment-sort">
+              <a
+                class="moment-sort-item"
+                th:href="@{|/moments${activeTag != null ? '?tag=' + activeTag : ''}${activeTag != null ? '&sort=newest' : '?sort=newest'}|}"
+                th:classappend="${activeSort == 'newest'} ? 'active'"
+              >最新</a>
+              <a
+                class="moment-sort-item"
+                th:href="@{|/moments${activeTag != null ? '?tag=' + activeTag : ''}${activeTag != null ? '&sort=hottest' : '?sort=hottest'}|}"
+                th:classappend="${activeSort == 'hottest'} ? 'active'"
+              >最热</a>
+            </div>
+            <a class="btn btn-primary btn-publish" href="/console/moments" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>发布瞬间</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ===== Moments Feed ===== -->
+        <div class="moment-feed" id="momentGrid" th:if="${hasMoments}">
+          <article
+            class="moment-card"
+            th:each="moment : ${moments.items}"
+            th:with="content = ${moment.spec.content}, owner = ${moment.owner}, releaseTime = ${moment.spec.releaseTime != null ? moment.spec.releaseTime : moment.metadata.creationTimestamp}, mediaCount = ${content != null and content.medium != null ? #lists.size(content.medium) : 0}, ownerName = ${owner != null and !#strings.isEmpty(owner.displayName) ? owner.displayName : (owner != null and !#strings.isEmpty(owner.name) ? owner.name : '匿名')}, upvote = ${moment.stats != null ? moment.stats.upvote : 0}, commentCount = ${moment.stats != null ? (moment.stats.approvedComment ?: moment.stats.totalComment ?: 0) : 0}"
+          >
+            <!-- 左侧头像 -->
+            <a
+              class="moment-avatar"
+              th:if="${owner != null and !#strings.isEmpty(owner.avatar)}"
+              th:href="@{|/moments/${moment.metadata.name}|}"
+            >
+              <img th:src="${owner.avatar}" th:alt="${ownerName}" loading="lazy" />
+            </a>
+            <span
+              class="moment-avatar"
+              th:unless="${owner != null and !#strings.isEmpty(owner.avatar)}"
+              th:text="${ownerName.substring(0,1)}"
+              >M</span
+            >
+
+            <!-- 右侧内容 -->
+            <div class="moment-body">
+              <div class="moment-header-line">
+                <div class="moment-header-main">
+                  <a class="moment-name" th:href="@{|/moments/${moment.metadata.name}|}" th:text="${ownerName}">作者</a>
+                </div>
+                <div class="moment-sub-line">
+                  <time
+                    class="moment-time"
+                    th:datetime="${releaseTime}"
+                    th:title="${releaseTime}"
+                    data-relative-time
+                    th:text="${releaseTime}"
+                    >时间</time
+                  >
+                  <span class="moment-dot" aria-hidden="true">·</span>
+                  <span class="moment-category" th:if="${moment.spec.tags != null and not #lists.isEmpty(moment.spec.tags)}" th:text="${moment.spec.tags[0]}">生活</span>
+                  <span class="moment-category" th:unless="${moment.spec.tags != null and not #lists.isEmpty(moment.spec.tags)}">日常</span>
+                </div>
+              </div>
+
+              <div
+                class="moment-content"
+                th:if="${content != null and not #strings.isEmpty(content.html)}"
+                th:utext="${content.html}"
+              ></div>
+
+              <th:block th:if="${mediaCount > 0}">
+                <div
+                  class="moment-media"
+                  th:classappend="${mediaCount == 1} ? 'is-single' : (${mediaCount == 4} ? 'is-four' : (${mediaCount == 2} ? 'is-duo' : ''))"
+                >
+                  <th:block th:each="media : ${content.medium}">
+                    <a
+                      class="moment-media-item moment-media-photo"
+                      th:if="${media.type.name == 'PHOTO'}"
+                      th:href="${media.url}"
+                      data-moment-lightbox
+                      th:attr="data-lightbox-src=${media.url}"
+                    >
+                      <img th:src="${media.url}" alt="" loading="lazy" />
+                    </a>
+                    <div class="moment-media-item moment-media-video" th:if="${media.type.name == 'VIDEO'}">
+                      <video th:src="${media.url}" controls="true" preload="none"></video>
+                    </div>
+                    <div class="moment-media-item moment-media-audio" th:if="${media.type.name == 'AUDIO'}">
+                      <audio th:src="${media.url}" controls="true"></audio>
+                    </div>
+                    <a
+                      class="moment-media-item moment-media-post"
+                      th:if="${media.type.name == 'POST'}"
+                      th:href="${media.url}"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                      </svg>
+                      <span>查看关联文章</span>
+                    </a>
+                  </th:block>
+                </div>
+              </th:block>
+
+              <!-- 互动栏 -->
+              <div class="moment-interactions">
+                <button
+                  type="button"
+                  class="moment-interaction moment-like"
+                  th:attr="data-moment-name=${moment.metadata.name}"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                  <span class="moment-like-count" th:text="${upvote}">0</span>
+                </button>
+                <a
+                  class="moment-interaction moment-comment"
+                  th:href="@{|/moments/${moment.metadata.name}|}"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <span th:text="${commentCount}">0</span>
+                </a>
+                <button
+                  type="button"
+                  class="moment-interaction moment-share"
+                  th:attr="data-share-url=@{|/moments/${moment.metadata.name}|}"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                  </svg>
+                  <span>分享</span>
+                </button>
+                <a class="moment-detail-link" th:href="@{|/moments/${moment.metadata.name}|}">
+                  <span>查看详情</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- ===== Empty State ===== -->
+        <div class="empty-state" th:if="${!hasMoments}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 8v4l3 3" />
+            <circle cx="12" cy="12" r="9" />
+          </svg>
+          <p>暂无瞬间动态</p>
+          <small th:if="${activeTag != null}">该标签下还没有瞬间，换个标签看看吧</small>
+        </div>
+
+        <!-- ===== Load More ===== -->
+        <a
+          th:if="${moments != null and moments.hasNext()}"
+          th:href="@{${moments.nextUrl}}"
+          class="moment-load-more"
+          id="momentLoadMore"
+          data-moment-load-more
+        >
+          <span>加载更多瞬间</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </a>
+      </th:block>
+    </div>
+
+    <!-- ===== Sidebar ===== -->
+    <th:block th:if="${theme.config?.moments?.show_sidebar != false}">
+      <include src="sidebar.html"></include>
+    </th:block>
+  </div>
+
+  <!-- ===== Image Lightbox ===== -->
+  <div class="moment-lightbox" id="momentLightbox" aria-hidden="true">
+    <button type="button" class="moment-lightbox-close" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+    </button>
+    <button type="button" class="moment-lightbox-nav moment-lightbox-prev" aria-label="上一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6" /></svg>
+    </button>
+    <div class="moment-lightbox-stage">
+      <img class="moment-lightbox-img" src="" alt="" />
+    </div>
+    <button type="button" class="moment-lightbox-nav moment-lightbox-next" aria-label="下一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6" /></svg>
+    </button>
+    <span class="moment-lightbox-counter"></span>
+    <span class="moment-lightbox-hint">滚轮缩放 · 拖动移动 · ESC 关闭</span>
+  </div>
+
+  <script th:inline="javascript">
+    window.__momentsPageData__ = {
+      total: /*[[${totalCount}]]*/ 0,
+      todayCount: /*[[${todayCount}]]*/ 0,
+      monthCount: /*[[${monthCount}]]*/ 0,
+      totalInteract: /*[[${totalInteract}]]*/ 0,
+      totalUpvote: /*[[${totalUpvote}]]*/ 0,
+      totalComment: /*[[${totalComment}]]*/ 0,
+      moments: [
+        [# th:each="item : ${allItems}" th:if="${allItems != null}"]
+        {
+          owner: /*[[${item.owner?.name}]]*/ null,
+          displayName: /*[[${item.owner?.displayName}]]*/ null,
+          avatar: /*[[${item.owner?.avatar}]]*/ null,
+          time: /*[[${item.spec?.releaseTime != null ? item.spec.releaseTime : item.metadata?.creationTimestamp}]]*/ null
+        },
+        [/]
+      ]
+    };
+  </script>
+</include>

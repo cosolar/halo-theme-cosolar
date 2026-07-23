@@ -1,0 +1,1429 @@
+/* moments.css — halo-theme-cosolar 瞬间页（moments）样式
+ * 列表页 /moments 与详情页 /moments/{name} 共用，随页面按需加载。
+ * 视觉风格参考用户设计稿：清新浅绿 Hero、右侧插画、标签工具栏、
+ * 朋友圈 Feed 卡片、右侧统计/标签/活跃用户/日历边栏。
+ * 仅依赖 main.css 中定义的主题变量。
+ */
+
+/* ===== Plugin Not Installed Notice ===== */
+.moment-notice {
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.moment-notice-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+.moment-notice-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.moment-notice h2 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.moment-notice p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===== Hero (与 links.html 风格统一) ===== */
+.moments-hero {
+  position: relative;
+  margin-bottom: 22px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  isolation: isolate;
+}
+
+.moments-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.moments-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.moments-hero-bg--fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(60% 80% at 92% 8%, rgba(167, 243, 208, 0.5) 0%, transparent 60%),
+    radial-gradient(70% 90% at 8% 100%, rgba(110, 231, 183, 0.4) 0%, transparent 55%),
+    linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 38%, #a7f3d0 62%, #6ee7b7 100%);
+}
+
+[data-theme="dark"] .moments-hero-bg--fallback {
+  background:
+    radial-gradient(60% 80% at 92% 8%, rgba(16, 185, 129, 0.35) 0%, transparent 60%),
+    radial-gradient(70% 90% at 8% 100%, rgba(5, 150, 105, 0.25) 0%, transparent 55%),
+    linear-gradient(135deg, #042f2e 0%, #064e3b 38%, #065f46 62%, #0f172a 100%);
+}
+
+.moments-hero-bg--fallback::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+    radial-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px, 56px 56px;
+  background-position: 0 0, 14px 14px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .moments-hero-bg--fallback::before {
+  background-image:
+    radial-gradient(rgba(167, 243, 208, 0.15) 1px, transparent 1px),
+    radial-gradient(rgba(167, 243, 208, 0.08) 1px, transparent 1px);
+}
+
+.moments-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 0%, transparent 50%, rgba(248, 250, 252, 0.3) 100%);
+}
+
+[data-theme="dark"] .moments-hero-overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.moments-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 16px;
+  padding: 22px 36px;
+}
+
+.moments-hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.moments-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  margin-bottom: 14px;
+}
+
+.moments-hero-eyebrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+.moments-hero-left h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #064e3b;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.moments-hero-desc {
+  font-size: 14px;
+  color: #065f46;
+  opacity: 0.85;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  max-width: 520px;
+}
+
+[data-theme="dark"] .moments-hero-left h1 {
+  color: #f1f5f9;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .moments-hero-desc {
+  color: rgba(241, 245, 249, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Hero 统计栏 (集成在 Hero 内) */
+.moments-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.moments-hero-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.moments-hero-stat-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  color: #0f766e;
+  backdrop-filter: blur(4px);
+}
+
+[data-theme="dark"] .moments-hero-stat-icon {
+  background: rgba(255, 255, 255, 0.12);
+  color: #6ee7b7;
+}
+
+.moments-hero-stat-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.moments-hero-stat-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.moments-hero-stat-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: #064e3b;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.moments-hero-stat-label {
+  font-size: 12px;
+  color: #0f766e;
+  opacity: 0.7;
+}
+
+[data-theme="dark"] .moments-hero-stat-num {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .moments-hero-stat-label {
+  color: rgba(241, 245, 249, 0.7);
+}
+
+.moments-hero-stat-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(15, 118, 110, 0.2);
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .moments-hero-stat-divider {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== Toolbar ===== */
+.moments-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.moment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.moment-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.moment-tag:hover {
+  border-color: var(--color-primary-border);
+  color: var(--color-primary);
+}
+
+.moment-tag.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.moment-tag small {
+  font-size: 11px;
+  opacity: 0.75;
+  padding-left: 2px;
+}
+
+.moments-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.moment-sort {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+
+.moment-sort-item {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.moment-sort-item:hover {
+  color: var(--color-primary);
+}
+
+.moment-sort-item.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.btn-publish {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-publish svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ===== Moments Feed ===== */
+.moment-feed {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2px 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.moment-card {
+  display: flex;
+  gap: 14px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.moment-card:last-child {
+  border-bottom: none;
+}
+
+/* Avatar */
+.moment-avatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.moment-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Body */
+.moment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.moment-header-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.moment-header-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.moment-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.moment-name:hover {
+  color: var(--color-primary);
+}
+
+.moment-level {
+  padding: 1px 7px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Level badge color variants — matches design: Lv2 green, Lv3 blue, Lv4 purple */
+.moment-level--1 {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.moment-level--2 {
+  background: #ecfdf5;
+  color: #10b981;
+}
+
+.moment-level--3 {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.moment-level--4 {
+  background: #faf5ff;
+  color: #a855f7;
+}
+
+.moment-level--5 {
+  background: #fff7ed;
+  color: #f97316;
+}
+
+.moment-level--6 {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+[data-theme="dark"] .moment-level--1 {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .moment-level--2 {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+[data-theme="dark"] .moment-level--3 {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .moment-level--4 {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+}
+
+[data-theme="dark"] .moment-level--5 {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+}
+
+[data-theme="dark"] .moment-level--6 {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.moment-sub-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.moment-dot {
+  color: var(--color-text-muted);
+}
+
+.moment-category {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.moment-content {
+  margin-top: 8px;
+  color: var(--color-text);
+  line-height: 1.7;
+  font-size: 15px;
+  word-break: break-word;
+}
+
+.moment-content p {
+  margin: 0 0 10px;
+}
+
+.moment-content p:last-child {
+  margin-bottom: 0;
+}
+
+.moment-content img {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  margin: 8px 0;
+}
+
+.moment-content a {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-primary-border);
+}
+
+.moment-content a:hover {
+  border-bottom-color: var(--color-primary);
+}
+
+/* ===== Inline Tags ===== */
+.moment-tags-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.moment-tag-inline {
+  color: var(--color-primary);
+  font-size: 13px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.moment-tag-inline:hover {
+  text-decoration: underline;
+}
+
+/* ===== Media（九宫格） ===== */
+.moment-media {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+  max-width: 420px;
+}
+
+.moment-media.is-single {
+  grid-template-columns: 1fr;
+  max-width: 260px;
+}
+
+.moment-media.is-single .moment-media-item {
+  aspect-ratio: auto;
+}
+
+.moment-media.is-single .moment-media-photo img {
+  height: auto;
+  max-height: 320px;
+  object-fit: contain;
+}
+
+.moment-media.is-duo,
+.moment-media.is-four {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 320px;
+}
+
+.moment-media-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.moment-media-photo {
+  display: block;
+}
+
+.moment-media-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+  transition: var(--transition);
+}
+
+.moment-media-photo:hover img {
+  opacity: 0.92;
+  transform: scale(1.03);
+}
+
+.moment-media-video,
+.moment-media-audio,
+.moment-media-post {
+  grid-column: 1 / -1;
+}
+
+.moment-media-video {
+  aspect-ratio: 16 / 9;
+}
+
+.moment-media-video video,
+.moment-media-audio audio {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 8px;
+}
+
+.moment-media-post {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.moment-media-post:hover {
+  filter: brightness(0.97);
+}
+
+.moment-media-post svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ===== Interactions（点赞 / 评论 / 分享） ===== */
+.moment-interactions {
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+  gap: 2px;
+}
+
+.moment-interaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.moment-interaction:hover {
+  color: var(--color-primary);
+}
+
+.moment-like:hover {
+  color: #ef4444;
+}
+
+.moment-like:hover svg {
+  stroke: #ef4444;
+}
+
+/* Liked state */
+.moment-like.liked {
+  color: #ef4444;
+}
+
+.moment-like.liked svg {
+  fill: #ef4444;
+  stroke: #ef4444;
+}
+
+.moment-like.liked .moment-like-count {
+  color: #ef4444;
+}
+
+.moment-comment:hover {
+  color: var(--color-primary);
+}
+
+.moment-share:hover {
+  color: #10b981;
+}
+
+.moment-interaction svg {
+  width: 18px;
+  height: 18px;
+  transition: var(--transition);
+}
+
+.moment-interaction span {
+  min-width: 14px;
+  text-align: center;
+}
+
+/* Detail link — pushed to the right */
+.moment-detail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.moment-detail-link svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s ease;
+}
+
+.moment-detail-link:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.moment-detail-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* ===== Load More ===== */
+.moment-load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 28px auto 0;
+  max-width: 240px;
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-primary);
+  font-size: 14px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.moment-load-more:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow);
+}
+
+.moment-load-more.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.moment-load-more span {
+  display: inline-block;
+}
+
+.moment-load-more svg {
+  width: 18px;
+  height: 18px;
+  transition: var(--transition);
+}
+
+.moment-load-more.loading svg {
+  animation: moment-spin 0.8s linear infinite;
+}
+
+@keyframes moment-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Back Link ===== */
+.moment-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.moment-back:hover {
+  color: var(--color-primary);
+}
+
+.moment-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== Detail Card ===== */
+.moment-detail {
+  display: flex;
+  gap: 16px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.moment-detail .moment-avatar--lg {
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+}
+
+.moment-detail .moment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.moment-detail .moment-content {
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.moment-detail .moment-media {
+  max-width: 560px;
+}
+
+.moment-detail .moment-media.is-single {
+  max-width: 300px;
+}
+
+.moment-detail .moment-media.is-single .moment-media-photo img {
+  max-height: 420px;
+}
+
+/* ===== Sidebar Widgets ===== */
+.widget-moments-profile {
+  padding: 18px;
+}
+
+.widget-moments-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.widget-moments-profile-header strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.widget-moments-profile-header a {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.widget-moments-profile-header a:hover {
+  color: var(--color-primary);
+}
+
+.widget-moments-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.widget-moments-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.widget-moments-stat-num {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.widget-moments-stat-label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* 热门标签 */
+.widget-moments-tags .widget-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.widget-moments-tags .widget-title a {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.widget-moments-tags .widget-title a:hover {
+  color: var(--color-primary);
+}
+
+.widget-moments-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.widget-moments-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.widget-moments-tag:hover {
+  border-color: var(--color-primary-border);
+  color: var(--color-primary);
+}
+
+.widget-moments-tag small {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* 活跃用户 */
+.widget-moments-users .widget-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.widget-moments-users .widget-title a {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.widget-moments-user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.widget-moments-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.widget-moments-user-avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.widget-moments-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.widget-moments-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.widget-moments-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widget-moments-user-name-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.widget-moments-user-level {
+  flex-shrink: 0;
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.widget-moments-user-count {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.widget-moments-user-count strong {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* 瞬间日历 */
+.widget-moments-calendar .widget-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.widget-moments-calendar-month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.widget-moments-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  text-align: center;
+}
+
+.widget-moments-weekday {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 4px 0;
+}
+
+.widget-moments-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: default;
+}
+
+.widget-moments-day.has-moment {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.widget-moments-day.has-moment:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.widget-moments-day.is-today {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.widget-moments-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.widget-moments-calendar-month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.widget-moments-calendar-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.widget-moments-calendar-nav button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.widget-moments-calendar-nav button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.widget-moments-calendar-nav button svg {
+  width: 12px;
+  height: 12px;
+}
+
+.widget-moments-day.is-other-month {
+  color: var(--color-text-muted);
+  opacity: 0.4;
+}
+
+/* ===== Moment Image Lightbox ===== */
+.moment-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.92);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.moment-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.moment-lightbox-stage {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moment-lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: grab;
+  transition: transform 0.1s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.moment-lightbox-img.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+.moment-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 2;
+}
+
+.moment-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.moment-lightbox-close svg {
+  width: 22px;
+  height: 22px;
+}
+
+.moment-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 2;
+}
+
+.moment-lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.moment-lightbox-nav svg {
+  width: 24px;
+  height: 24px;
+}
+
+.moment-lightbox-prev {
+  left: 20px;
+}
+
+.moment-lightbox-next {
+  right: 20px;
+}
+
+.moment-lightbox-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.moment-lightbox-hint {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .moment-lightbox-nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .moment-lightbox-prev {
+    left: 10px;
+  }
+
+  .moment-lightbox-next {
+    right: 10px;
+  }
+
+  .moment-lightbox-hint {
+    display: none;
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .moments-hero-content {
+    padding: 22px 28px;
+  }
+
+  .moments-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .moments-toolbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 768px) {
+  .moments-hero-content {
+    padding: 18px 18px;
+  }
+
+  .moments-hero-left h1 {
+    font-size: 1.7rem;
+  }
+
+  .moments-hero-stats {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .moments-hero-stat-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .moments-hero-stat-num {
+    font-size: 1.1rem;
+  }
+
+  .moment-tags {
+    gap: 6px;
+  }
+
+  .moment-tag {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .moments-toolbar-actions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .moment-feed {
+    padding: 2px 14px;
+  }
+
+  .moment-card {
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .moment-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .moment-detail {
+    gap: 12px;
+    padding: 16px 14px;
+  }
+
+  .moment-detail .moment-avatar--lg {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .moment-media {
+    gap: 4px;
+    max-width: none;
+  }
+
+  .moment-media.is-single {
+    max-width: 200px;
+  }
+
+  .moment-interactions {
+    max-width: none;
+  }
+}
