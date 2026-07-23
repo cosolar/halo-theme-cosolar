@@ -539,7 +539,8 @@
       btn.addEventListener("click", async function () {
         if (btn.classList.contains("liked")) return;
 
-        // Optimistic update
+        // 乐观更新：点击后本地先 +1，给用户即时反馈。
+        // 服务器已计入本次点赞，刷新后直接以服务器 stats.upvote 为准（刷新逻辑不再二次 +1）。
         btn.classList.add("liked");
         const count = countEl ? parseInt(countEl.textContent || "0", 10) : 0;
         if (countEl) countEl.textContent = String(count + 1);
@@ -558,12 +559,12 @@
 
           if (!response.ok) {
             btn.classList.remove("liked");
-            if (countEl) countEl.textContent = String(count);
+            if (countEl) countEl.textContent = String(count); // 失败回滚
             localStorage.removeItem(storageKey);
           }
         } catch {
           btn.classList.remove("liked");
-          if (countEl) countEl.textContent = String(count);
+          if (countEl) countEl.textContent = String(count); // 失败回滚
           localStorage.removeItem(storageKey);
         }
       });
