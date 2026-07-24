@@ -95,6 +95,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -4372,51 +4373,180 @@ body.nav-open {
   height: 16px;
 }
 
-/* ===== Responsive ===== */
+/* ===== Responsive: 768px Tablet/Mobile ===== */
 @media (max-width: 768px) {
+  /* --- Hero 区域简化 --- */
+  .links-hero {
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+
   .links-hero-content {
-    padding: 22px 20px;
-  }
-
-  .links-hero-left h1 {
-    font-size: 24px;
-  }
-
-  .links-hero-stats {
+    padding: 20px 16px;
     gap: 12px;
   }
 
+  .links-hero-eyebrow {
+    padding: 3px 10px;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  .links-hero-eyebrow svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .links-hero-left h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .links-hero-desc {
+    font-size: 13px;
+    margin-bottom: 16px;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* 统计栏横向滚动 */
+  .links-hero-stats {
+    gap: 14px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .links-hero-stats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .links-hero-stat {
+    flex-shrink: 0;
+  }
+
   .links-hero-stat-num {
-    font-size: 17px;
+    font-size: 16px;
+  }
+
+  .links-hero-stat-label {
+    font-size: 11px;
   }
 
   .links-hero-stat-icon {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
 
   .links-hero-stat-icon svg {
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
   }
 
+  .links-hero-stat-divider {
+    height: 24px;
+  }
+
+  /* --- 区域标题 --- */
+  .links-section-header {
+    margin-bottom: 14px;
+  }
+
+  .links-section-header h2 {
+    font-size: 16px;
+  }
+
+  .links-section-header h2 svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* 移动端隐藏第三个装饰性统计项（无限可能） */
+  .links-hero-stats .links-hero-stat:last-of-type,
+  .links-hero-stats .links-hero-stat-divider:last-of-type {
+    display: none;
+  }
+
+  /* --- 筛选 + 搜索工具栏 --- */
   .links-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
+    margin-bottom: 18px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* 筛选标签：单行横向滚动，防溢出 */
+  .link-filters {
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-width: 0;
+    padding: 2px 0;
+  }
+
+  .link-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .link-filters .link-filter {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* 移动端隐藏标签内数字计数 */
+  .link-filters .link-filter small {
+    display: none;
+  }
+
+  /* 搜索框独立全宽 */
+  .links-search {
+    width: 100%;
   }
 
   .links-search input,
   .links-search input:focus {
     width: 100%;
+    padding: 8px 14px 8px 36px;
   }
 
+  /* --- 分组标题 --- */
+  .link-group {
+    margin-bottom: 24px;
+  }
+
+  .link-group-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  .link-group-header h3 {
+    font-size: 15px;
+  }
+
+  /* --- 卡片网格 --- */
   .link-cards {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
+  /* --- 友链卡片紧凑布局 --- */
   .link-card {
     padding: 14px;
+    border-radius: 12px;
+  }
+
+  .link-card-head {
+    gap: 10px;
+    margin-bottom: 8px;
   }
 
   .link-card-logo {
@@ -4430,21 +4560,225 @@ body.nav-open {
     font-size: 14px;
   }
 
-  .link-filters {
-    overflow-x: auto;
-    flex-wrap: nowrap;
+  .link-card-url {
+    font-size: 11px;
   }
 
-  .link-filters .link-filter {
-    flex-shrink: 0;
+  .link-card-external {
+    width: 14px;
+    height: 14px;
   }
 
+  .link-card-desc {
+    font-size: 12px;
+    margin-bottom: 10px;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .link-card-footer {
+    padding-top: 10px;
+    gap: 6px;
+  }
+
+  .link-tag {
+    padding: 2px 8px;
+    font-size: 10px;
+  }
+
+  .link-badge {
+    padding: 1px 6px;
+    font-size: 10px;
+  }
+
+  /* --- 搜索无结果 --- */
+  .links-search-empty {
+    padding: 32px 16px;
+  }
+
+  .links-search-empty svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* --- CTA 申请友链区域 --- */
   .links-cta {
     padding: 28px 20px;
+    margin-top: 28px;
+    border-radius: 12px;
   }
 
-  .links-cta-inner h3 {
-    font-size: 16px;
+  .links-cta-decoration--left {
+    width: 70px;
+    height: 70px;
+  }
+
+  .links-cta-decoration--right {
+    width: 56px;
+    height: 56px;
+  }
+
+  .links-cta-decoration--leaf1 {
+    width: 22px;
+    height: 22px;
+  }
+
+  .links-cta-decoration--leaf2 {
+    width: 18px;
+    height: 18px;
+  }
+
+  .links-cta-inner {
+    gap: 12px;
+  }
+
+  .links-cta-inner p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .links-cta-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+
+  /* --- 评论区域 --- */
+  .link-comments {
+    margin-top: 28px;
+  }
+}
+
+/* ===== Responsive: 480px 小屏手机 ===== */
+@media (max-width: 480px) {
+  /* Hero 进一步缩减 */
+  .links-hero-content {
+    padding: 16px 14px;
+    gap: 10px;
+  }
+
+  .links-hero-eyebrow {
+    padding: 2px 8px;
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  .links-hero-left h1 {
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+
+  .links-hero-desc {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* 统计栏更紧凑 */
+  .links-hero-stats {
+    gap: 10px;
+  }
+
+  .links-hero-stat {
+    gap: 6px;
+  }
+
+  .links-hero-stat-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .links-hero-stat-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .links-hero-stat-num {
+    font-size: 14px;
+  }
+
+  .links-hero-stat-label {
+    font-size: 10px;
+  }
+
+  .links-hero-stat-divider {
+    height: 20px;
+  }
+
+  /* 区域标题 */
+  .links-section-header h2 {
+    font-size: 15px;
+  }
+
+  /* 筛选按钮更小 */
+  .link-filters .link-filter {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+
+  /* 搜索框 */
+  .links-search input {
+    padding: 7px 12px 7px 32px;
+    font-size: 12px;
+  }
+
+  .links-search svg {
+    left: 10px;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* 卡片更紧凑 */
+  .link-card {
+    padding: 12px;
+  }
+
+  .link-card-head {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .link-card-logo {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+    border-radius: 7px;
+  }
+
+  .link-card-name {
+    font-size: 13px;
+  }
+
+  .link-card-url {
+    font-size: 10px;
+  }
+
+  .link-card-desc {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .link-card-footer {
+    padding-top: 8px;
+  }
+
+  /* CTA 区域进一步缩减 */
+  .links-cta {
+    padding: 20px 16px;
+  }
+
+  .links-cta-decoration--left,
+  .links-cta-decoration--right,
+  .links-cta-decoration--leaf1,
+  .links-cta-decoration--leaf2 {
+    display: none;
+  }
+
+  .links-cta-inner p {
+    font-size: 11px;
+  }
+
+  .links-cta-btn {
+    padding: 7px 18px;
+    font-size: 12px;
   }
 }
 
@@ -7040,6 +7374,86 @@ body.nav-open {
   .article-list.grid-view .article-thumb {
     height: 160px;
   }
+
+  /* ===== feeds 页小屏适配 ===== */
+  .feed-hero-inner {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .feed-hero-stat-num {
+    font-size: 1.1rem;
+  }
+
+  .feed-hero-stat-label {
+    font-size: 10px;
+  }
+
+  .feed-section {
+    padding: 12px 12px;
+    gap: 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .feed-item {
+    padding: 10px 4px;
+    margin: 0 -4px;
+  }
+
+  .feed-item-avatar {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .feed-item-author {
+    font-size: 12px;
+    max-width: 100px;
+  }
+
+  .feed-item-time {
+    font-size: 10px;
+  }
+
+  .feed-item-time svg {
+    display: none;
+  }
+
+  .feed-item-title {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  .feed-item-summary {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+
+  /* 隐藏活跃频道列表，仅保留概览 */
+  .feed-widget:not(.feed-overview-widget) {
+    display: none;
+  }
+
+  .feed-overview-hero-num {
+    font-size: 1.5rem;
+  }
+
+  .feed-overview-cell {
+    padding: 8px 4px;
+  }
+
+  .feed-overview-cell-num {
+    font-size: 1rem;
+  }
+
+  .feed-overview-cell-label {
+    font-size: 9px;
+  }
+
+  .feed-overview-cell-icon {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 /* ============================================
@@ -7920,11 +8334,14 @@ body.nav-open {
 @media (max-width: 1024px) {
   .feed-layout {
     grid-template-columns: 1fr;
+    min-width: 0;
   }
 
   .feed-sidebar--left,
   .feed-sidebar--right {
     position: static;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .feed-sidebar--left .feed-sidebar-inner {
@@ -7968,24 +8385,111 @@ body.nav-open {
 
 @media (max-width: 768px) {
   .feed-hero-inner {
-    padding-top: 32px;
-    padding-bottom: 32px;
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
 
   .feed-hero-stats {
     gap: 12px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .feed-hero-stats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .feed-hero-stat {
+    flex-shrink: 0;
   }
 
   .feed-hero-stat-num {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+  }
+
+  .feed-hero-stat-label {
+    font-size: 11px;
   }
 
   .feed-hero-stat-divider {
     height: 24px;
   }
 
+  /* 左侧频道导航：单行横向滚动标签栏 */
+  .feed-sidebar--left .feed-sidebar-inner {
+    display: block;
+    padding: 8px 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* 移动端隐藏"我的频道"标题和"管理订阅源"按钮 */
+  .feed-sidebar--left .feed-sidebar-title,
+  .feed-sidebar--left .feed-manage-btn {
+    display: none;
+  }
+
+  .feed-channel-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-width: 0;
+    padding: 0 12px;
+    margin-bottom: 0;
+  }
+
+  .feed-channel-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .feed-channel-list a {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: var(--radius-full);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: all var(--transition);
+  }
+
+  .feed-channel-list a:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary-border);
+  }
+
+  .feed-channel-list a.active {
+    color: #fff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* 移动端隐藏频道标签内数字计数 */
+  .feed-channel-list a small {
+    display: none;
+  }
+
+  /* 右侧统计面板：隐藏引言和CTA，保留概览 */
   .feed-sidebar--right {
     flex-direction: column;
+    gap: 12px;
+  }
+
+  .feed-quote,
+  .feed-links-cta {
+    display: none;
+  }
+
+  /* 资讯列表区域 */
+  .feed-section {
+    padding: 14px 16px;
+    gap: 14px;
   }
 
   .feed-section-head {
@@ -7994,7 +8498,85 @@ body.nav-open {
     gap: 8px;
   }
 
+  .feed-section-title h2 {
+    font-size: 1.05rem;
+  }
+
+  /* 资讯条目 */
+  .feed-item {
+    padding: 12px 6px;
+    margin: 0 -6px;
+  }
+
+  .feed-item-header {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .feed-item-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    font-size: 11px;
+  }
+
   .feed-item-author {
-    max-width: 200px;
+    font-size: 13px;
+    max-width: 140px;
+  }
+
+  .feed-item-time {
+    font-size: 11px;
+    gap: 3px;
+  }
+
+  .feed-item-time svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .feed-item-title {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+
+  .feed-item-summary {
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-line-clamp: 2;
+  }
+
+  /* 概览面板 */
+  .feed-overview-hero-num {
+    font-size: 1.8rem;
+  }
+
+  .feed-overview-cell {
+    padding: 10px 6px;
+  }
+
+  .feed-overview-cell-num {
+    font-size: 1.2rem;
+  }
+
+  .feed-overview-cell-label {
+    font-size: 10px;
+  }
+
+  /* 加载更多 */
+  .feed-load-more {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  /* 活跃频道 */
+  .feed-active-channel {
+    padding: 6px;
+  }
+
+  .feed-active-channel-avatar {
+    width: 28px;
+    height: 28px;
   }
 }

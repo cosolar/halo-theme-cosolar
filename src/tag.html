@@ -93,70 +93,74 @@
         <h2 class="section-title">文章列表</h2>
       </div>
 
-      <th:block th:each="post : ${posts.items}">
-        <article class="article-card">
-          <a
-            class="article-thumb"
-            th:href="@{${post.status.permalink}}"
-            th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.style?.default_post_cover != null and !#strings.isEmpty(theme.config.style.default_post_cover) ? theme.config.style.default_post_cover : builtinCover)}"
-          >
-            <img th:if="${coverUrl != null}" th:src="${coverUrl}" alt="" loading="lazy" />
-            <span class="article-thumb-placeholder" th:unless="${coverUrl != null}">&lt;/&gt;</span>
-          </a>
-          <div class="article-body">
-            <h3 class="article-card-title">
-              <span class="pinned-badge" th:if="${post.spec.pinned}">置顶</span>
-              <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
-            </h3>
-            <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
-            <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
-              <a
-                th:each="postTag : ${post.tags}"
-                th:href="@{${postTag.status.permalink}}"
-                th:text="${postTag.spec.displayName}"
-                class="tag"
-              ></a>
+      <div class="article-list" th:if="${not #lists.isEmpty(posts.items)}">
+        <th:block th:each="post : ${posts.items}">
+          <article class="article-card">
+            <a
+              class="article-thumb"
+              th:href="@{${post.status.permalink}}"
+              th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.style?.default_post_cover != null and !#strings.isEmpty(theme.config.style.default_post_cover) ? theme.config.style.default_post_cover : builtinCover)}"
+            >
+              <img th:if="${coverUrl != null}" th:src="${coverUrl}" alt="" loading="lazy" />
+              <span class="article-thumb-placeholder" th:unless="${coverUrl != null}">&lt;/&gt;</span>
+            </a>
+            <div class="article-body">
+              <h3 class="article-card-title">
+                <span class="pinned-badge" th:if="${post.spec.pinned}">置顶</span>
+                <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
+              </h3>
+              <div class="article-card-text">
+                <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
+                <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
+                  <a
+                    th:each="postTag : ${post.tags}"
+                    th:href="@{${postTag.status.permalink}}"
+                    th:text="${postTag.spec.displayName}"
+                    class="tag"
+                  ></a>
+                </div>
+              </div>
+              <div class="article-card-meta">
+                <span class="meta-item" th:if="${post.owner}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  <span th:text="${post.owner?.displayName}"></span>
+                </span>
+                <span class="meta-item" th:if="${not #lists.isEmpty(post.categories)}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                  <a
+                    th:href="@{${post.categories[0].status.permalink}}"
+                    th:text="${post.categories[0].spec.displayName}"
+                    style="color: inherit"
+                  ></a>
+                </span>
+                <span class="meta-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
+                </span>
+                <span class="meta-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <span th:text="${post.stats?.visit ?: 0}"></span>
+                </span>
+              </div>
             </div>
-            <div class="article-card-meta">
-              <span class="meta-item" th:if="${post.owner}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                <span th:text="${post.owner?.displayName}"></span>
-              </span>
-              <span class="meta-item" th:if="${not #lists.isEmpty(post.categories)}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path
-                    d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
-                  />
-                </svg>
-                <a
-                  th:href="@{${post.categories[0].status.permalink}}"
-                  th:text="${post.categories[0].spec.displayName}"
-                  style="color: inherit"
-                ></a>
-              </span>
-              <span class="meta-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
-              </span>
-              <span class="meta-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                <span th:text="${post.stats?.visit ?: 0}"></span>
-              </span>
-            </div>
-          </div>
-        </article>
-      </th:block>
+          </article>
+        </th:block>
+      </div>
 
       <div class="empty-state" th:if="${#lists.isEmpty(posts.items)}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
