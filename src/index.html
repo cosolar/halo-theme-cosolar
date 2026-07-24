@@ -28,7 +28,7 @@
         <div
           class="featured-carousel"
           th:if="${slideCount > 0}"
-          th:attr="data-autoplay=${theme.config?.featured?.autoplay}, data-interval=${theme.config?.featured?.interval ?: 5000}, data-max-slides=${theme.config?.featured?.featured_max_count ?: 5}"
+          th:attr="data-autoplay=${theme.config?.featured?.autoplay}, data-interval=${theme.config?.featured?.interval ?: 5000}, data-max-slides=${theme.config?.featured?.featured_max_count ?: 5}, data-mobile-cover-only=${theme.config?.featured?.mobile_carousel_cover_only == true ? 'true' : null}"
         >
           <!-- Slides -->
           <div class="carousel-track">
@@ -49,7 +49,19 @@
                 class="featured-bg--fallback"
                 th:unless="${fCover != null and !#strings.isEmpty(fCover)}"
               ></div>
+              <div
+                class="featured-bg-post"
+                th:if="${featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)}"
+                th:style="'background-image:url(' + ${featured.spec.cover} + ')'"
+              ></div>
               <div class="featured-overlay"></div>
+              <a
+                class="featured-cover-link"
+                th:href="${fUrl}"
+                th:target="${fExternal ? '_blank' : '_self'}"
+                th:rel="${fExternal ? 'noopener' : ''}"
+                aria-label="阅读文章"
+              ></a>
               <div class="featured-content">
                 <span class="featured-badge">
                   <svg
@@ -154,7 +166,19 @@
                 class="featured-bg--fallback"
                 th:unless="${fCover != null and !#strings.isEmpty(fCover)}"
               ></div>
+              <div
+                class="featured-bg-post"
+                th:if="${featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)}"
+                th:style="'background-image:url(' + ${featured.spec.cover} + ')'"
+              ></div>
               <div class="featured-overlay"></div>
+              <a
+                class="featured-cover-link"
+                th:href="${fUrl}"
+                th:target="${fExternal ? '_blank' : '_self'}"
+                th:rel="${fExternal ? 'noopener' : ''}"
+                aria-label="阅读文章"
+              ></a>
               <div class="featured-content">
                 <span class="featured-badge">
                   <svg
@@ -259,7 +283,19 @@
                 class="featured-bg--fallback"
                 th:unless="${fCover != null and !#strings.isEmpty(fCover)}"
               ></div>
+              <div
+                class="featured-bg-post"
+                th:if="${featured.spec.cover != null and !#strings.isEmpty(featured.spec.cover)}"
+                th:style="'background-image:url(' + ${featured.spec.cover} + ')'"
+              ></div>
               <div class="featured-overlay"></div>
+              <a
+                class="featured-cover-link"
+                th:href="${fUrl}"
+                th:target="${fExternal ? '_blank' : '_self'}"
+                th:rel="${fExternal ? 'noopener' : ''}"
+                aria-label="阅读文章"
+              ></a>
               <div class="featured-content">
                 <span class="featured-badge">
                   <svg
@@ -450,14 +486,16 @@
                 <span class="pinned-badge" th:if="${post.spec.pinned}">置顶</span>
                 <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"></a>
               </h3>
-              <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
-              <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
-                <a
-                  th:each="tag : ${post.tags}"
-                  th:href="@{${tag.status.permalink}}"
-                  th:text="${tag.spec.displayName}"
-                  class="tag"
-                ></a>
+              <div class="article-card-text">
+                <p class="article-card-excerpt" th:text="${post.status.excerpt}"></p>
+                <div class="article-card-tags" th:if="${not #lists.isEmpty(post.tags)}">
+                  <a
+                    th:each="tag : ${post.tags}"
+                    th:href="@{${tag.status.permalink}}"
+                    th:text="${tag.spec.displayName}"
+                    class="tag"
+                  ></a>
+                </div>
               </div>
               <div class="article-card-meta">
                 <span class="meta-item" th:if="${post.owner}">
@@ -517,9 +555,7 @@
       </div>
 
       <!-- 滚动加载模式：手动「查看更多」+ 自动滚动哨兵 -->
-      <th:block
-        th:if="${theme.config?.featured?.home_load_mode == 'scroll'}"
-      >
+      <th:block th:if="${theme.config?.featured?.home_load_mode == 'scroll'}">
         <div class="mt-4 text-center" th:if="${posts.hasNext()}">
           <a class="btn btn-outline" th:href="@{${posts.nextUrl}}">
             查看更多文章
@@ -545,9 +581,7 @@
       </th:block>
 
       <!-- 分页模式：翻页导航 -->
-      <th:block
-        th:if="${theme.config?.featured?.home_load_mode != 'scroll'}"
-      >
+      <th:block th:if="${theme.config?.featured?.home_load_mode != 'scroll'}">
         <include src="pagination.html"></include>
       </th:block>
     </div>

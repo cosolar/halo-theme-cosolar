@@ -5,7 +5,10 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <section class="page-hero" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.category?.categories_cover) ? theme.config.category.categories_cover : defaultCover}">
+      <section
+        class="page-hero"
+        th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.category?.categories_cover) ? theme.config.category.categories_cover : defaultCover}"
+      >
         <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>
@@ -21,10 +24,10 @@
                 d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
               />
             </svg>
-            <span>分类</span>
+            <span>专栏</span>
           </span>
-          <h1>文章分类</h1>
-          <p class="page-hero-desc">共 <span th:text="${#lists.size(categories)}"></span> 个分类</p>
+          <h1>专题类别</h1>
+          <p class="page-hero-desc">共 <span th:text="${#lists.size(categories)}"></span> 个类别</p>
         </div>
       </section>
 

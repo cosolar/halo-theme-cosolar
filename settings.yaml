@@ -245,7 +245,7 @@ spec:
 
     - group: social
       label: 博主信息
-      formSchema:        
+      formSchema:
         - $formkit: text
           name: author_name
           label: 博主昵称
@@ -315,7 +315,6 @@ spec:
           value: ""
           help: 第三方邮件订阅服务地址（如 Mailchimp），留空则仅展示表单不提交
 
-
     - group: featured
       label: 首页轮播
       formSchema:
@@ -381,6 +380,11 @@ spec:
             - label: 滚动加载
               value: scroll
           help: 首页文章列表的加载方式。分页：点击翻页切换（保留轮播图）；滚动加载：滚动到底部自动加载更多（同时保留手动"查看更多文章"按钮作为兜底）
+        - $formkit: switch
+          name: mobile_carousel_cover_only
+          label: 移动端轮播图仅显示封面
+          value: false
+          help: 启用后，在移动端（≤768px）访问时轮播图只展示文章封面图片，隐藏标题、摘要、标签、按钮等文字内容，让封面图更突出；默认关闭，保持与桌面端一致的完整展示
 
     - group: sidebar
       label: 侧边栏设置
@@ -556,7 +560,7 @@ spec:
                   value: tag_cloud
                 - label: 公众号
                   value: wechat
-                - label: 分类导航
+                - label: 专题类别
                   value: categories
                 - label: 近期更新
                   value: recent

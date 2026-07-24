@@ -34,17 +34,67 @@ import "../css/main.css";
   // ===== Mobile Menu Toggle =====
   const menuToggle = document.getElementById("menuToggle");
   const headerNav = document.getElementById("headerNav");
+  const navBackdrop = document.getElementById("navBackdrop");
+  const body = document.body;
+
+  function openNav() {
+    menuToggle?.classList.add("active");
+    headerNav?.classList.add("open");
+    navBackdrop?.classList.add("show");
+    body.classList.add("nav-open");
+  }
+
+  function closeNav() {
+    menuToggle?.classList.remove("active");
+    headerNav?.classList.remove("open");
+    navBackdrop?.classList.remove("show");
+    body.classList.remove("nav-open");
+  }
 
   menuToggle?.addEventListener("click", function () {
-    menuToggle.classList.toggle("active");
-    headerNav?.classList.toggle("open");
+    if (headerNav?.classList.contains("open")) {
+      closeNav();
+    } else {
+      openNav();
+    }
   });
 
-  headerNav?.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () {
-      menuToggle?.classList.remove("active");
-      headerNav.classList.remove("open");
-    });
+  // Backdrop click closes menu
+  navBackdrop?.addEventListener("click", closeNav);
+
+  // Escape key closes menu
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && headerNav?.classList.contains("open")) {
+      closeNav();
+    }
+  });
+
+  // Close menu when resizing to desktop
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 768) {
+      closeNav();
+      headerNav?.querySelectorAll(".nav-item.expanded").forEach(function (item) {
+        item.classList.remove("expanded");
+      });
+    }
+  });
+
+  // Accordion: tap parent with children toggles submenu (mobile only);
+  // leaf links close the menu and navigate
+  headerNav?.addEventListener("click", function (e) {
+    const link = (e.target as HTMLElement).closest("a");
+    if (!link) return;
+
+    const item = link.closest(".nav-item");
+    const hasChildren = item?.classList.contains("has-children");
+
+    if (window.innerWidth <= 768 && hasChildren && item) {
+      e.preventDefault();
+      item.classList.toggle("expanded");
+      return;
+    }
+
+    closeNav();
   });
 
   // ===== Search Shortcut (Ctrl+K) =====
@@ -80,10 +130,22 @@ import "../css/main.css";
     const href = link.getAttribute("href") || "";
     const linkPath = href.replace(/^(https?:\/\/[^/]+)?/, "");
 
-    if (linkPath === currentPath || (linkPath !== "/" && currentPath.startsWith(linkPath))) {
+    // 精确匹配，或当前路径以菜单路径为前缀（排除 "/" 和空串避免误匹配外部链接）
+    if (linkPath === currentPath || (linkPath.length > 1 && currentPath.startsWith(linkPath))) {
       link.classList.add("active");
     } else if (linkPath === "/" && currentPath === "/") {
       link.classList.add("active");
+    }
+  });
+
+  // Auto-expand parent chain for active links (mobile accordion)
+  headerNav?.querySelectorAll(".nav-item > a.active").forEach(function (link) {
+    let el = link.parentElement;
+    while (el && el !== headerNav) {
+      if (el.classList.contains("nav-item")) {
+        el.classList.add("expanded");
+      }
+      el = el.parentElement;
     }
   });
 

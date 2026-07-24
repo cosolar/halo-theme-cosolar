@@ -35,7 +35,10 @@
           </svg>
         </div>
         <h2>图库功能未启用</h2>
-        <p>本页面需要安装并启用「图库插件 plugin-photos」，启用后即可在 /photos 浏览和分享你的摄影作品。</p>
+        <p>
+          本页面需要安装并启用「图库插件 plugin-photos」，启用后即可在 /photos
+          浏览和分享你的摄影作品。
+        </p>
       </div>
 
       <th:block th:if="${pluginInstalled}">
@@ -76,7 +79,9 @@
                     </svg>
                   </div>
                   <div class="photo-hero-stat-text">
-                    <span class="photo-hero-stat-num" th:text="${totalPhotos}" data-format-number>0</span>
+                    <span class="photo-hero-stat-num" th:text="${totalPhotos}" data-format-number
+                      >0</span
+                    >
                     <span class="photo-hero-stat-label">照片总数</span>
                   </div>
                 </div>
@@ -84,11 +89,15 @@
                 <div class="photo-hero-stat">
                   <div class="photo-hero-stat-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                      <path
+                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                      />
                     </svg>
                   </div>
                   <div class="photo-hero-stat-text">
-                    <span class="photo-hero-stat-num" th:text="${groupCount}" data-format-number>0</span>
+                    <span class="photo-hero-stat-num" th:text="${groupCount}" data-format-number
+                      >0</span
+                    >
                     <span class="photo-hero-stat-label">分组数</span>
                   </div>
                 </div>
@@ -102,10 +111,10 @@
                       <rect x="14" y="14" width="7" height="7" rx="1" />
                     </svg>
                   </div>
-                  <div class="photo-hero-stat-text">
+                  <!--<div class="photo-hero-stat-text">
                     <span class="photo-hero-stat-num" th:text="${currentCount}" data-format-number>0</span>
-                    <span class="photo-hero-stat-label">本页展示</span>
-                  </div>
+                    <span class="photo-hero-stat-label">展示数</span>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -130,13 +139,21 @@
               th:classappend="${g.metadata.name == activeGroup} ? 'active'"
             >
               <span th:text="${g.spec.displayName}">分组</span>
-              <small th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}">0</small>
+              <small
+                th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}"
+                >0</small
+              >
             </a>
           </div>
 
           <div class="photo-toolbar-actions">
             <div class="photo-view-toggle" role="group" aria-label="视图切换">
-              <button type="button" class="photo-view-btn active" data-view="masonry" title="瀑布流">
+              <button
+                type="button"
+                class="photo-view-btn active"
+                data-view="masonry"
+                title="瀑布流"
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="3" width="7" height="9" rx="1" />
                   <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -153,7 +170,12 @@
                 </svg>
               </button>
             </div>
-            <a class="btn btn-primary photo-upload" href="/console/photos" target="_blank" rel="noopener">
+            <a
+              class="btn btn-primary photo-upload"
+              href="/console/photos"
+              target="_blank"
+              rel="noopener"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
@@ -194,7 +216,12 @@
             </span>
             <div class="photo-card-overlay">
               <span class="photo-card-title" th:text="${photo.spec.displayName}">照片标题</span>
-              <span class="photo-card-meta" th:if="${photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName)}" th:text="${photo.spec.groupName}">分组</span>
+              <span
+                class="photo-card-meta"
+                th:if="${photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName)}"
+                th:text="${photo.spec.groupName}"
+                >分组</span
+              >
             </div>
           </a>
         </div>
@@ -226,25 +253,21 @@
         </a>
 
         <!-- ===== Pager ===== -->
-        <div class="photo-pager" th:if="${photos != null and (photos.hasPrevious() or photos.hasNext())}">
-          <a
-            class="photo-pager-btn"
-            th:if="${photos.hasPrevious()}"
-            th:href="${photos.prevUrl}"
-          >
+        <div
+          class="photo-pager"
+          th:if="${photos != null and (photos.hasPrevious() or photos.hasNext())}"
+        >
+          <a class="photo-pager-btn" th:if="${photos.hasPrevious()}" th:href="${photos.prevUrl}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="15 18 9 12 15 6" />
             </svg>
             <span>上一页</span>
           </a>
           <span class="photo-pager-info">
-            <strong th:text="${photos.page}">1</strong> / <span th:text="${photos.totalPages}">1</span>
+            <strong th:text="${photos.page}">1</strong> /
+            <span th:text="${photos.totalPages}">1</span>
           </span>
-          <a
-            class="photo-pager-btn"
-            th:if="${photos.hasNext()}"
-            th:href="${photos.nextUrl}"
-          >
+          <a class="photo-pager-btn" th:if="${photos.hasNext()}" th:href="${photos.nextUrl}">
             <span>下一页</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 18 15 12 9 6" />
@@ -278,7 +301,9 @@
             <span class="widget-photo-stat-label">分组</span>
           </div>
           <div class="widget-photo-stat">
-            <span class="widget-photo-stat-num" th:text="${currentCount}" data-format-number>0</span>
+            <span class="widget-photo-stat-num" th:text="${currentCount}" data-format-number
+              >0</span
+            >
             <span class="widget-photo-stat-label">本页</span>
           </div>
         </div>
@@ -289,7 +314,9 @@
         <div class="widget-title">
           <span class="title-text">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              <path
+                d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+              />
             </svg>
             照片分组
           </span>
@@ -303,14 +330,20 @@
               th:classappend="${g.metadata.name == activeGroup} ? 'active'"
             >
               <span th:text="${g.spec.displayName}">分组</span>
-              <small th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}">0</small>
+              <small
+                th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}"
+                >0</small
+              >
             </a>
           </li>
         </ul>
       </div>
 
       <!-- 最近上传 -->
-      <div class="widget widget-photo-recent" th:if="${recentPhotos != null and recentPhotos.items != null and not #lists.isEmpty(recentPhotos.items)}">
+      <div
+        class="widget widget-photo-recent"
+        th:if="${recentPhotos != null and recentPhotos.items != null and not #lists.isEmpty(recentPhotos.items)}"
+      >
         <div class="widget-title">
           <span class="title-text">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
