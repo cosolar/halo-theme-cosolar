@@ -6,9 +6,9 @@
 
 ### 极简不简单 — 面向开发者的现代 Halo 博客主题
 
-**青绿美学** · **暗色模式** · **精选轮播** · **分类导航** · **全局搜索** · **完美移动端适配**
+**青绿美学** · **明暗双模** · **精选轮播** · **分类导航** · **全局搜索** · **完美移动端适配**
 
-[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.0.5](https://img.shields.io/badge/Version-1.0.5-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.1.1](https://img.shields.io/badge/Version-1.1.1-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
 **🚀 [在线预览 →](https://note.minims.cn)** · **📘 [配置手册 / 使用教程](docs/使用教程.md)**
 
@@ -16,7 +16,25 @@
 
 ---
 
-## ✨ 为什么选择 halo-theme-cosolar？
+## 📑 目录
+
+- [✨ 为什么选择这个主题？](#-为什么选择这个主题)
+- [🎯 功能全览](#-功能全览)
+- [📸 预览](#-预览)
+- [🚀 安装与启用](#-安装与启用)
+- [📖 使用教程](#-使用教程)
+- [❓ 常见问题](#-常见问题)
+- [🛠️ 开发](#-开发)
+- [📐 响应式断点](#-响应式断点)
+- [🗺️ 路线图](#-路线图)
+- [🤝 贡献](#-贡献)
+- [🔒 第三方服务资源](#-第三方服务资源)
+- [📄 许可证](#-许可证)
+- [💝 致谢](#-致谢)
+
+---
+
+## ✨ 为什么选择这个主题？
 
 > 把「内容」放回舞台中央 —— 干净的排版、克制的动效、合理的留白，让代码与文字都能舒适呼吸。
 
@@ -38,7 +56,7 @@
 ### 🎨 视觉与主题
 
 - **青绿美学** — 默认主色 `#10B981`，后台一键换色，全站联动
-- **暗色模式** — 跟随系统 / 强制浅色 / 强制暗色三档可切
+- **明暗双模** — 跟随系统 / 强制浅色 / 强制暗色三档可切
 - **毛玻璃风格** — 导航栏与操作栏 `backdrop-filter` 毛玻璃质感
 - **页面背景** — 支持自定义背景图（浅色/深色分别配置）和 5 种动态渲染背景
 
@@ -46,7 +64,8 @@
 
 - **精选轮播** — 首页顶部卡片轮播，手动指定文章、自动播放、置顶回退
 - **文章卡片** — 封面图 + 标题 + 摘要 + 分类标签 + 时间，信息密度恰到好处
-- **侧边栏** — 博主信息 / 公告栏 / 热门标签（词云） / 公众号二维码 / 分类导航 / 近期更新，模块化可单独开关
+- **侧边栏** — 博主信息 / 公告栏 / 热门标签（词云） / 公众号二维码 / 分类导航 / 近期更新，模块化可单独开关与拖拽排序
+- **首页加载** — 支持分页翻页或滚动到底自动加载
 
 ### 📖 阅读体验
 
@@ -63,10 +82,10 @@
 
 ### 🔧 个性化
 
-- **自定义字体** — 支持引入第三方字体 CSS，一键切换全局字体
-- **自定义图标** — 支持 Remix Icon、Font Awesome 等第三方图标库
+- **自定义字体** — 支持引入第三方字体 CSS（默认霞鹜文楷），一键切换全局字体
+- **图标库** — 内置 **Iconify**（默认，图标最全、开箱即用）与 **iconfont**（阿里巴巴，自定义上传图标）两种模式，导航 / 分类 / 标签等内置 SVG 图标独立渲染不受影响
 - **自定义背景** — 背景图浅色/深色分别配置，5 种 Canvas 动态背景可选
-- **封面图配置** — 分类页、标签页、归档页 Hero 区域均可自定义封面图
+- **封面图配置** — 分类页、标签页、归档页、图库页 Hero 区域均可自定义封面图
 
 ### 👤 账号体系（登录 / 注册 / 登出）
 
@@ -88,26 +107,22 @@
 - **筛选与分页** — 支持按订阅源 / 分组筛选、分页「加载更多」
 - **依赖友情链接插件的 RSS** — 未启用时给出友好引导提示
 
+### 📷 图库页面
+
+依赖 Halo 官方图库插件 **plugin-photos**，提供精美的照片墙与分组浏览：
+
+- **分组浏览** — 顶部筛选栏与侧边栏均支持分组导航，「不分组」选项固定置于列表最后，未分组照片为 0 时自动隐藏
+- **操作权限可控** — 后台「显示操作按钮」开关（默认开），仅当访客**已登录且开启此开关**时才显示上传 / 删除入口，关闭后对所有访客（含登录用户）隐藏
+- **即时反馈** — 删除照片后立即从页面移除并精确更新计数，无需刷新
+- **侧边栏概览** — 图库概览、分组导航、最近上传一应俱全（可单独关闭）
+
 ---
 
 ## 📸 预览
 
 **🚀 演示站点：** [https://note.minims.cn](https://note.minims.cn)
 
-<table>
-<tr>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/067822d60b6058d4b30fb6813b57b3c8.png" alt="首页" /></td>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/a92b4b950731be7d7f6c46a08c8338b5.png" alt="暗色模式" /></td>
-</tr>
-<tr>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/cbe45d9ceb3945c68c7fa619e0ec1da8.png" alt="文章卡片" /></td>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/d937c99a23b2f9271cb3e5ae31a1f205.png" alt="文章页" /></td>
-</tr>
-<tr>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/0a5adf875585795d1a77ad82fe3a1d20.png" alt="暗色模式" /></td>
-<td><img src="https://oss.towao.com/proxy/plain/img/2026/2e2014d86ce40843710eb172947c0cd1.png" alt="移动端" /></td>
-</tr>
-</table>
+![mininotes.png](docs/img/mininotes.png)
 
 ---
 
@@ -121,11 +136,12 @@
 
 ### 依赖插件
 
-本主题的**友情链接页面**与 **RSS 资讯页面**依赖 Halo 官方链接管理插件 **plugin-links**（Halo 2.0 的链接管理插件，用于管理友情链接、检查链接状态，并将链接站点的 RSS / Atom 动态聚合到 Halo Console 中）。
+本主题的**友情链接页面**与 **RSS 资讯页面**依赖 Halo 官方链接管理插件 **plugin-links**；**图库页面**依赖官方图库插件 **plugin-photos**。
 
 | 插件             | 用途                                                                                         | 必需度                                  |
 | ---------------- | -------------------------------------------------------------------------------------------- | --------------------------------------- |
 | `plugin-links`   | 管理友情链接、检测链接可访问性与回链状态、聚合友站 RSS / Atom 动态到 Halo Console            | 友情链接页、侧边栏友链/订阅模块、RSS 资讯页**必需** |
+| `plugin-photos`  | Halo 官方图库插件，提供照片管理与分组                                                         | 图库页**必需**                          |
 
 > ⚠️ **未安装 `plugin-links` 时的表现**：
 >
@@ -135,11 +151,11 @@
 >
 > 安装并启用插件后，需在插件设置的「RSS 订阅」中开启「公开 RSS 订阅动态」，RSS 资讯页与侧边栏订阅模块才会有内容。
 
-此外，搜索功能依赖官方搜索插件（详见下文「搜索功能」一节）。
+此外，搜索功能依赖官方搜索插件（详见下文「常见问题」一节）。
 
 ### 方式一：直接安装（推荐）
 
-1. 前往 [Releases](https://github.com/cosolar/halo-theme-cosolar/releases) 下载最新 `cosolar-<version>.zip`
+1. 前往 [Releases](https://github.com/cosolar/halo-theme-cosolar/releases) 下载最新 `halo-theme-cosolar-<version>.zip`
 2. 登录 Halo 后台，进入 **主题管理 → 安装主题** → 上传 ZIP
 3. 安装完成后点击 **启用** 🎉
 
@@ -151,16 +167,16 @@
 git clone https://github.com/cosolar/halo-theme-cosolar.git
 cd halo-theme-cosolar
 pnpm install
-pnpm build            # 产物：templates/ + cosolar-<version>.zip
+pnpm build            # 产物：templates/ + halo-theme-cosolar-<version>.zip
 ```
 
-将生成的 ZIP 上传到 Halo，或将整个目录放入 Halo 工作目录的 `themes/cosolar/` 下。
+将生成的 ZIP 上传到 Halo，或将整个目录放入 Halo 工作目录的 `themes/halo-theme-cosolar/` 下。
 
 ---
 
 ## 📖 使用教程
 
-完整的**逐项配置手册**已整理到 [**使用教程.md**](docs/使用教程.md)，涵盖全部 14 个设置分组（基础 / 页脚 / 主题样式 / 博主信息 / 首页轮播 / 侧边栏 / 分类 / 标签 / 归档 / 友链 / RSS / 浅色背景 / 深色背景 / 登录页）每个字段的**类型、默认值、取值范围与配置建议**，以及菜单图标、文章自定义阅读地址等设置界面之外的功能。
+完整的**逐项配置手册**已整理到 [**使用教程.md**](docs/使用教程.md)，涵盖全部设置分组（基础 / 页脚 / 主题样式 / 博主信息 / 首页轮播 / 侧边栏 / 分类 / 标签 / 归档 / 友链 / RSS / 图库 / 页面背景 / 登录页）每个字段的**类型、默认值、取值范围与配置建议**，以及菜单图标、文章自定义阅读地址等设置界面之外的功能。
 
 > 主题启用后，进入 **Halo 后台 → 主题管理 → halo-theme-cosolar → 设置** 即可按分组配置。
 
@@ -171,6 +187,7 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 - **首页轮播** — 指定精选文章，或设置回退策略（最新 / 置顶）
 - **侧边栏** — 按需开关博主卡 / 公告 / 标签云 / 公众号 / 分类 / 友链 / RSS，并拖拽排序
 - **页面背景** — 浅色 / 深色分别配置纯色、背景图或 5 种动态背景
+- **图库页** — 配置封面、侧边栏与「显示操作按钮」权限开关
 - **分类 / 标签 / 归档 / 友链 / RSS / 登录页** — 配置封面图、标题与页面参数
 
 逐项说明、字段默认值与常见问题，请查阅 [使用教程.md](docs/使用教程.md)。
@@ -190,10 +207,9 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 
 ### 如何完全离线部署？
 
-1. 下载 [lxgw-wenkai-screen-webfont](https://github.com/lxgw-wenkai-webfont) 字体文件
-2. 上传到 Halo 附件管理
-3. 在 **字体设置** 中将「字体 CSS 地址」替换为上传后的本地路径
-4. 图标字体已内置在主题中，无需额外处理
+1. 下载 [lxgw-wenkai-screen-webfont](https://github.com/lxgw-wenkai-webfont) 字体文件并上传到 Halo 附件管理
+2. 在 **主题样式** 中将「字体 CSS 地址」替换为上传后的本地路径
+3. **图标说明**：默认图标库为 Iconify，其图标通过公共 CDN（api.iconify.design）按需加载。若需完全离线，请在「主题样式 → 图标库」切换为 **iconfont** 模式，并填入自建 iconfont 项目的本地 CSS 地址；导航 / 分类 / 标签等内置 SVG 图标本身已本地化，无需额外处理
 
 ### 动态背景会影响性能吗？
 
@@ -203,7 +219,7 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 
 两种方式：
 
-1. **手动指定**：在「精选文章」设置中直接选择文章
+1. **手动指定**：在「首页轮播 → 精选文章列表」中直接选择文章
 2. **自动回退**：将文章设为置顶，然后选择回退策略为「显示置顶文章」
 
 ### 博主信息卡片的背景图和背景色有什么区别？
@@ -211,6 +227,14 @@ pnpm build            # 产物：templates/ + cosolar-<version>.zip
 - **背景图**：适合使用深色图片，文字会自动变为白色，并添加半透明遮罩确保可读性
 - **背景色**：适合使用纯色或渐变色，效果更简洁
 - 两者同时设置时，背景图优先
+
+### 为什么图库的操作按钮（上传 / 删除）看不到？
+
+图库操作按钮受后台「图库页设置 → 显示操作按钮」开关控制，且**仅对登录用户**可见：
+
+1. 确认已在 Halo 后台登录账号
+2. 在 **主题设置 → 图库页设置** 中确认「显示操作按钮」处于开启状态
+3. 关闭该开关后，所有访客（含登录用户）都不会看到上传 / 删除入口
 
 ### 为什么友情链接 / RSS 资讯页面没有内容？
 
@@ -256,6 +280,7 @@ pnpm build            # 完整构建 + 打 ZIP 包
 - [ ] 404 / 500 错误页美化
 - [ ] 文章系列/专栏支持
 - [ ] 首页布局模式切换（列表 / 瀑布流）
+- [ ] 图库上传进度与批量管理增强
 
 ---
 
@@ -275,15 +300,16 @@ pnpm build            # 完整构建 + 打 ZIP 包
 本主题在页面加载时可能请求以下第三方资源：
 
 | 服务商           | 资源                                                                  | 用途             | 触发条件             |
-| ---------------- | --------------------------------------------------------------------- | ---------------- | -------------------- |
+| ------------------- | ------------------------------------------------------------------- | ---------------- | ------------------------------ |
 | npm.elemecdn.com | [LXGW WenKai Screen](https://github.com/lxgw-wenkai-webfont) 中文字体 | 页面中文排版     | 仅默认字体配置时加载 |
-| 自定义 CDN       | 第三方字体 / 图标库                                                   | 自定义排版和图标 | 用户主动配置后加载   |
+| api.iconify.design  | [Iconify](https://iconify.design) 图标数据                          | 默认图标库渲染   | 图标库选择 Iconify 时加载      |
+| 自定义 CDN          | 第三方字体 / 图标库（iconfont / Remix / Font Awesome 等）           | 自定义排版和图标 | 用户主动配置后加载             |
 
 > **说明**：
 >
-> - 默认配置下，iconfont 图标字体已完全本地化，霞鹜文楷字体通过 elemecdn 公共 CDN 按需加载
-> - 如需完全离线部署，可在后台 **字体设置** 中将字体 CSS 地址替换为本地路径
-> - 如配置了第三方图标库（如 Font Awesome、Remix Icon），浏览器将向对应 CDN 请求资源
+> - 默认配置下，中文排版使用霞鹜文楷（通过 elemecdn 公共 CDN 按需加载），图标使用 Iconify（通过 api.iconify.design 加载）
+> - 如需完全离线部署，可将字体 CSS 地址替换为本地路径，并将图标库切换为 iconfont 模式并填入本地 iconfont CSS 地址
+> - 导航 / 分类 / 标签等内置 SVG 图标已随主题本地化，不依赖任何 CDN
 
 ---
 
@@ -296,6 +322,7 @@ pnpm build            # 完整构建 + 打 ZIP 包
 ## 💝 致谢
 
 - [Halo](https://halo.run) — 强大易用的开源建站平台
+- [Iconify](https://iconify.design) — 开箱即用的开源图标方案
 - 所有为本主题提过 Issue 与建议的用户
 
 ---
