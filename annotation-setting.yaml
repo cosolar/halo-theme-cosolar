@@ -11,7 +11,7 @@ spec:
       name: icon
       label: 导航图标
       value: ""
-      help: 输入 iconfont 图标类名（如 icon-shouye），留空不显示图标。完整图标列表见 https://www.iconfont.cn
+      help: 图标名，根据主题"图标库"设置填写。Iconify 填 mdi:home（搜索 icon-sets.iconify.design），iconfont 填 icon-shouye。留空不显示图标
 ---
 apiVersion: v1alpha1
 kind: AnnotationSetting

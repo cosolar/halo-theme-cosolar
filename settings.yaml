@@ -231,16 +231,21 @@ spec:
           label: 等宽字体 CSS 地址
           value: ""
           help: 第三方等宽字体 CSS 链接，留空则不额外加载
+        - $formkit: radio
+          name: icon_provider
+          label: 图标库
+          value: iconify
+          options:
+            - label: Iconify（默认，图标最全）
+              value: iconify
+            - label: iconfont（阿里巴巴，自定义图标）
+              value: iconfont
+          help: 全站统一图标库。Iconify 图标数量最多，开箱即用；iconfont 需在 iconfont.cn 创建项目后填入 CSS 地址，支持自定义上传图标
         - $formkit: url
           name: icon_css_url
-          label: 图标字体 CSS 地址
+          label: iconfont CSS 地址
           value: ""
-          help: 第三方图标库 CSS 链接（如 Font Awesome、Remix Icon、Lucide 等），留空则使用主题内置 iconfont。例如 https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css
-        - $formkit: text
-          name: icon_prefix
-          label: 图标类名前缀
-          value: "iconfont"
-          help: 图标 CSS 类名前缀，用于导航菜单图标。内置 iconfont 使用 iconfont，Font Awesome 使用 fa-solid/fas，Remix Icon 使用 ri，Lucide 使用 lucide
+          help: 仅 iconfont 模式生效。填入自建 iconfont 项目的 CSS 地址（如 https://at.alicdn.com/t/xxx.css）。Iconify 模式下此项忽略
         # 代码高亮主题由 Halo plugin-shiki 插件后台配置（亮色/暗色主题），主题不再提供此选项
 
     - group: social
@@ -276,39 +281,35 @@ spec:
           label: 建站时间
           value: ""
           help: 显示在页脚博主卡片的建站时间，例如：2023-01-01
-        - $formkit: url
-          name: github
-          label: GitHub
-          value: ""
-          help: GitHub 主页地址
-        - $formkit: email
-          name: email
-          label: 邮箱
-          value: ""
-        - $formkit: url
-          name: juejin
-          label: 掘金
-          value: ""
-        - $formkit: url
-          name: wechat
-          label: 微信公众号
-          value: ""
-          help: 跳转微信公众号任意文章页（没有可留空）
-        - $formkit: url
-          name: csdn
-          label: CSDN
-          value: ""
-          help: CSDN 博客主页地址
-        - $formkit: url
-          name: zhihu
-          label: 知乎
-          value: ""
-          help: 知乎个人主页地址
-        - $formkit: url
-          name: rss
-          label: RSS 订阅
-          value: ""
-          help: 留空则使用默认 RSS 地址
+        - $formkit: array
+          name: author_social_links
+          label: 博主社交图标
+          help: 显示在侧边栏博主卡片上的社交图标。填"图标名"用所选图标库渲染（颜色自动跟随文字色）— Iconify 填 mdi:github，iconfont 填 icon-github
+          addLabel: 添加图标
+          min: 0
+          max: 20
+          value: []
+          children:
+            - $formkit: switch
+              name: enabled
+              label: 显示此图标
+              value: true
+              help: 关闭后该图标不在侧边栏显示
+            - $formkit: text
+              name: name
+              label: 名称
+              value: ""
+              help: 鼠标悬停时显示的提示文字，如 GitHub、邮箱、RSS
+            - $formkit: url
+              name: url
+              label: 链接地址
+              value: ""
+              help: 点击图标跳转的地址；邮箱请填写 mailto:xxx@example.com；RSS 可填 /feed.xml
+            - $formkit: text
+              name: icon_name
+              label: 图标名（图标库）
+              value: ""
+              help: 所选图标库的图标名，颜色自动跟随文字色。Iconify 填 mdi:github，iconfont 填 icon-github
         - $formkit: url
           name: footer_subscribe_action
           label: 页脚订阅表单提交地址

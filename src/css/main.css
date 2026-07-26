@@ -352,6 +352,7 @@ textarea {
   flex: 1;
   justify-content: flex-start;
   margin-left: 8px;
+  line-height: normal;
   font-family:
     "MiSans", "Source Han Sans SC", "Source Han Sans CN", "PingFang SC", "Microsoft YaHei",
     sans-serif;
@@ -382,6 +383,15 @@ textarea {
 
 .header-nav a:hover .iconfont {
   transform: scale(1.15);
+}
+
+/* 顶层导航图标垂直对齐：消除 iconify 默认 baseline 偏移，避免 line-height 撑高行盒导致图标与文字错位 */
+.header-nav a iconify-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  --svg-vertical-align: 0;
+  flex-shrink: 0;
 }
 
 .header-nav a:hover {
@@ -519,7 +529,8 @@ textarea {
 }
 
 /* 图标：主色 + 浅色圆底，更醒目好看 */
-.nav-submenu .nav-item > a .iconfont {
+.nav-submenu .nav-item > a .iconfont,
+.nav-submenu .nav-item > a iconify-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -531,6 +542,11 @@ textarea {
   border-radius: 7px;
   flex-shrink: 0;
   transition: all 0.18s ease;
+}
+
+/* Iconify Web Component 对齐修正 */
+.nav-submenu .nav-item > a iconify-icon {
+  --svg-vertical-align: 0;
 }
 
 /* 带下级的项：箭头推到最右 */
@@ -2255,7 +2271,7 @@ body.nav-open {
   display: flex;
   justify-content: center;
   gap: 2px;
-  padding: 10px 0 6px;
+  padding: 10px 0 10px;
 }
 
 .widget-author .author-link {
@@ -2264,15 +2280,20 @@ body.nav-open {
   justify-content: center;
   width: 32px;
   height: 32px;
+  padding: 0;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
+  background: var(--color-card);
   color: var(--color-text-muted);
+  font-size: 22px;
   transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .widget-author .author-link:hover {
   color: var(--color-primary);
-  background: var(--color-bg);
+  border-color: var(--color-primary);
+  background: var(--color-card);
 }
 
 .widget-author .author-link.is-disabled {
@@ -2281,10 +2302,12 @@ body.nav-open {
   pointer-events: none;
 }
 
-.widget-author .author-link svg {
-  width: 16px;
-  height: 16px;
+.widget-author .author-link svg,
+.widget-author .author-link iconify-icon {
+  width: 22px;
+  height: 22px;
   display: block;
+  flex-shrink: 0;
 }
 
 .widget-author .author-link span {
@@ -2493,9 +2516,17 @@ body.nav-open {
   flex-shrink: 0;
 }
 
-.category-icon svg {
+.category-icon svg,
+.category-icon iconify-icon {
   width: 18px;
   height: 18px;
+}
+
+.category-icon iconify-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  --svg-vertical-align: 0;
 }
 
 .category-icon .iconfont {
@@ -5560,10 +5591,12 @@ body.nav-open {
   pointer-events: none;
 }
 
-.author-link svg {
+.author-link svg,
+.author-link img {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
+  object-fit: contain;
 }
 
 /* Brand */
@@ -5644,7 +5677,7 @@ body.nav-open {
 .footer-social {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -5667,7 +5700,7 @@ body.nav-open {
   background: color-mix(in srgb, var(--footer-social-color, var(--color-primary)) 12%, transparent);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px
-    color-mix(in srgb, var(--footer-social-color, var(--color-primary)) 18%, transparent);
+  color-mix(in srgb, var(--footer-social-color, var(--color-primary)) 18%, transparent);
 }
 
 [data-theme="dark"] .footer-social-link {
@@ -5684,11 +5717,11 @@ body.nav-open {
     transparent
   );
   box-shadow: 0 4px 10px
-    color-mix(
-      in srgb,
-      var(--footer-social-color-dark, var(--footer-social-color, var(--color-primary))) 18%,
-      transparent
-    );
+  color-mix(
+    in srgb,
+    var(--footer-social-color-dark, var(--footer-social-color, var(--color-primary))) 18%,
+    transparent
+  );
 }
 
 .footer-social-link.is-disabled {
@@ -5701,6 +5734,17 @@ body.nav-open {
   width: 17px;
   height: 17px;
   flex-shrink: 0;
+}
+
+.footer-social-link iconify-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  --svg-vertical-align: 0;
 }
 
 /* ===== Footer Middle Section: 网站统计卡片 ===== */
@@ -6536,6 +6580,7 @@ body.nav-open {
     transform: translateY(-12px);
     opacity: 0;
     visibility: hidden;
+    line-height: normal;
     transition:
       transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
       opacity 0.28s ease,
@@ -6625,7 +6670,9 @@ body.nav-open {
 
   /* 顶级图标：圆底徽章 */
   .header-nav > .nav-item > a .iconfont,
-  .header-nav > a .iconfont {
+  .header-nav > a .iconfont,
+  .header-nav > .nav-item > a iconify-icon,
+  .header-nav > a iconify-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6642,8 +6689,15 @@ body.nav-open {
       color var(--transition);
   }
 
+  .header-nav > .nav-item > a iconify-icon,
+  .header-nav > a iconify-icon {
+    --svg-vertical-align: 0;
+  }
+
   .header-nav > .nav-item > a:active .iconfont,
-  .header-nav > a:active .iconfont {
+  .header-nav > a:active .iconfont,
+  .header-nav > .nav-item > a:active iconify-icon,
+  .header-nav > a:active iconify-icon {
     transform: scale(0.9);
     background: var(--color-primary);
     color: #fff;
@@ -6685,7 +6739,9 @@ body.nav-open {
   }
 
   .header-nav > .nav-item > a.active .iconfont,
-  .header-nav > a.active .iconfont {
+  .header-nav > a.active .iconfont,
+  .header-nav > .nav-item > a.active iconify-icon,
+  .header-nav > a.active iconify-icon {
     color: #fff;
     background: var(--color-primary);
     box-shadow: 0 3px 8px color-mix(in srgb, var(--color-primary) 35%, transparent);
@@ -6780,7 +6836,8 @@ body.nav-open {
   }
 
   /* 子菜单图标 */
-  .nav-submenu .nav-item > a .iconfont {
+  .nav-submenu .nav-item > a .iconfont,
+  .nav-submenu .nav-item > a iconify-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6796,13 +6853,18 @@ body.nav-open {
       color var(--transition);
   }
 
+  .nav-submenu .nav-item > a iconify-icon {
+    --svg-vertical-align: 0;
+  }
+
   /* 子菜单激活态 */
   .nav-submenu .nav-item > a.active {
     color: var(--color-primary);
     font-weight: 600;
   }
 
-  .nav-submenu .nav-item > a.active .iconfont {
+  .nav-submenu .nav-item > a.active .iconfont,
+  .nav-submenu .nav-item > a.active iconify-icon {
     color: #fff;
     background: var(--color-primary);
   }
@@ -6953,11 +7015,11 @@ body.nav-open {
   }
 
   .featured-carousel[data-mobile-cover-only="true"]
-    .featured-card:has(.featured-bg-post)
-    .featured-bg,
+  .featured-card:has(.featured-bg-post)
+  .featured-bg,
   .featured-carousel[data-mobile-cover-only="true"]
-    .featured-card:has(.featured-bg-post)
-    .featured-bg--fallback {
+  .featured-card:has(.featured-bg-post)
+  .featured-bg--fallback {
     display: none;
   }
 
