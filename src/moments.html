@@ -42,7 +42,7 @@
 
       <th:block th:if="${pluginInstalled}">
         <!-- ===== Page Hero (与 links.html 风格统一) ===== -->
-        <section class="moments-hero" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.moments?.moments_cover) ? theme.config.moments.moments_cover : defaultCover}">
+        <section class="moments-hero" th:if="${theme.config?.moments?.show_hero != false}" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.moments?.moments_cover) ? theme.config.moments.moments_cover : defaultCover}">
           <div class="moments-hero-bg" th:if="${!#strings.isEmpty(cover)}">
             <img th:src="${cover}" alt="" loading="lazy" />
           </div>

@@ -38,14 +38,20 @@
 html, body { margin:0; padding:0; font-family:var(--f); color:var(--c-text); -webkit-font-smoothing:antialiased; }
 body {
     background-color:var(--c-bg);
-    background-image:url("/themes/halo-theme-cosolar/assets/images/login_default.png");
-    background-size:cover; background-position:center; background-repeat:no-repeat; background-attachment:fixed;
     min-height:100vh; overflow-x:hidden;
 }
 
-/* ====== 主容器：左右分栏（左 1/3 · 右 2/3） ====== */
+/* ====== 主容器：左右分栏（左 1/3 · 右 2/3） ======
+   背景图放在 .cos-page 上而非 body，因为 --login-bg / --login-bg-dark
+   变量定义在 .cos-page 的 th:style 中，CSS 自定义属性只能从父到子继承，
+   body 作为父元素无法读取子元素 .cos-page 上定义的变量。 */
 .cos-page {
     display:flex; height:100vh; height:100dvh; overflow:hidden;
+    background-image:var(--login-bg, url("/themes/halo-theme-cosolar/assets/images/login_default.png"));
+    background-size:cover; background-position:center; background-repeat:no-repeat; background-attachment:fixed;
+}
+[data-theme="dark"] .cos-page {
+    background-image:var(--login-bg-dark, var(--login-bg, url("/themes/halo-theme-cosolar/assets/images/login_default.png")));
 }
 
 /* ====== 左侧品牌区（占 1/3） ====== */

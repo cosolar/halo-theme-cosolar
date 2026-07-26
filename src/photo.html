@@ -29,13 +29,15 @@
 
       <!-- ===== Photo Viewer ===== -->
       <figure class="photo-viewer">
-        <div class="photo-viewer-stage">
+        <div
+          class="photo-viewer-stage"
+          data-lightbox
+          th:attr="data-lightbox-src=${imgUrl}, data-lightbox-title=${photo.spec.displayName}"
+        >
           <img class="photo-viewer-img" th:src="${imgUrl}" th:alt="${photo.spec.displayName}" />
           <button
             type="button"
             class="photo-zoom photo-zoom--stage"
-            data-lightbox
-            th:attr="data-lightbox-src=${imgUrl}, data-lightbox-title=${photo.spec.displayName}"
             aria-label="查看大图"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -148,15 +150,41 @@
           </div>
           <div
             class="widget-photo-basic-row"
+            th:if="${photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName)}"
+          >
+            <dt>分组</dt>
+            <dd>
+              <a
+                class="widget-photo-basic-link"
+                id="photoGroupName"
+                th:href="@{${photoUrl.list(photo.spec.groupName)}}"
+                th:attr="data-group=${photo.spec.groupName}"
+                >加载中...</a
+              >
+            </dd>
+          </div>
+          <div class="widget-photo-basic-row" th:if="${hasTags}">
+            <dt>标签</dt>
+            <dd class="widget-photo-basic-tags">
+              <a
+                class="widget-photo-tag"
+                th:each="t : ${tags}"
+                th:href="@{${photoUrl.list(photo.spec.groupName)}}"
+                th:text="'#' + ${t}"
+                >#标签</a
+              >
+            </dd>
+          </div>
+          <div
+            class="widget-photo-basic-row"
             th:with="
-              cleanUrl = ${photo.spec.url != null and !#strings.isEmpty(photo.spec.url) ? #strings.substringBefore(photo.spec.url, '?') : ''},
-              dotIdx = ${!#strings.isEmpty(cleanUrl) ? cleanUrl.lastIndexOf('.') : -1},
-              rawExt = ${dotIdx >= 0 ? #strings.substring(cleanUrl, dotIdx + 1) : ''},
-              fileExt = ${!#strings.isEmpty(rawExt) ? #strings.toUpperCase(rawExt) : '未知'}
+              fileName = ${photo.spec.displayName != null and !#strings.isEmpty(photo.spec.displayName) ? photo.spec.displayName : ''},
+              dotIdx = ${!#strings.isEmpty(fileName) ? fileName.lastIndexOf('.') : -1},
+              ext = ${dotIdx >= 0 ? #strings.substring(fileName, dotIdx + 1) : ''}
             "
           >
             <dt>类型</dt>
-            <dd th:text="${fileExt}">未知</dd>
+            <dd th:text="${!#strings.isEmpty(ext) ? #strings.toUpperCase(ext) : '未知'}">未知</dd>
           </div>
           <div
             class="widget-photo-basic-row"
@@ -174,23 +202,7 @@
           照片描述
         </p>
 
-        <div class="widget-photo-meta-tags" th:if="${hasTags}">
-          <a
-            class="widget-photo-tag"
-            th:each="t : ${tags}"
-            th:href="@{${photoUrl.list(photo.spec.groupName)}}"
-            th:text="'#' + ${t}"
-            >#标签</a
-          >
-        </div>
-
-        <dl class="widget-photo-meta-list" th:if="${hasExif or createTime != null or (photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName))}">
-          <div class="widget-photo-meta-row" th:if="${photo.spec.groupName != null and !#strings.isEmpty(photo.spec.groupName)}">
-            <dt>分组</dt>
-            <dd>
-              <a th:href="@{${photoUrl.list(photo.spec.groupName)}}" th:text="${photo.spec.groupName}">分组</a>
-            </dd>
-          </div>
+        <dl class="widget-photo-meta-list" th:if="${hasExif or createTime != null}">
           <div class="widget-photo-meta-row" th:if="${createTime != null and !#strings.isEmpty(createTime)}">
             <dt>上传时间</dt>
             <dd th:text="${#strings.replace(#strings.substring(createTime, 0, 16), 'T', ' ')}">时间</dd>

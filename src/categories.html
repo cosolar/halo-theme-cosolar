@@ -7,6 +7,7 @@
     <div class="content-area">
       <section
         class="page-hero"
+        th:if="${theme.config?.category?.show_hero != false}"
         th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.category?.categories_cover) ? theme.config.category.categories_cover : defaultCover}"
       >
         <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">

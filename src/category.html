@@ -11,6 +11,7 @@
       <!-- 专题封面 Header -->
       <section
         class="topic-hero"
+        th:if="${theme.config?.category?.show_hero != false}"
         th:with="builtinCover = @{/assets/images/featured-default.png},
                          configCover = ${theme.config?.category?.category_cover},
                          ownCoverFirst = ${theme.config?.category?.category_own_cover_first == true},

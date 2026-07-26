@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/login.css" />
 </head>
 <th:block th:fragment="body">
-<div class="cos-page" th:style="'--brand-ratio:' + (${theme.config?.login?.brand_ratio ?: 33}) + '%;' + '--ov-enabled:' + (${theme.config?.login?.brand_overlay_enabled ?: true} ? 'block' : 'none') + ';' + '--ov-color:' + (${theme.config?.login?.brand_overlay_color ?: '#059669'}) + ';' + '--ov-op:' + (${theme.config?.login?.brand_overlay_opacity ?: 0.6}) + ';' + '--ov-color-dark:' + (${theme.config?.login?.brand_overlay_color_dark ?: '#059669'}) + ';' + '--ov-op-dark:' + (${theme.config?.login?.brand_overlay_opacity_dark ?: 0.5}) + ';' + '--brand-text:' + (${theme.config?.login?.brand_text_color ?: '#FFFFFF'}) + ';'">
+<div class="cos-page" th:with="lightBg=${theme.config?.login?.light?.bg_image}, darkBg=${theme.config?.login?.dark?.bg_image}" th:style="'--brand-ratio:' + (${theme.config?.login?.brand_ratio ?: 33}) + '%;' + '--ov-enabled:' + (${theme.config?.login?.brand_overlay_enabled ?: true} ? 'block' : 'none') + ';' + '--ov-color:' + (${theme.config?.login?.light?.overlay_color ?: '#059669'}) + ';' + '--ov-op:' + (${theme.config?.login?.light?.overlay_opacity ?: 0.6}) + ';' + '--ov-color-dark:' + (${theme.config?.login?.dark?.overlay_color ?: '#059669'}) + ';' + '--ov-op-dark:' + (${theme.config?.login?.dark?.overlay_opacity ?: 0.5}) + ';' + '--brand-text:' + (${theme.config?.login?.brand_text_color ?: '#FFFFFF'}) + ';' + (${lightBg != null and !#strings.isEmpty(lightBg)} ? ('--login-bg:url(' + ${lightBg} + ');') : '') + (${darkBg != null and !#strings.isEmpty(darkBg)} ? ('--login-bg-dark:url(' + ${darkBg} + ');') : '')">
 
     <!-- ═══ 左侧：品牌展示区 ═══ -->
     <div class="cos-brand">

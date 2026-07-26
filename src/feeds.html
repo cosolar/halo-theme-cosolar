@@ -43,7 +43,7 @@
       <!-- ===== Main Content ===== -->
       <th:block th:if="${linkFeedFinder != null}">
         <!-- Page Hero -->
-        <section class="page-hero feed-hero">
+        <section class="page-hero feed-hero" th:if="${theme.config?.feeds?.show_hero != false}">
           <div class="page-hero-bg" th:if="${!#strings.isEmpty(feedsCover)}">
             <img th:src="${feedsCover}" alt="" loading="lazy" />
           </div>

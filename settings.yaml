@@ -573,6 +573,11 @@ spec:
     - group: category
       label: 分类页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在分类列表页与详情页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: attachment
           name: categories_cover
           label: 分类列表页封面图
@@ -592,6 +597,11 @@ spec:
     - group: tag
       label: 标签页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在标签列表页与详情页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: attachment
           name: tags_cover
           label: 标签列表页封面图
@@ -606,6 +616,11 @@ spec:
     - group: archive
       label: 归档页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在归档页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: attachment
           name: archives_cover
           label: 归档页封面图
@@ -615,6 +630,11 @@ spec:
     - group: links
       label: 友情链接页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在友情链接页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: text
           name: links_title
           label: 页面标题
@@ -634,6 +654,11 @@ spec:
     - group: feeds
       label: RSS 资讯页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在 RSS 资讯页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: text
           name: feeds_title
           label: 页面标题
@@ -661,6 +686,11 @@ spec:
     - group: moments
       label: 瞬间页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在瞬间页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: text
           name: moments_title
           label: 页面标题
@@ -685,6 +715,11 @@ spec:
     - group: photos
       label: 图库页设置
       formSchema:
+        - $formkit: switch
+          name: show_hero
+          label: 显示 Hero 区
+          value: true
+          help: 开启后在图库页顶部显示封面 Hero 区域；关闭后直接展示内容
         - $formkit: text
           name: photos_title
           label: 页面标题
@@ -705,132 +740,141 @@ spec:
           label: 显示侧边栏
           value: true
           help: 在图库列表页显示侧边栏（图库概览、分组导航、最近上传）
+        - $formkit: switch
+          name: photos_show_actions
+          label: 显示操作按钮
+          value: true
+          help: 仅当访客已登录且开启此开关时，才显示上传、删除等图库操作按钮；关闭后所有访客（含登录用户）均看不到操作按钮
 
-    - group: background_light
-      label: 页面背景 · 浅色模式
+    - group: background
+      label: 页面背景
       formSchema:
-        - $formkit: select
-          name: bg_type
-          label: 背景类型
-          value: none
-          options:
-            - label: 无（默认纯色）
+        - $formkit: group
+          name: light
+          label: 浅色模式
+          children:
+            - $formkit: select
+              name: bg_type
+              label: 背景类型
               value: none
-            - label: 自定义背景图
-              value: image
-            - label: 动态渲染背景
-              value: dynamic
-          help: 浅色模式下的页面背景类型
-        - $formkit: attachment
-          name: bg_image
-          label: 背景图
-          value: ""
-          help: 浅色模式下显示的背景图，建议使用浅色调、低饱和度图片以免影响内容阅读
-        - $formkit: range
-          name: bg_image_opacity
-          label: 背景图透明度
-          value: 0.2
-          min: 0.05
-          max: 1
-          step: 0.05
-          help: 背景图的不透明度，值越小越淡，避免影响内容阅读
-        - $formkit: select
-          name: bg_dynamic_type
-          label: 动态背景类型
-          value: particles
-          options:
-            - label: 粒子连线
+              options:
+                - label: 无（默认纯色）
+                  value: none
+                - label: 自定义背景图
+                  value: image
+                - label: 动态渲染背景
+                  value: dynamic
+              help: 浅色模式下的页面背景类型
+            - $formkit: attachment
+              name: bg_image
+              label: 背景图
+              value: ""
+              help: 浅色模式下显示的背景图，建议使用浅色调、低饱和度图片以免影响内容阅读
+            - $formkit: range
+              name: bg_image_opacity
+              label: 背景图透明度
+              value: 0.2
+              min: 0.05
+              max: 1
+              step: 0.05
+              help: 背景图的不透明度，值越小越淡，避免影响内容阅读
+            - $formkit: select
+              name: bg_dynamic_type
+              label: 动态背景类型
               value: particles
-            - label: 渐变流光
-              value: gradient
-            - label: 气泡漂浮
-              value: bubbles
-            - label: 星空闪烁
-              value: stars
-            - label: 网格波纹
-              value: mesh
-          help: 浅色模式下的动态渲染背景效果
-        - $formkit: color
-          name: bg_dynamic_color1
-          label: 动态背景主色
-          value: "#10B981"
-          help: 动态背景的主要颜色
-        - $formkit: color
-          name: bg_dynamic_color2
-          label: 动态背景辅色
-          value: "#3B82F6"
-          help: 动态背景的辅助颜色，用于渐变和混合效果
-        - $formkit: range
-          name: bg_dynamic_opacity
-          label: 动态背景透明度
-          value: 0.15
-          min: 0.05
-          max: 0.5
-          step: 0.05
-          help: 动态背景的不透明度，值越小越淡
-
-    - group: background_dark
-      label: 页面背景 · 深色模式
-      formSchema:
-        - $formkit: select
-          name: bg_type
-          label: 背景类型
-          value: none
-          options:
-            - label: 无（默认纯色）
+              options:
+                - label: 粒子连线
+                  value: particles
+                - label: 渐变流光
+                  value: gradient
+                - label: 气泡漂浮
+                  value: bubbles
+                - label: 星空闪烁
+                  value: stars
+                - label: 网格波纹
+                  value: mesh
+              help: 浅色模式下的动态渲染背景效果
+            - $formkit: color
+              name: bg_dynamic_color1
+              label: 动态背景主色
+              value: "#10B981"
+              help: 动态背景的主要颜色
+            - $formkit: color
+              name: bg_dynamic_color2
+              label: 动态背景辅色
+              value: "#3B82F6"
+              help: 动态背景的辅助颜色，用于渐变和混合效果
+            - $formkit: range
+              name: bg_dynamic_opacity
+              label: 动态背景透明度
+              value: 0.15
+              min: 0.05
+              max: 0.5
+              step: 0.05
+              help: 动态背景的不透明度，值越小越淡
+        - $formkit: group
+          name: dark
+          label: 深色模式
+          children:
+            - $formkit: select
+              name: bg_type
+              label: 背景类型
               value: none
-            - label: 自定义背景图
-              value: image
-            - label: 动态渲染背景
-              value: dynamic
-          help: 深色模式下的页面背景类型
-        - $formkit: attachment
-          name: bg_image
-          label: 背景图
-          value: ""
-          help: 深色模式下显示的背景图，建议使用深色调图片
-        - $formkit: range
-          name: bg_image_opacity
-          label: 背景图透明度
-          value: 0.2
-          min: 0.05
-          max: 1
-          step: 0.05
-          help: 背景图的不透明度，值越小越淡，避免影响内容阅读
-        - $formkit: select
-          name: bg_dynamic_type
-          label: 动态背景类型
-          value: stars
-          options:
-            - label: 粒子连线
-              value: particles
-            - label: 渐变流光
-              value: gradient
-            - label: 气泡漂浮
-              value: bubbles
-            - label: 星空闪烁
+              options:
+                - label: 无（默认纯色）
+                  value: none
+                - label: 自定义背景图
+                  value: image
+                - label: 动态渲染背景
+                  value: dynamic
+              help: 深色模式下的页面背景类型
+            - $formkit: attachment
+              name: bg_image
+              label: 背景图
+              value: ""
+              help: 深色模式下显示的背景图，建议使用深色调图片
+            - $formkit: range
+              name: bg_image_opacity
+              label: 背景图透明度
+              value: 0.2
+              min: 0.05
+              max: 1
+              step: 0.05
+              help: 背景图的不透明度，值越小越淡，避免影响内容阅读
+            - $formkit: select
+              name: bg_dynamic_type
+              label: 动态背景类型
               value: stars
-            - label: 网格波纹
-              value: mesh
-          help: 深色模式下的动态渲染背景效果，默认星空闪烁
-        - $formkit: color
-          name: bg_dynamic_color1
-          label: 动态背景主色
-          value: "#10B981"
-          help: 动态背景的主要颜色
-        - $formkit: color
-          name: bg_dynamic_color2
-          label: 动态背景辅色
-          value: "#3B82F6"
-          help: 动态背景的辅助颜色，用于渐变和混合效果
-        - $formkit: range
-          name: bg_dynamic_opacity
-          label: 动态背景透明度
-          value: 0.15
-          min: 0.05
-          max: 0.5
-          step: 0.05
-          help: 动态背景的不透明度，值越小越淡
+              options:
+                - label: 粒子连线
+                  value: particles
+                - label: 渐变流光
+                  value: gradient
+                - label: 气泡漂浮
+                  value: bubbles
+                - label: 星空闪烁
+                  value: stars
+                - label: 网格波纹
+                  value: mesh
+              help: 深色模式下的动态渲染背景效果，默认星空闪烁
+            - $formkit: color
+              name: bg_dynamic_color1
+              label: 动态背景主色
+              value: "#10B981"
+              help: 动态背景的主要颜色
+            - $formkit: color
+              name: bg_dynamic_color2
+              label: 动态背景辅色
+              value: "#3B82F6"
+              help: 动态背景的辅助颜色，用于渐变和混合效果
+            - $formkit: range
+              name: bg_dynamic_opacity
+              label: 动态背景透明度
+              value: 0.15
+              min: 0.05
+              max: 0.5
+              step: 0.05
+              help: 动态背景的不透明度，值越小越淡
 
     - group: login
       label: 登录页面
@@ -849,33 +893,51 @@ spec:
           value: true
           help: 是否在左侧品牌区背景图上叠加渐变遮罩层以保证文字可读；关闭后不显示任何遮罩，直接透出背景图
         - $formkit: color
-          name: brand_overlay_color
-          label: 遮罩渐变主色
-          value: "#059669"
-          help: 左侧品牌区遮罩层的渐变主色，由该颜色按透明度从实色渐变到透明（配合下方"遮罩渐变透明度"控制起始不透明度）
-        - $formkit: color
-          name: brand_overlay_color_dark
-          label: 遮罩渐变主色（深色模式）
-          value: "#059669"
-          help: 深色模式下左侧品牌区遮罩层的渐变主色
-        - $formkit: range
-          name: brand_overlay_opacity
-          label: 遮罩渐变透明度
-          value: 0.6
-          min: 0
-          max: 1
-          step: 0.05
-          help: 遮罩渐变起始处（最实）的不透明度，0 为完全透明，1 为完全不透明；向下渐变至透明
-        - $formkit: range
-          name: brand_overlay_opacity_dark
-          label: 遮罩渐变透明度（深色模式）
-          value: 0.5
-          min: 0
-          max: 1
-          step: 0.05
-          help: 深色模式下遮罩渐变起始处的不透明度
-        - $formkit: color
           name: brand_text_color
           label: 品牌区文字颜色
           value: "#FFFFFF"
           help: 左侧品牌区内 Logo、站点名、标语等文字颜色
+        - $formkit: group
+          name: light
+          label: 浅色模式
+          children:
+            - $formkit: attachment
+              name: bg_image
+              label: 浅色背景图
+              value: ""
+              help: 登录页浅色模式下的背景图片，建议 1920×1080 横图；留空则使用主题内置默认背景图
+            - $formkit: color
+              name: overlay_color
+              label: 遮罩渐变主色
+              value: "#059669"
+              help: 浅色模式下左侧品牌区遮罩层的渐变主色，由该颜色按透明度从实色渐变到透明
+            - $formkit: range
+              name: overlay_opacity
+              label: 遮罩渐变透明度
+              value: 0.6
+              min: 0
+              max: 1
+              step: 0.05
+              help: 浅色模式下遮罩渐变起始处（最实）的不透明度，0 为完全透明，1 为完全不透明
+        - $formkit: group
+          name: dark
+          label: 深色模式
+          children:
+            - $formkit: attachment
+              name: bg_image
+              label: 深色背景图
+              value: ""
+              help: 登录页深色模式下的背景图片，建议 1920×1080 横图；留空则使用主题内置默认背景图
+            - $formkit: color
+              name: overlay_color
+              label: 遮罩渐变主色
+              value: "#059669"
+              help: 深色模式下左侧品牌区遮罩层的渐变主色
+            - $formkit: range
+              name: overlay_opacity
+              label: 遮罩渐变透明度
+              value: 0.5
+              min: 0
+              max: 1
+              step: 0.05
+              help: 深色模式下遮罩渐变起始处的不透明度
