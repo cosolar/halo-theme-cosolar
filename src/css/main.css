@@ -1332,6 +1332,11 @@ body.nav-open {
   border-left: 2px solid var(--color-primary);
 }
 
+.toc-h1 {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
 .toc-h2 {
   font-weight: 500;
 }
@@ -3048,6 +3053,10 @@ body.nav-open {
 
 .prose h1 {
   font-size: 1.75em;
+}
+
+.content-area[data-show-content-h1="false"] .prose h1 {
+  display: none;
 }
 
 .prose h2 {

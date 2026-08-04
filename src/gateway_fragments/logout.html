@@ -5,15 +5,21 @@
 
 <form th:fragment="form" class="halo-form cos-logout-form" th:action="@{/logout}" method="post">
   <!-- 用户信息卡片 -->
-  <div th:if="${user != null}" class="cos-user-card" th:object="${user}">
+  <div th:if="${user != null}" class="cos-user-card">
     <img
-      th:src="*{spec.avatar} ?: '/images/default-avatar.png'"
-      th:alt="*{spec.displayName}"
+      th:if="${user.spec.avatar != null and !#strings.isEmpty(user.spec.avatar)}"
+      th:src="${user.spec.avatar}"
+      th:alt="${user.spec.displayName}"
       class="cos-user-avatar"
     />
+    <div
+      th:unless="${user.spec.avatar != null and !#strings.isEmpty(user.spec.avatar)}"
+      class="cos-user-avatar cos-user-avatar-placeholder"
+      th:text="${#strings.isEmpty(user.spec.displayName) ? '?' : #strings.substring(user.spec.displayName,0,1)}"
+    >U</div>
     <div class="cos-user-meta">
-      <p class="cos-user-name" th:text="*{spec.displayName}">User</p>
-      <p class="cos-user-handle" th:text="|@*{metadata.name}|">@username</p>
+      <p class="cos-user-name" th:text="${user.spec.displayName}">User</p>
+      <p class="cos-user-handle" th:text="|@${user.metadata.name}|">@username</p>
     </div>
   </div>
 

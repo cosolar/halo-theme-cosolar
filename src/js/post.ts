@@ -8,8 +8,11 @@
   const articleContent = document.querySelector(".prose");
   if (!articleContent) return;
 
-  // Extract headings (h2, h3, h4)
-  const headings = articleContent.querySelectorAll("h2, h3, h4");
+  // 是否将正文中的 H1 级标题也加入目录（由后台「文章目录显示 H1 级标题」控制）
+  const tocShowH1 = (articleContent.closest(".content-area") as HTMLElement | null)?.dataset.tocShowH1 === "true";
+  const headingSelector = tocShowH1 ? "h1, h2, h3, h4" : "h2, h3, h4";
+  // Extract headings (h2, h3, h4, 可选 h1)
+  const headings = articleContent.querySelectorAll(headingSelector);
   if (headings.length === 0) {
     tocNav.innerHTML = '<div class="toc-empty">本文无目录</div>';
     return;

@@ -1,0 +1,45 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  lang="zh-CN"
+  th:data-color-scheme="${theme.config?.style?.color_scheme ?: 'auto'}"
+>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title th:text="|重置密码 - ${site.title}|">重置密码</title>
+  <!-- Cosolar 主题色防闪烁 -->
+  <script>
+    (function(){var s=localStorage.getItem("cosolar-theme");if(s){document.documentElement.setAttribute("data-theme",s);}else{var m=window.matchMedia("(prefers-color-scheme: dark)");if(m.matches)document.documentElement.setAttribute("data-theme","dark");}})();
+  </script>
+  <link rel="stylesheet" href="/css/login.css" />
+  <link rel="icon" th:if="${site.favicon != null and !#strings.isEmpty(site.favicon)}" th:href="${site.favicon}" />
+</head>
+<body class="cos-auth-page">
+  <div class="cos-card">
+    <a class="cos-auth-logo" th:href="@{/}">
+      <img
+        th:if="${theme.config?.basic?.logo_image != null and !#strings.isEmpty(theme.config.basic.logo_image)}"
+        th:src="${theme.config.basic.logo_image}"
+        th:width="${theme.config?.basic?.logo_image_width ?: 44}"
+        th:height="${theme.config?.basic?.logo_image_height ?: 44}"
+        alt="Logo"
+      />
+      <span
+        class="cos-b-icon"
+        th:unless="${theme.config?.basic?.logo_image != null and !#strings.isEmpty(theme.config.basic.logo_image)}"
+        th:style="'width:' + (${theme.config?.basic?.logo_image_width ?: 44}) + 'px;height:' + (${theme.config?.basic?.logo_image_height ?: 44}) + 'px;'">&lt;/&gt;</span>
+      <span class="cos-b-name" th:text="${theme.config?.basic?.logo_text ?: ''}">码迹志</span>
+    </a>
+
+    <h1 class="cos-title" th:text="'重置密码'">重置密码</h1>
+    <p class="cos-subtitle">请设置您的新密码</p>
+
+    <form th:replace="~{gateway_fragments/password_reset_email_reset::form}"></form>
+
+    <div class="cos-auth-foot">
+      <a th:href="@{/login}">← 返回登录</a>
+    </div>
+  </div>
+</body>
+</html>

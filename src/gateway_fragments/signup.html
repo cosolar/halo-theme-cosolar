@@ -1,21 +1,23 @@
 <form
     th:fragment="form"
-    class="halo-form"
+    class="halo-form halo-form-signup"
     name="signup-form"
     id="signup-form"
     th:action="@{/signup}"
     th:object="${form}"
     method="post"
 >
-    <div class="alert alert-error" role="alert" th:if="${error == 'invalid-email-code'}">
-        <strong>无效的邮箱验证码</strong>
+    <!-- 全局错误提示：占满整行；兜底文案防止后端返回未知错误时红框为空 -->
+    <div class="alert alert-error signup-global-error" role="alert" th:if="${error != null and !#strings.isEmpty(error)}">
+        <strong th:if="${error == 'invalid-email-code'}">邮箱验证码无效</strong>
+        <strong th:if="${error == 'rate-limit-exceeded'}">请求过于频繁，请稍后再试</strong>
+        <strong th:if="${error == 'duplicate-username'}">用户名已经被注册</strong>
+        <strong th:if="${error == 'restricted-username'}">该用户名受保护，不可使用</strong>
+        <strong th:if="${error == 'email-already-exists'}">该邮箱已被注册</strong>
+        <strong th:if="${error == 'email-code-expired'}">邮箱验证码已过期，请重新获取</strong>
+        <strong th:unless="${error == 'invalid-email-code' or error == 'rate-limit-exceeded' or error == 'duplicate-username' or error == 'restricted-username' or error == 'email-already-exists' or error == 'email-code-expired'}">注册失败，请检查填写内容</strong>
     </div>
-    <div class="alert alert-error" role="alert" th:if="${error == 'rate-limit-exceeded'}">
-        <strong>请求过于频繁，请稍后再试</strong>
-    </div>
-    <div class="alert alert-error" role="alert" th:if="${error == 'duplicate-username'}">
-        <strong>用户名已经被注册</strong>
-    </div>
+
     <div class="form-item-group">
         <div class="form-item">
             <label for="username">用户名</label>
@@ -32,6 +34,7 @@
                     required
                     minlength="4"
                     maxlength="63"
+                    placeholder="请输入用户名"
                     th:field="*{username}"
                 />
             </div>
@@ -39,7 +42,7 @@
         </div>
 
         <div class="form-item">
-            <label for="displayName">名称</label>
+            <label for="displayName">昵称</label>
             <div class="form-input">
                 <input
                     type="text"
@@ -50,6 +53,7 @@
                     autocorrect="off"
                     autocapitalize="off"
                     required
+                    placeholder="请输入显示名称"
                     th:field="*{displayName}"
                 />
             </div>
@@ -57,36 +61,42 @@
         </div>
     </div>
 
-    <div class="form-item-group">
-        <div class="form-item">
-            <label for="email">电子邮箱</label>
+    <div class="form-item">
+        <label for="email">电子邮箱</label>
+        <div class="form-input">
+            <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="off"
+                spellcheck="false"
+                autocorrect="off"
+                autocapitalize="off"
+                required
+                placeholder="请输入电子邮箱"
+                th:field="*{email}"
+            />
+        </div>
+        <p class="alert alert-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+    </div>
+
+    <div class="form-item" th:if="${globalInfo.mustVerifyEmailOnRegistration}">
+        <label for="emailCode">邮箱验证码</label>
+        <div class="form-input-group">
             <div class="form-input">
                 <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    autocomplete="off"
-                    spellcheck="false"
-                    autocorrect="off"
-                    autocapitalize="off"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    id="emailCode"
+                    name="emailCode"
                     required
-                    th:field="*{email}"
+                    placeholder="请输入 6 位验证码"
                 />
             </div>
-            <p class="alert alert-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            <button id="emailCodeSendButton" type="button">发送验证码</button>
         </div>
-
-        <div class="form-item" th:if="${globalInfo.mustVerifyEmailOnRegistration}">
-            <label for="emailCode">邮箱验证码</label>
-            <div class="form-input-group">
-                <div class="form-input">
-                    <input type="text" inputmode="numeric" pattern="\d*" id="emailCode" name="emailCode" required />
-                </div>
-
-                <button id="emailCodeSendButton" type="button">发送</button>
-            </div>
-            <p class="alert alert-error" th:if="${#fields.hasErrors('emailCode')}" th:errors="*{emailCode}"></p>
-        </div>
+        <p class="alert alert-error" th:if="${#fields.hasErrors('emailCode')}" th:errors="*{emailCode}"></p>
     </div>
 
     <div class="form-item">
@@ -105,13 +115,38 @@
         <p class="alert alert-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
     </div>
 
+    <div class="form-item-compact" th:if="${agreementPages != null and !agreementPages.isEmpty()}">
+        <input type="checkbox" id="agreedToTerms" name="agreedToTerms" value="true" required />
+        <label for="agreedToTerms">
+            <span>我已阅读并同意</span>
+            <th:block th:each="page, iterStat : ${agreementPages}">
+                <a th:if="${page.permalink != null}" th:href="${page.permalink}" target="_blank" th:text="${page.title}"></a>
+                <span th:if="${page.permalink == null}" th:text="${page.title}"></span>
+                <span th:if="${!iterStat.last}">、</span>
+            </th:block>
+        </label>
+    </div>
+    <p class="alert alert-error" th:if="${#fields.hasErrors('agreedToTerms')}" th:errors="*{agreedToTerms}"></p>
+
     <div class="form-item">
-        <button type="submit">注册</button>
+        <button type="submit">创建账户</button>
     </div>
 
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function () {
             setupPasswordConfirmation("password", "confirmPassword");
+
+            const form = document.getElementById("signup-form");
+            form.addEventListener("submit", function () {
+                const usernameInput = document.getElementById("username");
+                const displayNameInput = document.getElementById("displayName");
+                if (usernameInput) {
+                    usernameInput.value = usernameInput.value.trim();
+                }
+                if (displayNameInput) {
+                    displayNameInput.value = displayNameInput.value.trim();
+                }
+            });
         });
     </script>
 

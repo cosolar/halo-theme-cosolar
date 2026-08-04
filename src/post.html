@@ -85,9 +85,9 @@
       </button>
     </aside>
 
-    <div class="content-area">
+    <div class="content-area" th:with="tocShowH1=${theme.config?.post?.toc_show_h1 == true}, showContentH1=${theme.config?.post?.show_content_h1 != false}" th:attr="data-toc-show-h1=${tocShowH1},data-show-content-h1=${showContentH1}">
       <article class="article-detail"
-               th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.style?.default_post_cover != null and !#strings.isEmpty(theme.config.style.default_post_cover) ? theme.config.style.default_post_cover : builtinCover)}">
+               th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.post?.default_post_cover != null and !#strings.isEmpty(theme.config.post.default_post_cover) ? theme.config.post.default_post_cover : builtinCover)}">
         <!-- Cover -->
         <div class="article-detail-cover" th:if="${coverUrl != null}">
           <img th:src="${coverUrl}" alt="" />
@@ -95,7 +95,7 @@
 
         <!-- Header -->
         <header class="article-detail-header">
-          <h1 class="article-detail-title" th:text="${post.spec.title}"></h1>
+          <h1 class="article-detail-title" th:if="${theme.config?.post?.show_post_title != false}" th:text="${post.spec.title}"></h1>
           <div class="article-detail-meta">
             <span class="meta-item" th:if="${post.owner}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

@@ -198,19 +198,6 @@ spec:
           max: 48
           step: 2
           help: 内容区与侧边栏之间的间距（像素）
-        - $formkit: number
-          name: toc_width
-          label: 文章目录宽度
-          value: 240
-          min: 180
-          max: 320
-          step: 10
-          help: 文章页右侧目录（TOC）的宽度（像素），建议 180-320
-        - $formkit: attachment
-          name: default_post_cover
-          label: 文章缺省封面图
-          value: ""
-          help: 文章未设置封面图时默认显示的图片，建议 16:9 横图；留空则显示代码图标占位符
         - $formkit: text
           name: font_family
           label: 正文字体族
@@ -247,6 +234,38 @@ spec:
           value: ""
           help: 仅 iconfont 模式生效。填入自建 iconfont 项目的 CSS 地址（如 https://at.alicdn.com/t/xxx.css）。Iconify 模式下此项忽略
         # 代码高亮主题由 Halo plugin-shiki 插件后台配置（亮色/暗色主题），主题不再提供此选项
+
+    - group: post
+      label: 文章页面
+      formSchema:
+        - $formkit: switch
+          name: show_post_title
+          label: 显示文章标题
+          value: true
+          help: 在文章详情页顶部显示文章标题（H1）。关闭后仅展示封面、元信息与正文，标题不单独显示
+        - $formkit: switch
+          name: toc_show_h1
+          label: 右侧目录显示 H1 级标题
+          value: false
+          help: 开启后，文章正文中手动写的 H1 标题也会出现在右侧目录里；默认仅显示 H2 及以下层级
+        - $formkit: switch
+          name: show_content_h1
+          label: 显示文章内容里的 H1 级标题
+          value: true
+          help: 控制文章正文中手动撰写的 H1 标题是否渲染显示。关闭后正文里的 H1 不再显示（与「右侧目录显示 H1 级标题」相互独立，目录是否包含 H1 不受此项影响）
+        - $formkit: number
+          name: toc_width
+          label: 文章目录宽度
+          value: 240
+          min: 180
+          max: 320
+          step: 10
+          help: 文章页右侧目录（TOC）的宽度（像素），建议 180-320
+        - $formkit: attachment
+          name: default_post_cover
+          label: 文章缺省封面图
+          value: ""
+          help: 文章未设置封面图时默认显示的图片，建议 16:9 横图；留空则显示代码图标占位符
 
     - group: social
       label: 博主信息

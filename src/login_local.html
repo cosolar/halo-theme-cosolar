@@ -3,7 +3,7 @@
 <!--    Cosolar Theme · 左右分栏               -->
 <!-- ========================================== -->
 
-<div th:remove="tag" th:fragment="form">
+<div th:remove="tag" th:fragment="form" xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- 隐藏的加密密码字段 (加密逻辑在 common.html 的 basicScriptResources 中) -->
     <input type="hidden" name="password" id="password" />
 
@@ -22,7 +22,7 @@
 
     <!-- 密码 -->
     <div class="cos-fg">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;justify-content:space-between; margin-bottom:9px;">
             <label for="plainPassword" class="cos-label" style="margin-bottom:0;">密码</label>
             <a tabindex="-1" th:href="@{/password-reset/email}"
                 style="font-size:13px;font-weight:500;color:var(--c-primary);text-decoration:none;transition:color .2s;"

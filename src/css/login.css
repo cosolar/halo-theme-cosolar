@@ -266,8 +266,8 @@ body {
 .alert-error { color:#dc2626; background:rgba(220,38,38,.08); border:1px solid rgba(220,38,38,.25); }
 .form-item .alert { margin:8px 0 0; }
 
-/* 窄屏：分组堆叠为单列 */
-@media (max-width:480px) {
+/* 窄屏：分组堆叠为单列（放宽到 600px，避免 480–600 区间挤压） */
+@media (max-width:600px) {
     .form-item-group { flex-direction:column; gap:0; }
     .form-item-group .form-item { margin-bottom:18px; }
 }
@@ -367,6 +367,12 @@ body {
     width:52px; height:52px; border-radius:50%; object-fit:cover;
     border:2px solid var(--c-pborder); box-shadow:var(--s-sm); flex-shrink:0;
 }
+.cos-user-avatar-placeholder {
+    display:inline-flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--c-primary), var(--c-phover));
+    color:#fff; font-size:22px; font-weight:700;
+    text-transform:uppercase; user-select:none;
+}
 .cos-user-meta { min-width:0; flex:1; }
 .cos-user-name {
     font-size:16px; font-weight:700; color:var(--c-text); line-height:1.4;
@@ -415,13 +421,173 @@ body {
 }
 
 /* ====== 响应式：小屏变单栏 ====== */
+/* 平板及以下：隐藏左侧品牌区，表单占满，允许页面自然滚动（避免框内滚动） */
 @media (max-width:900px) {
     .cos-brand { display:none; }
-    .cos-form-area { flex:0 0 100%;max-width:100%;padding:24px 20px;height:100%; }
+    .cos-page { height:auto; min-height:100dvh; overflow:visible; }
+    .cos-form-area {
+        flex:0 0 100%;
+        max-width:100%;
+        padding:36px 20px 40px;
+        height:auto;
+        min-height:100dvh;
+        align-items:flex-start;
+        overflow:visible;
+    }
     .cos-card { padding:40px 28px 36px; border-radius:var(--r-lg); box-shadow:var(--s-lg); }
     .cos-form-area::before { display:none; }
+    /* 注册卡片在平板下收一点宽度，避免空旷 */
+    .cos-card-signup { max-width:460px; }
 }
-@media (max-width:400px) {
-    .cos-card { padding:24px 18px 20px; }
-    .cos-title { font-size:22px; }
+
+/* 手机：输入框字号 16px，防止 iOS Safari 聚焦时自动放大页面 */
+@media (max-width:768px) {
+    .form-input input,
+    .form-item > input,
+    .cos-input,
+    .form-input-group input {
+        font-size:16px;
+    }
+    /* 触控目标最小高度，便于手指点击 */
+    .cos-card form button[type="submit"],
+    .cos-card .login-form button[type="submit"],
+    .cos-card button.cos-btn-submit,
+    .form-input-group > button {
+        min-height:48px;
+    }
+    .cos-remember input[type="checkbox"] { width:19px; height:19px; }
 }
+
+/* 中小屏手机：卡片更紧凑 */
+@media (max-width:480px) {
+    .cos-card { padding:32px 22px 30px; }
+    .cos-title { font-size:23px; margin-bottom:8px; }
+    .cos-subtitle { margin-bottom:28px; font-size:13px; }
+    .form-item { margin-bottom:16px; }
+    /* 其他登录方式胶囊：缩小间距，更多换行 */
+    .pill-items { gap:8px; justify-content:center; }
+    .pill-items a { padding:8px 13px; font-size:12px; }
+    /* 社交登录圆形图标略缩 */
+    .social-auth-providers a,
+    .form-auth-providers a { width:44px!important; height:44px!important; }
+}
+
+/* 超小屏（320–360px）：极致紧凑，避免横向溢出 */
+@media (max-width:360px) {
+    body { -webkit-text-size-adjust:100%; }
+    .cos-form-area { padding:16px 12px; }
+    .cos-card { padding:24px 16px 24px; }
+    .cos-title { font-size:21px; }
+    .form-item > label { font-size:12px; }
+    /* 验证码按钮在极窄屏缩短文案空间 */
+    .form-input-group { gap:8px; }
+    .form-input-group > button { min-width:92px; padding:0 12px; font-size:13px; }
+    .halo-form-signup .form-input-group > button { min-width:92px; }
+    .cos-footer-links { margin-top:24px; }
+    .cos-register { font-size:13px; }
+}
+
+/* 横屏矮屏（如手机横放）：减少纵向留白，允许滚动 */
+@media (max-height:560px) and (orientation:landscape) {
+    .cos-form-area { align-items:flex-start; padding-top:20px; }
+    .cos-card { padding-top:28px; padding-bottom:24px; }
+    .cos-subtitle { margin-bottom:20px; }
+    .form-item { margin-bottom:14px; }
+}
+
+/* ====== 注册页专用优化 ====== */
+.halo-form-signup .form-item { margin-bottom:12px; }
+.halo-form-signup .form-item-group { gap:12px; margin-bottom:12px; }
+.halo-form-signup .form-item-group .form-item { margin-bottom:0; }
+
+/* 注册页标题区更紧凑 */
+.cos-card-signup .cos-title { margin-bottom:6px; }
+.cos-card-signup .cos-subtitle { margin-bottom:14px; }
+
+/* 全局错误提示：占满整行，高度紧凑 */
+.signup-global-error {
+    margin-bottom:12px;
+    padding:8px 12px;
+    border-radius:var(--r-md);
+    background:rgba(220,38,38,.08);
+    border:1px solid rgba(220,38,38,.20);
+}
+.signup-global-error strong {
+    color:#dc2626;
+    font-size:13px;
+    font-weight:600;
+}
+
+/* 邮箱验证码输入框：与发送按钮等高、更协调 */
+.halo-form-signup .form-input-group .form-input input {
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+    border-right:none;
+}
+.halo-form-signup .form-input-group > button {
+    border-top-left-radius:0;
+    border-bottom-left-radius:0;
+    min-width:110px;
+    padding:0 18px;
+}
+
+/* 输入框 placeholder 更柔和 */
+.halo-form-signup .form-input input::placeholder { color:var(--c-text3); opacity:.75; }
+
+/* 协议勾选区域：与上方字段留出清晰间距 */
+.halo-form-signup .form-item-compact {
+    margin-top:2px;
+    margin-bottom:14px;
+}
+.halo-form-signup .form-item-compact label a {
+    color:var(--c-primary);
+    text-decoration:none;
+    font-weight:500;
+}
+.halo-form-signup .form-item-compact label a:hover {
+    text-decoration:underline;
+}
+
+/* 注册按钮上方无需额外间隔 */
+.halo-form-signup > .form-item:last-of-type { margin-top:0; margin-bottom:0; }
+
+/* 注册卡片更宽一些（桌面端容纳两列分组），窄屏由上方响应式规则统一收口 */
+.cos-card-signup { max-width:520px; }
+
+/* 注册页 footer 更紧凑 */
+.cos-card-signup ~ .cos-footer-links { margin-top:20px; }
+
+/* ====== 居中单栏网关页（找回密码 / 重置密码等，无左右分栏） ====== */
+.cos-auth-page {
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; min-height:100dvh; padding:40px 20px;
+    box-sizing:border-box;
+    background-color:var(--c-bg);
+    background-image:
+        radial-gradient(700px 360px at 12% -8%, rgba(16,185,129,.10), transparent 60%),
+        radial-gradient(640px 320px at 92% 108%, rgba(52,211,153,.10), transparent 60%);
+}
+.cos-auth-page .cos-card {
+    width:100%; max-width:440px; margin:auto;
+    box-shadow:0 10px 40px rgba(15,23,42,.10), var(--s-lg);
+}
+.cos-auth-logo {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    margin-bottom:28px; text-decoration:none; color:var(--c-text);
+}
+.cos-auth-logo img { border-radius:var(--r-md); object-fit:contain; }
+.cos-auth-logo .cos-b-icon {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:44px; height:44px; border-radius:var(--r-md);
+    background:var(--c-pbg); color:var(--c-primary); font-weight:700;
+    font-family:"Cascadia Code","JetBrains Mono",monospace; font-size:20px;
+}
+.cos-auth-logo .cos-b-name { font-size:19px; font-weight:700; letter-spacing:-.01em; }
+.cos-auth-foot {
+    margin-top:22px; text-align:center; font-size:13px; color:var(--c-text2);
+}
+.cos-auth-foot a {
+    color:var(--c-primary); text-decoration:none; font-weight:500; transition:color .2s;
+}
+.cos-auth-foot a:hover { color:var(--c-phover); text-decoration:underline; }
+
