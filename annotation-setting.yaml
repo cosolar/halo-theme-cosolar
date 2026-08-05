@@ -27,3 +27,18 @@ spec:
       label: 自定义阅读地址
       value: ""
       help: 设置后，文章卡片的"阅读全文"链接将跳转到此地址（如外部博客、第三方平台），留空则使用默认文章链接
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: theme-cosolar-linkgroup-icon
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: LinkGroup
+  formSchema:
+    - $formkit: text
+      name: icon
+      label: 分组图标
+      value: ""
+      help: 图标名，根据主题"图标库"设置填写。Iconify 填 mdi:folder（搜索 icon-sets.iconify.design），iconfont 填 icon-shouye。留空则使用默认分类图标

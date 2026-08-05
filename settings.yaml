@@ -669,6 +669,46 @@ spec:
           label: 友情链接页封面图
           value: ""
           help: 友情链接页顶部 Hero 区域的背景封面图，留空则显示默认渐变背景
+        - $formkit: email
+          name: apply_email
+          label: 友链申请邮箱
+          value: ""
+          help: 未开启插件在线申请时，点击"申请友链"将使用此邮箱的 mailto 链接；留空则打开无收件人的邮件客户端
+        - $formkit: text
+          name: apply_url
+          label: 友链申请地址
+          value: ""
+          help: 未开启插件在线申请时，自定义"申请友链"跳转地址（如申请页链接），优先级高于邮箱；留空则回退到邮箱提交
+        - $formkit: switch
+          name: show_apply_cta
+          label: 显示底部申请友链 CTA
+          value: true
+          help: 开启后在友情链接页底部显示"想在这里展示你的网站？"引导区块及"申请友链"按钮；关闭后隐藏整个 CTA
+        - $formkit: group
+          name: form_fields
+          label: 申请表单字段显示
+          help: 控制在线申请表单中哪些非必填字段显示。必填字段（网站地址、网站名称、验证码）始终显示
+          children:
+            - $formkit: switch
+              name: show_logo
+              label: 显示 Logo 地址
+              value: true
+            - $formkit: switch
+              name: show_email
+              label: 显示联系邮箱
+              value: true
+            - $formkit: switch
+              name: show_description
+              label: 显示网站描述
+              value: true
+            - $formkit: switch
+              name: show_backlink
+              label: 显示反链地址
+              value: true
+            - $formkit: switch
+              name: show_feed_urls
+              label: 显示订阅地址
+              value: true
 
     - group: feeds
       label: RSS 资讯页设置

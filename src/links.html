@@ -1,290 +1,810 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|${(theme.config?.links?.links_title ?: '友情链接')} - ${site.title}|">友情链接</title>
+    <title th:text="|${htmlTitle ?: (site.title + ' - 友链')}|">友链导航</title>
     <script type="module" src="./js/links.ts"></script>
   </template>
 
-  <div
-    class="layout-grid no-sidebar"
-    th:with="
-      linksTitle = ${theme.config?.links?.links_title ?: '友情链接'},
-      linksSubtitle = ${theme.config?.links?.links_subtitle ?: '与优秀的开发者们互相学习，共同进步，以下是我精心挑选的技术伙伴们'},
-      totalLinks = ${linkFinder.count()},
-      totalGroups = ${groups != null ? #lists.size(groups) : 0}
-    "
-  >
+  <div class="layout-grid no-sidebar cosolar-links-page">
     <div class="content-area">
-      <!-- ===== Links Hero (双栏：左内容+右插画) ===== -->
-      <section class="links-hero" th:if="${theme.config?.links?.show_hero != false}" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.links?.links_cover) ? theme.config.links.links_cover : defaultCover}">
-        <div class="links-hero-bg" th:if="${!#strings.isEmpty(cover)}">
-          <img th:src="${cover}" alt="" loading="lazy" />
-        </div>
-        <div class="links-hero-bg--fallback" th:unless="${!#strings.isEmpty(cover)}"></div>
-        <div class="links-hero-overlay" th:if="${!#strings.isEmpty(cover)}"></div>
-
-        <div class="links-hero-content">
-          <!-- 左侧：标题 + 统计 -->
-          <div class="links-hero-left">
-            <span class="links-hero-eyebrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-              </svg>
-              <span th:text="${linksTitle}">友情链接</span>
-            </span>
-            <h1 th:text="${linksTitle}">友情链接</h1>
-            <p class="links-hero-desc" th:text="${linksSubtitle}">
-              与优秀的开发者们互相学习，共同进步
-            </p>
-
-            <!-- 统计栏 (集成在 Hero 内) -->
-            <div class="links-hero-stats">
-              <div class="links-hero-stat">
-                <div class="links-hero-stat-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
-                </div>
-                <div class="links-hero-stat-text">
-                  <span class="links-hero-stat-num" th:text="${totalLinks}">0</span>
-                  <span class="links-hero-stat-label">友链网站</span>
-                </div>
-              </div>
-              <span class="links-hero-stat-divider"></span>
-              <div class="links-hero-stat">
-                <div class="links-hero-stat-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                </div>
-                <div class="links-hero-stat-text">
-                  <span class="links-hero-stat-num" th:text="${totalGroups}">0</span>
-                  <span class="links-hero-stat-label">链接分组</span>
-                </div>
-              </div>
-              <span class="links-hero-stat-divider"></span>
-              <div class="links-hero-stat">
-                <div class="links-hero-stat-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 16a6 6 0 0 1 12 0" />
-                    <path d="M6 8a6 6 0 0 1 12 0" />
-                  </svg>
-                </div>
-                <div class="links-hero-stat-text">
-                  <span class="links-hero-stat-num">∞</span>
-                  <span class="links-hero-stat-label">无限可能</span>
-                </div>
-              </div>
-            </div>
+      <section
+        class="links-page-header"
+        th:if="${theme.config?.links?.show_hero != false}"
+        th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.links?.links_cover) ? theme.config.links.links_cover : defaultCover}"
+      >
+        <div class="links-hero">
+          <div class="links-hero-bg" th:if="${!#strings.isEmpty(cover)}">
+            <img th:src="${cover}" alt="" loading="lazy" />
           </div>
-
-        </div>
-      </section>
-
-      <!-- ===== 友链列表区域 ===== -->
-      <section class="links-section">
-        <!-- 区域标题 -->
-        <div class="links-section-header">
-          <h2>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96c1.4 9.3-4.5 17.04-8.2 17.04z" />
-              <path d="M2 21c0-3 1.85-5.36 5.08-6" />
-            </svg>
-            友链列表
-          </h2>
-        </div>
-
-        <!-- 筛选 + 搜索 -->
-        <div class="links-toolbar" th:if="${not #lists.isEmpty(simpleGroups)}">
-          <nav class="link-filters" id="linkFilters">
-            <button
-              type="button"
-              class="link-filter active"
-              data-group="__all__"
-            >
-              <span>全部</span>
-              <small th:text="${totalLinks}"></small>
-            </button>
-            <button
-              type="button"
-              class="link-filter"
-              th:each="item : ${simpleGroups}"
-              th:attr="data-group=${item.metadata.name}"
-              th:with="groupLinks = ${linkFinder.listBy(item.metadata.name)}"
-            >
-              <span th:text="${item.spec.displayName}"></span>
-              <small th:text="${#lists.size(groupLinks)}"></small>
-            </button>
-          </nav>
-          <div class="links-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              type="text"
-              id="linksSearchInput"
-              placeholder="搜索友链..."
-              autocomplete="off"
-            />
-          </div>
-        </div>
-
-        <!-- 链接分组列表（始终渲染全部分组，分组切换由前端筛选，不再整页跳转） -->
-        <section
-          class="link-group"
-          th:each="grp : ${groups}"
-          data-link-group
-          th:attr="data-group-name=${grp.metadata.name}"
-        >
-          <header class="link-group-header" th:if="${totalGroups > 1}">
-            <h3 th:text="${grp.spec.displayName} ?: '未分组'"></h3>
-            <small th:text="${#lists.size(grp.links) + ' 个站点'}"></small>
-          </header>
-          <div class="link-cards" th:unless="${#lists.isEmpty(grp.links)}">
-            <a
-              th:each="link : ${grp.links}"
-              th:href="${link.spec.url}"
-              class="link-card"
-              target="_blank"
-              rel="noopener"
-              th:with="
-                accessState=${link.status?.verification?.access?.state?.name()},
-                backlinkState=${link.status?.verification?.backlink?.state?.name()},
-                groupName=${grp.spec?.displayName}
-              "
-              data-link-item
-              th:attr="data-name=${link.spec?.displayName},data-desc=${link.spec?.description},data-url=${link.spec?.url}"
-            >
-              <div class="link-card-head">
-                <div class="link-card-logo">
-                  <img
-                    th:if="${!#strings.isEmpty(link.spec.logo)}"
-                    th:src="${link.spec.logo}"
-                    th:alt="${link.spec.displayName}"
-                    loading="lazy"
-                    onerror="this.style.display='none';this.parentElement.classList.add('is-fallback');"
-                  />
-                  <span
-                    class="link-card-logo-fallback"
-                    th:if="${#strings.isEmpty(link.spec.logo)}"
-                    th:text="${#strings.substring(link.spec.displayName, 0, 1)}"
-                  ></span>
-                </div>
-                <div class="link-card-title-row">
-                  <span class="link-card-name" th:text="${link.spec.displayName}"></span>
-                  <span class="link-card-url" th:text="${link.spec.url}"></span>
-                </div>
+          <div
+            class="links-hero-bg--fallback"
+            th:unless="${!#strings.isEmpty(cover)}"
+          ></div>
+          <div
+            class="links-hero-overlay"
+            th:if="${!#strings.isEmpty(cover)}"
+          ></div>
+          <div class="links-hero-content">
+            <div class="links-hero-left">
+              <span class="links-hero-eyebrow">
                 <svg
-                  class="link-card-external"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                 >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                  />
                 </svg>
-              </div>
-              <p
-                class="link-card-desc"
-                th:if="${!#strings.isEmpty(link.spec.description)}"
-                th:text="${link.spec.description}"
+                <span
+                  th:text="${theme.config?.links?.links_title ?: '友情链接'}"
+                  >友情链接</span
+                >
+              </span>
+              <h1
+                th:text="${theme.config?.links?.links_title ?: '精选优质资源导航'}"
               >
-                描述
+                精选优质资源导航
+              </h1>
+              <p
+                class="links-hero-desc"
+                th:text="${theme.config?.links?.links_subtitle ?: '精心筛选的优质网站与工具集合，持续更新中...'}"
+              >
+                精心筛选的优质网站与工具集合，持续更新中...
               </p>
-              <div class="link-card-footer">
-                <span class="link-tag" th:text="${groupName}">分组</span>
-                <div class="link-card-badges">
-                  <span class="link-badge link-badge--ok" th:if="${accessState == 'ACCESSIBLE'}" title="链接可访问">
-                    <span class="dot"></span>在线
-                  </span>
-                  <span class="link-badge link-badge--off" th:if="${accessState == 'INACCESSIBLE'}" title="链接不可访问">
-                    <span class="dot"></span>离线
-                  </span>
-                  <span class="link-badge link-badge--check" th:if="${accessState == 'CHECKING'}" title="正在检测">
-                    <span class="dot"></span>检测中
-                  </span>
-                  <span class="link-badge link-badge--back" th:if="${backlinkState == 'FOUND'}" title="已回链">
-                    <span class="dot"></span>已回链
-                  </span>
-                  <span class="link-badge link-badge--back link-badge--back-miss" th:if="${backlinkState == 'MISSING'}" title="未回链">
-                    <span class="dot"></span>未回链
-                  </span>
+              <div class="links-hero-stats">
+                <div class="links-hero-stat">
+                  <div class="links-hero-stat-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                      <path d="M2 17l10 5 10-5" />
+                      <path d="M2 12l10 5 10-5" />
+                    </svg>
+                  </div>
+                  <div class="links-hero-stat-text">
+                    <strong
+                      class="links-hero-stat-num"
+                      th:text="${linkFinder.count()}"
+                      >0</strong
+                    >
+                    <span class="links-hero-stat-label">收录站点</span>
+                  </div>
+                </div>
+                <div class="links-hero-stat-divider"></div>
+                <div class="links-hero-stat">
+                  <div class="links-hero-stat-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                      />
+                      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                      <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </svg>
+                  </div>
+                  <div class="links-hero-stat-text">
+                    <strong
+                      class="links-hero-stat-num"
+                      id="linkGroupCount"
+                      th:text="${#lists.size(linkFinder.groupBy())}"
+                      >0</strong
+                    >
+                    <span class="links-hero-stat-label">友链导航</span>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="links-main">
+        <div class="links-layout">
+          <aside class="links-sidebar">
+            <div class="links-sidebar-inner">
+              <div class="links-sidebar-block links-categories-block">
+                <h3 class="links-sidebar-title">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                  </svg>
+                  友链导航
+                </h3>
+                <ul class="links-category-list" id="categoryList">
+                  <li>
+                    <button
+                      type="button"
+                      class="links-category-item active links-category-item--all"
+                      data-filter="all"
+                    >
+                      <span class="links-category-icon">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M2 12h20" />
+                          <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                          />
+                        </svg>
+                      </span>
+                      <span class="links-category-name">全部友链</span>
+                      <span
+                        class="links-category-count"
+                        th:text="${linkFinder.count()}"
+                        >0</span
+                      >
+                    </button>
+                  </li>
+                  <li
+                    th:each="group : ${linkFinder.groupBy()}"
+                    th:with="groupIcon=${#annotations.get(group, 'icon')}, groupIconIsIconfont=${!#strings.isEmpty(groupIcon) and #strings.startsWith(groupIcon, 'iconfont')}"
+                  >
+                    <button
+                      type="button"
+                      class="links-category-item"
+                      th:data-filter="${group.metadata.name}"
+                    >
+                      <span class="links-category-icon">
+                        <!-- 自定义图标：Iconify -->
+                        <iconify-icon
+                          th:if="${!#strings.isEmpty(groupIcon) and !groupIconIsIconfont}"
+                          th:icon="${groupIcon}"
+                          inline
+                        ></iconify-icon>
+                        <!-- 自定义图标：iconfont -->
+                        <i
+                          th:if="${!#strings.isEmpty(groupIcon) and groupIconIsIconfont}"
+                          th:class="${groupIcon}"
+                        ></i>
+                        <!-- 默认图标：分类（文件夹） -->
+                        <svg
+                          th:if="${#strings.isEmpty(groupIcon)}"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                          />
+                        </svg>
+                      </span>
+                      <span
+                        class="links-category-name"
+                        th:text="${group.spec.displayName} ?: '未分组'"
+                        >分类</span
+                      >
+                      <span
+                        class="links-category-count"
+                        th:text="${#lists.size(group.links)}"
+                        >0</span
+                      >
+                    </button>
+                  </li>
+                </ul>
+
+                <!-- 移动端分类下拉（避免网格溢出） -->
+                <div class="links-category-mobile">
+                  <label
+                    for="categorySelect"
+                    class="links-category-select-label"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="14" width="7" height="7" rx="1" />
+                      <rect x="3" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    分类
+                  </label>
+                  <select id="categorySelect" class="links-category-select">
+                    <option
+                      value="all"
+                      selected
+                      th:text="|全部友链 (${linkFinder.count()})|"
+                    >
+                      全部友链 (0)
+                    </option>
+                    <option
+                      th:each="group : ${linkFinder.groupBy()}"
+                      th:value="${group.metadata.name}"
+                      th:text="|${group.spec.displayName ?: '未分组'} (${#lists.size(group.links)})|"
+                    >
+                      分类 (0)
+                    </option>
+                  </select>
+                  <button
+                    th:if="${linkApplicationEnabled}"
+                    type="button"
+                    class="links-category-submit js-link-application-open"
+                  >
+                    提交友链
+                  </button>
+                  <a
+                    th:unless="${linkApplicationEnabled}"
+                    class="links-category-submit"
+                    th:href="${theme.config?.links?.apply_url ?: ('mailto:' + (theme.config?.links?.apply_email ?: ''))}"
+                    >提交友链</a
+                  >
+                </div>
+              </div>
+
+              <div class="links-sidebar-block links-submit-block">
+                <div class="links-submit-card">
+                  <div class="links-submit-body">
+                    <h3 class="links-submit-title">提交优质资源</h3>
+                    <p class="links-submit-desc">
+                      分享你的宝藏资源，让更多人发现
+                    </p>
+                    <button
+                      th:if="${linkApplicationEnabled}"
+                      type="button"
+                      class="links-submit-btn js-link-application-open"
+                    >
+                      立即提交
+                    </button>
+                    <a
+                      th:unless="${linkApplicationEnabled}"
+                      class="links-submit-btn"
+                      th:href="${theme.config?.links?.apply_url ?: ('mailto:' + (theme.config?.links?.apply_email ?: ''))}"
+                      >立即提交</a
+                    >
+                  </div>
+                  <div class="links-submit-icon" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                      />
+                      <path
+                        d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="links-content">
+            <div class="links-toolbar">
+              <div class="links-toolbar-title">
+                <h2 id="currentCategoryTitle">全部友链</h2>
+                <p id="currentCategoryDesc">
+                  精心筛选的优质资源集合，持续更新中...
+                </p>
+              </div>
+              <div class="links-toolbar-actions">
+                <div class="links-search">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                  </svg>
+                  <input
+                    type="text"
+                    id="linkSearchInput"
+                    placeholder="搜索资源..."
+                    autocomplete="off"
+                    aria-label="搜索资源"
+                  />
+                </div>
+                <div class="links-sort" id="linksSort">
+                  <button
+                    type="button"
+                    class="links-sort-btn active"
+                    data-sort="default"
+                    data-mobile-label="默认"
+                  >
+                    默认排序
+                  </button>
+                  <button
+                    type="button"
+                    class="links-sort-btn"
+                    data-sort="newest"
+                    data-mobile-label="最新"
+                  >
+                    最新收录
+                  </button>
+                </div>
+                <div class="links-view-toggle" id="linksViewToggle">
+                  <button
+                    type="button"
+                    class="links-view-btn active"
+                    data-view="detailed"
+                    title="详细卡片"
+                    aria-label="切换到详细卡片"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <line x1="3" y1="9" x2="21" y2="9" />
+                      <line x1="9" y1="21" x2="9" y2="9" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="links-view-btn"
+                    data-view="compact"
+                    title="简洁卡片"
+                    aria-label="切换到简洁卡片"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="3" y="3" width="7" height="7" rx="1" />
+                      <rect x="14" y="3" width="7" height="7" rx="1" />
+                      <rect x="3" y="14" width="7" height="7" rx="1" />
+                      <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="links-search-empty"
+              id="linksSearchEmpty"
+              style="display: none"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" />
+                <line x1="8" y1="11" x2="14" y2="11" />
+              </svg>
+              <p>没有找到匹配的资源</p>
+              <button
+                type="button"
+                class="links-search-reset"
+                id="clearSearchBtn"
+              >
+                清除搜索
+              </button>
+            </div>
+
+            <div class="links-groups" id="linksGroups">
+              <div
+                class="link-group"
+                th:each="group : ${linkFinder.groupBy()}"
+                th:data-group="${group.metadata.name}"
+                th:if="${#lists.size(group.links) > 0}"
+                data-view="detailed"
+              >
+                <div class="link-group-header">
+                  <div class="link-group-info">
+                    <h3 th:text="${group.spec.displayName} ?: '未分组'">
+                      分类名称
+                    </h3>
+                    <span
+                      class="link-group-count"
+                      th:text="${#lists.size(group.links)} + ' 个站点'"
+                      >0 个站点</span
+                    >
+                  </div>
+                </div>
+                <div class="link-cards">
+                  <a
+                    class="link-card"
+                    th:each="link : ${group.links}"
+                    th:href="${link.spec.url}"
+                    target="_blank"
+                    rel="noopener"
+                    th:data-name="${link.spec.displayName}"
+                    th:data-desc="${link.spec.description ?: ''}"
+                  >
+                    <div class="link-card-head">
+                      <div class="link-card-logo">
+                        <img
+                          th:if="${link.spec.logo != null and !#strings.isEmpty(link.spec.logo)}"
+                          th:src="${link.spec.logo}"
+                          th:alt="${link.spec.displayName}"
+                          loading="lazy"
+                        />
+                        <span
+                          th:if="${link.spec.logo == null or #strings.isEmpty(link.spec.logo)}"
+                          th:text="${#strings.substring(link.spec.displayName,0,1) ?: 'L'}"
+                          >L</span
+                        >
+                      </div>
+                      <div class="link-card-info">
+                        <div class="link-card-name-row">
+                          <h4
+                            class="link-card-name"
+                            th:text="${link.spec.displayName}"
+                          >
+                            站点名称
+                          </h4>
+                          <svg
+                            class="link-card-external"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                          >
+                            <path
+                              d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                            />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                          </svg>
+                        </div>
+                        <span
+                          class="link-card-url"
+                          th:text="${#strings.replace(link.spec.url, 'https://', '')}"
+                          >example.com</span
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="link-card-desc"
+                      th:text="${link.spec.description ?: '暂无描述'}"
+                    >
+                      站点描述
+                    </p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="links-cta-section"
+        id="apply-link"
+        th:if="${theme.config?.links?.show_apply_cta != false}"
+      >
+        <!-- 友链申请 CTA：开放申请时按钮弹窗填写，未开放时跳转申请地址 -->
+        <div class="links-cta">
+          <div class="links-cta-decoration links-cta-decoration--left">
+            <svg
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="100"
+                cy="100"
+                r="80"
+                stroke="var(--color-primary)"
+                stroke-width="1"
+                opacity="0.3"
+              />
+              <circle
+                cx="100"
+                cy="100"
+                r="55"
+                stroke="var(--color-primary)"
+                stroke-width="1"
+                opacity="0.5"
+              />
+              <circle cx="100" cy="100" r="30" fill="var(--color-primary-bg)" />
+            </svg>
+          </div>
+          <div class="links-cta-decoration links-cta-decoration--right">
+            <svg
+              viewBox="0 0 160 160"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M80 10C42.4 10 10 42.4 10 80s32.4 70 70 70"
+                stroke="var(--color-primary)"
+                stroke-width="1.5"
+                opacity="0.4"
+              />
+              <path
+                d="M80 30C54.6 30 30 54.6 30 80s24.6 50 50 50"
+                stroke="var(--color-primary)"
+                stroke-width="1.5"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
+          <div class="links-cta-inner">
+            <h2>想在这里展示你的网站？</h2>
+            <p>
+              欢迎提交友链申请，我们会对内容进行审核，优质站点将被收录到导航中。请确保你的网站内容健康、原创且持续更新。
+            </p>
+            <button
+              th:if="${linkApplicationEnabled}"
+              type="button"
+              class="links-cta-btn js-link-application-open"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                />
+                <path
+                  d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                />
+              </svg>
+              申请友链
+            </button>
+            <a
+              th:unless="${linkApplicationEnabled}"
+              class="links-cta-btn"
+              th:href="${theme.config?.links?.apply_url ?: ('mailto:' + (theme.config?.links?.apply_email ?: ''))}"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                />
+                <path
+                  d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                />
+              </svg>
+              申请友链
             </a>
           </div>
-          <div class="empty-state" th:if="${#lists.isEmpty(grp.links)}">
-            <p>该分组下暂无链接</p>
-          </div>
-        </section>
-
-        <!-- 搜索无结果提示 -->
-        <div class="links-search-empty" id="linksSearchEmpty" style="display: none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <p>未找到匹配的友链</p>
-          <small>尝试使用其他关键词搜索</small>
         </div>
       </section>
 
-      <!-- ===== 申请友链 CTA ===== -->
-      <section class="links-cta" th:with="applyEmail = ${theme.config?.social?.email}">
-        <div class="links-cta-decoration links-cta-decoration--left">
-          <svg viewBox="0 0 100 100" fill="none">
-            <path d="M50 95 C50 70 35 50 10 45 C15 70 30 88 50 95 Z" fill="#34D399" opacity="0.18" />
-            <path d="M50 95 C50 75 40 60 20 55" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" opacity="0.35" fill="none" />
-            <path d="M35 70 C30 65 25 62 18 60" stroke="#10B981" stroke-width="1.2" stroke-linecap="round" opacity="0.25" fill="none" />
-            <ellipse cx="32" cy="62" rx="6" ry="3" fill="#6EE7B7" opacity="0.2" transform="rotate(-30 32 62)" />
-          </svg>
-        </div>
-        <div class="links-cta-decoration links-cta-decoration--right">
-          <svg viewBox="0 0 80 80" fill="none">
-            <path d="M30 5 C35 25 30 50 15 70 C10 50 15 25 30 5 Z" fill="#5EEAD4" opacity="0.15" />
-            <path d="M28 10 C30 28 27 48 18 62" stroke="#2DD4BF" stroke-width="1.2" stroke-linecap="round" opacity="0.3" fill="none" />
-            <ellipse cx="22" cy="35" rx="5" ry="2.5" fill="#6EE7B7" opacity="0.18" transform="rotate(40 22 35)" />
-          </svg>
-        </div>
-        <div class="links-cta-decoration links-cta-decoration--leaf1">
-          <svg viewBox="0 0 30 30" fill="none">
-            <path d="M5 25 C8 15 15 8 25 5 C22 15 15 22 5 25 Z" fill="#34D399" opacity="0.12" />
-          </svg>
-        </div>
-        <div class="links-cta-decoration links-cta-decoration--leaf2">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M3 20 C6 12 12 6 21 4 C18 12 12 18 3 20 Z" fill="#6EE7B7" opacity="0.1" />
-          </svg>
-        </div>
-        <div class="links-cta-inner">
-          <a
-            class="links-cta-btn"
-            th:if="${!#strings.isEmpty(applyEmail)}"
-            th:href="'mailto:' + ${applyEmail} + '?subject=' + ${#strings.replace('申请友链 - ' + site.title, ' ', '%20')}"
+      <!-- 申请表单弹窗（仅插件开放申请时渲染；plugin-links 原生 Form 契约：_csrf + Cookie 验证码 + 303 重定向） -->
+      <div
+        th:if="${linkApplicationEnabled}"
+        class="link-application-modal"
+        id="link-application-modal"
+        aria-hidden="true"
+      >
+        <div
+          class="link-application-modal-backdrop"
+          data-link-application-close
+        ></div>
+        <div
+          class="link-application link-application-modal-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="link-application-title"
+          th:with="appliedList = ${#lists.toList(param.applied)}, errField = ${#lists.toList(param.field)}, errValue = ${#lists.toList(param.value)}, errMessage = ${#lists.toList(param.message)}"
+        >
+          <button
+            type="button"
+            class="link-application-modal-close"
+            data-link-application-close
+            aria-label="关闭"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M18 6L6 18" />
+              <path d="M6 6l12 12" />
             </svg>
-            <span>申请友链</span>
-          </a>
-          <p>如果您的网站符合本站友链要求，欢迎申请交换友链，一起构建更好的技术社区！</p>
-        </div>
-      </section>
+          </button>
 
-      <!-- 评论组件 -->
-      <div th:if="${haloCommentEnabled}" class="link-comments">
-        <halo:comment
-          group="plugin.halo.run"
-          kind="Plugin"
-          th:attr="name=${pluginName}"
-        />
+          <div class="link-application-head">
+            <h2 id="link-application-title">申请友链</h2>
+            <p>
+              填写以下信息提交申请，审核通过后你的网站将出现在友链列表中。请确保你的网站内容健康、原创且持续更新。
+            </p>
+          </div>
+
+          <p
+            class="link-application-alert is-success"
+            th:if="${#lists.contains(appliedList, 'success')}"
+            role="status"
+          >
+            申请已提交，等待审核。
+          </p>
+          <p
+            class="link-application-alert is-error"
+            th:if="${#lists.contains(appliedList, 'error') or #lists.contains(appliedList, 'disabled')}"
+            th:text="${#lists.isEmpty(errMessage) ? '提交失败，请稍后再试' : errMessage[0]}"
+            role="alert"
+          ></p>
+
+          <form
+            id="link-application-form"
+            class="link-application-form"
+            method="post"
+            th:action="@{/links/apply/submit}"
+          >
+            <input type="hidden" name="_csrf" th:value="${csrfToken}" />
+            <div class="link-application-grid">
+              <div class="link-application-field">
+                <label for="link-application-url"
+                  >网站地址
+                  <span class="link-application-required">*</span></label
+                >
+                <input
+                  id="link-application-url"
+                  name="url"
+                  type="url"
+                  required
+                  placeholder="https://example.com"
+                  th:value="${!#lists.isEmpty(errField) and errField[0] == 'url' ? errValue[0] : ''}"
+                />
+              </div>
+              <div class="link-application-field">
+                <label for="link-application-name"
+                  >网站名称
+                  <span class="link-application-required">*</span></label
+                >
+                <input
+                  id="link-application-name"
+                  name="displayName"
+                  required
+                  placeholder="你的网站名称"
+                  th:value="${!#lists.isEmpty(errField) and errField[0] == 'displayName' ? errValue[0] : ''}"
+                />
+              </div>
+              <div
+                class="link-application-field"
+                th:if="${theme.config?.links?.form_fields?.show_logo != false}"
+              >
+                <label for="link-application-logo">Logo 地址</label>
+                <input
+                  id="link-application-logo"
+                  name="logo"
+                  type="url"
+                  placeholder="https://example.com/logo.png"
+                  th:value="${!#lists.isEmpty(errField) and errField[0] == 'logo' ? errValue[0] : ''}"
+                />
+              </div>
+              <div
+                class="link-application-field"
+                th:if="${theme.config?.links?.form_fields?.show_email != false}"
+              >
+                <label for="link-application-email">联系邮箱</label>
+                <input
+                  id="link-application-email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  th:value="${!#lists.isEmpty(errField) and errField[0] == 'email' ? errValue[0] : ''}"
+                />
+              </div>
+              <div
+                class="link-application-field link-application-field--full"
+                th:if="${theme.config?.links?.form_fields?.show_description != false}"
+              >
+                <label for="link-application-desc">网站描述</label>
+                <textarea
+                  id="link-application-desc"
+                  name="description"
+                  rows="3"
+                  placeholder="一句话介绍你的网站"
+                  th:text="${!#lists.isEmpty(errField) and errField[0] == 'description' ? errValue[0] : ''}"
+                ></textarea>
+              </div>
+              <div
+                class="link-application-field"
+                th:if="${theme.config?.links?.form_fields?.show_backlink != false}"
+              >
+                <label for="link-application-backlink">反链地址</label>
+                <input
+                  id="link-application-backlink"
+                  name="backlink"
+                  type="url"
+                  placeholder="https://example.com/links"
+                  th:value="${!#lists.isEmpty(errField) and errField[0] == 'backlink' ? errValue[0] : ''}"
+                />
+              </div>
+              <div
+                class="link-application-field"
+                th:if="${theme.config?.links?.form_fields?.show_feed_urls != false}"
+              >
+                <label for="link-application-feeds">订阅地址</label>
+                <textarea
+                  id="link-application-feeds"
+                  name="feedUrls"
+                  rows="3"
+                  placeholder="每行一个 RSS/Atom 地址"
+                  th:text="${!#lists.isEmpty(errField) and errField[0] == 'feedUrls' ? errValue[0] : ''}"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="link-application-captcha">
+              <div class="link-application-field">
+                <label for="link-application-captcha-code"
+                  >验证码
+                  <span class="link-application-required">*</span></label
+                >
+                <input
+                  id="link-application-captcha-code"
+                  name="captchaCode"
+                  required
+                  minlength="5"
+                  maxlength="5"
+                  autocomplete="off"
+                  placeholder="5 位字符"
+                />
+              </div>
+              <img
+                id="link-application-captcha-img"
+                class="link-application-captcha-img"
+                th:src="@{/links/apply/captcha}"
+                alt="验证码图片，点击刷新"
+                width="120"
+                height="41"
+                title="看不清？点击刷新"
+              />
+            </div>
+
+            <button type="submit" class="link-application-submit">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M22 2L11 13" />
+                <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+              提交申请
+            </button>
+          </form>
+        </div>
       </div>
+
+      <section class="link-comments">
+        <halo:comment
+          group="content.halo.run"
+          kind="SinglePage"
+          th:name="${post.slug ?: 'links'}"
+        />
+      </section>
     </div>
   </div>
 </include>
