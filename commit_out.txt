@@ -1,0 +1,24 @@
+[33m[STARTED][39m Backing up original state...
+[32m[COMPLETED][39m Backed up original state in git stash (0b91372)
+[33m[STARTED][39m Hiding unstaged changes to partially staged files...
+[31m[FAILED][39m error: unable to unlink old 'commit_out.txt': Invalid argument
+[33m[STARTED][39m Running tasks for staged files...
+[33m[SKIPPED][39m Running tasks for staged files...
+[33m[STARTED][39m Applying modifications from tasks...
+[33m[SKIPPED][39m 
+  [0;31m[0;31m✖[0m lint-staged failed due to a git error.[0m
+[33m[STARTED][39m Restoring unstaged changes...
+[33m[SKIPPED][39m 
+  [0;31m[0;31m✖[0m lint-staged failed due to a git error.[0m
+[33m[STARTED][39m Cleaning up temporary files...
+[33m[SKIPPED][39m 
+  [0;31m[0;31m✖[0m lint-staged failed due to a git error.[0m
+
+  [0;31m[0;31m✖[0m lint-staged failed due to a git error.[0m
+Any lost modifications can be restored from a git stash:
+
+  > git stash list --format="%h %s"
+  0b91372 On main: lint-staged automatic backup
+  > git apply --index 0b91372
+
+VITE+ - pre-commit script failed (code 1)

@@ -2921,164 +2921,206 @@ body.nav-open {
 
 /* ============================================
    PAGINATION
+   设计思路：紧凑内敛，与文章卡片标签同等量级。
+            "下一页"是主色实心按钮（最强视觉），"上一页"是次级按钮，
+            当前页码用文本信息呈现，跳转区也保持小巧。
    ============================================ */
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   padding: 28px 0 8px;
 }
 
-.pagination > a,
-.pagination > span {
+/* —— 翻页主区域 —— */
+.pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 上一页/下一页：图标+文字按钮（次级风格，下一页通过 primary 强调） */
+.pager-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 38px;
-  height: 38px;
-  padding: 0 12px;
-  font-size: 14px;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
   font-weight: 500;
+  line-height: 1;
   color: var(--color-text-secondary);
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  border-radius: 6px;
   cursor: pointer;
   user-select: none;
   transition:
     color var(--transition),
-    border-color var(--transition),
     background-color var(--transition),
-    box-shadow var(--transition),
+    border-color var(--transition),
     transform var(--transition);
 }
 
-.pagination > a:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  background: rgba(16, 185, 129, 0.08);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+.pager-btn svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  transition: transform var(--transition);
 }
 
-.pagination > a:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
-
-.pagination > .disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.pagination > .disabled:hover {
-  color: var(--color-text-secondary);
-  border-color: var(--color-border);
-  background: var(--color-card);
-  transform: none;
-  box-shadow: none;
-}
-
-/* 当前页码（不可点击，高亮） */
-.pagination > span.page-num.is-current {
-  color: #fff;
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  font-weight: 600;
-  cursor: default;
-  box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.45);
-}
-
-.pagination .page-label {
-  margin: 0 5px;
-}
-
-.pagination .page-arrow {
-  font-size: 16px;
+.pager-btn-label {
+  display: inline-block;
   line-height: 1;
 }
 
-/* 跳转 */
-.pagination-jump {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 10px;
-  color: var(--color-text-muted);
+.page-prev:hover {
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.page-prev:hover svg {
+  transform: translateX(-2px);
+}
+
+/* 下一页：主色实心，核心 CTA */
+.pager-btn-primary {
+  color: #fff;
+  background: var(--color-primary);
+  font-weight: 600;
+}
+
+.pager-btn-primary:hover {
+  color: #fff;
+  background: var(--color-primary-hover);
+  box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--color-primary) 55%, transparent);
+}
+
+.pager-btn-primary:active {
+  color: #fff;
+}
+
+.page-next:hover svg {
+  transform: translateX(2px);
+}
+
+.pager-btn:active {
+  transform: scale(0.96);
+}
+
+/* 当前页码 */
+.pager-current {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  min-width: 40px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: default;
+  user-select: none;
+}
+
+.pager-current-num {
   font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.pager-current-sep {
+  opacity: 0.4;
+  margin: 0 1px;
+}
+
+.pager-current-total {
+  opacity: 0.7;
+}
+
+/* —— 跳转区 —— */
+.pagination-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 3px 3px 8px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
 }
 
 .pagination-jump .jump-input {
-  width: 64px;
-  height: 38px;
-  padding: 0 8px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
+  width: 48px;
+  height: 28px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
   color: var(--color-text);
   text-align: center;
-  font-size: 14px;
-  box-shadow: var(--shadow-sm);
-  transition:
-    border-color var(--transition),
-    box-shadow var(--transition);
+  font-size: 12px;
+  -moz-appearance: textfield;
+  transition: background-color var(--transition);
+}
+
+.pagination-jump .jump-input::-webkit-outer-spin-button,
+.pagination-jump .jump-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .pagination-jump .jump-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  background: var(--color-border-light);
+}
+
+.pagination-jump .jump-input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .pagination-jump .jump-btn {
-  height: 38px;
-  padding: 0 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  color: var(--color-text-secondary);
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 5px;
+  background: var(--color-primary);
+  color: #fff;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  box-shadow: var(--shadow-sm);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   transition:
-    color var(--transition),
-    border-color var(--transition),
     background-color var(--transition),
-    box-shadow var(--transition),
     transform var(--transition);
 }
 
 .pagination-jump .jump-btn:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  background: rgba(16, 185, 129, 0.08);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  background: var(--color-primary-hover);
 }
 
 .pagination-jump .jump-btn:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
-
-.pagination-jump .jump-btn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  transform: scale(0.94);
 }
 
 @media (max-width: 640px) {
-  .pagination .page-label {
+  .pagination {
+    gap: 8px;
+  }
+  .pager-btn-label {
     display: none;
   }
-  .pagination-jump .jump-text {
-    display: none;
+  .pager-btn {
+    padding: 0 8px;
   }
-  .pagination-jump {
-    margin-left: 4px;
+  .pager-current {
+    min-width: 36px;
+    padding: 0 6px;
   }
 }
 
@@ -5135,6 +5177,46 @@ body.nav-open {
   transform: scale(1.08);
 }
 
+/* 服务商/赞助商信息 */
+.footer-sponsor {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--color-text-muted);
+}
+
+.footer-sponsor-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+.footer-sponsor-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+.footer-sponsor-icon-img {
+  object-fit: contain;
+}
+
+.footer-sponsor-brand a,
+.footer-sponsor-brand span {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.footer-sponsor-brand a:hover {
+  color: var(--color-primary);
+}
+
 /* Powered by / Theme */
 .footer-powered {
   display: inline-flex;
@@ -6443,12 +6525,37 @@ body.nav-open {
     padding: 16px;
   }
 
-  .pagination > a,
-  .pagination > span {
-    min-width: 32px;
-    height: 32px;
+  .pager-btn {
+    height: 24px;
     padding: 0 8px;
-    font-size: 13px;
+    font-size: 11px;
+  }
+
+  .pager-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .pager-current {
+    min-width: 32px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
+
+  .pager-current-num {
+    font-size: 12px;
+  }
+
+  .pagination-jump .jump-input {
+    width: 40px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .pagination-jump .jump-btn {
+    height: 24px;
+    padding: 0 10px;
+    font-size: 10px;
   }
 
   .article-list.grid-view {

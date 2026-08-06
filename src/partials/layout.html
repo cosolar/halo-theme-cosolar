@@ -624,23 +624,24 @@
   th:style="${footerStyle}"
   th:with="
               showFooterMain=${theme.config?.footer?.show_footer_main ?: true},
-              subscribeAction=${theme.config?.social?.footer_subscribe_action},
-              privacyUrl=${theme.config?.footer?.privacy_url},
-              termsUrl=${theme.config?.footer?.terms_url},
-              linksUrl=${theme.config?.footer?.links_url},
-              aboutUrl=${theme.config?.footer?.about_url},
+              subscribeAction=${theme.config?.footer?.footer_subscribe_action},
+              legalLinks=${theme.config?.footer?.legal_links},
+              privacyUrl=${legalLinks?.privacy_enabled ?: true ? legalLinks?.privacy_url : null},
+              termsUrl=${legalLinks?.terms_enabled ?: true ? legalLinks?.terms_url : null},
+              linksUrl=${legalLinks?.links_enabled ?: true ? legalLinks?.links_url : null},
+              aboutUrl=${legalLinks?.about_enabled ?: true ? legalLinks?.about_url : null},
               footerLogo=${theme.config?.footer?.logo_image ?: theme.config?.basic?.logo_image},
               footerLogoWidth=${theme.config?.footer?.logo_image_width ?: theme.config?.basic?.logo_image_width ?: 40},
               footerLogoHeight=${theme.config?.footer?.logo_image_height ?: theme.config?.basic?.logo_image_height ?: 40},
               footerName=${theme.config?.footer?.logo_text ?: theme.config?.basic?.logo_text},
               footerTagline=${theme.config?.footer?.tagline ?: theme.config?.basic?.tagline},
               footerDesc=${(theme.config?.footer?.footer_description) != null and !#strings.isEmpty(theme.config?.footer?.footer_description) ? theme.config?.footer?.footer_description : footerTagline},
-              footerBgImage=${theme.config?.footer?.bg_image},
-              footerBgImageOpacity=${theme.config?.footer?.bg_image_opacity ?: 0.2},
-              footerBgImageDark=${theme.config?.footer?.bg_image_dark},
-              footerBgImageOpacityDark=${theme.config?.footer?.bg_image_opacity_dark ?: 0.2},
-              footerSocialColor=${theme.config?.footer?.social_color},
-              footerSocialColorDark=${theme.config?.footer?.social_color_dark},
+              footerBgImage=${theme.config?.footer?.light?.bg_image},
+              footerBgImageOpacity=${theme.config?.footer?.light?.bg_image_opacity ?: 0.2},
+              footerBgImageDark=${theme.config?.footer?.dark?.bg_image},
+              footerBgImageOpacityDark=${theme.config?.footer?.dark?.bg_image_opacity ?: 0.2},
+              footerSocialColor=${theme.config?.footer?.light?.social_color},
+              footerSocialColorDark=${theme.config?.footer?.dark?.social_color},
               footerHasBgImg=${footerBgImage != null and footerBgImage != ''},
               footerHasBgImgDark=${footerBgImageDark != null and footerBgImageDark != ''},
               footerHasSocial=${footerSocialColor != null and footerSocialColor != ''},
@@ -1030,16 +1031,74 @@
     </div>
 
     <div class="footer-bottom">
+      <th:block
+        th:with="
+          sponsor=${theme.config?.footer?.sponsor},
+          sponsorEnabled=${sponsor?.enabled ?: false},
+          sponsorName=${sponsor?.name},
+          sponsorUrl=${sponsor?.url},
+          sponsorIcon=${sponsor?.icon},
+          sponsorPrefix=${sponsor?.prefix},
+          sponsorSuffix=${sponsor?.suffix},
+          sponsorNameIsLink=${sponsor?.name_is_link ?: true},
+          sponsorHasName=${sponsorName != null and !#strings.isEmpty(sponsorName)},
+          sponsorHasIcon=${sponsorIcon != null and !#strings.isEmpty(sponsorIcon)},
+          sponsorIsImg=${sponsorHasIcon and (#strings.startsWith(sponsorIcon, 'http://') or #strings.startsWith(sponsorIcon, 'https://'))}
+        "
+      >
+        <div
+          class="footer-sponsor"
+          th:if="${sponsorEnabled and sponsorHasName}"
+        >
+          <th:block
+            th:if="${sponsorPrefix != null and !#strings.isEmpty(sponsorPrefix)}"
+            th:text="${sponsorPrefix}"
+          ></th:block>
+          <span class="footer-sponsor-brand">
+            <th:block th:if="${sponsorHasIcon and !sponsorIsImg}">
+              <iconify-icon
+                class="footer-sponsor-icon"
+                th:icon="${sponsorIcon}"
+                inline
+                aria-hidden="true"
+              ></iconify-icon>
+            </th:block>
+            <th:block th:if="${sponsorHasIcon and sponsorIsImg}">
+              <img
+                class="footer-sponsor-icon footer-sponsor-icon-img"
+                th:src="${sponsorIcon}"
+                alt=""
+                aria-hidden="true"
+              />
+            </th:block>
+            <a
+              th:if="${sponsorNameIsLink and sponsorUrl != null and !#strings.isEmpty(sponsorUrl)}"
+              th:href="${sponsorUrl}"
+              target="_blank"
+              rel="noopener"
+              th:text="${sponsorName}"
+            ></a>
+            <span
+              th:if="${!sponsorNameIsLink or sponsorUrl == null or #strings.isEmpty(sponsorUrl)}"
+              th:text="${sponsorName}"
+            ></span>
+          </span>
+          <th:block
+            th:if="${sponsorSuffix != null and !#strings.isEmpty(sponsorSuffix)}"
+            th:text="${sponsorSuffix}"
+          ></th:block>
+        </div>
+      </th:block>
       <div class="footer-copy">
             <span
               class="footer-copy-text"
-              th:utext="${theme.config?.basic?.footer_text ?: #strings.defaultString(site.title, '')}"
+              th:utext="${theme.config?.footer?.footer_text ?: #strings.defaultString(site.title, '')}"
             ></span>
         <a
           class="footer-badge"
-          th:if="${#strings.trim(theme.config?.basic?.icp ?: '') != ''}"
+          th:if="${#strings.trim(theme.config?.footer?.icp ?: '') != ''}"
           th:href="'https://beian.miit.gov.cn/'"
-          th:attr="title=${theme.config.basic.icp}"
+          th:attr="title=${theme.config.footer.icp}"
           target="_blank"
           rel="noopener"
         >
@@ -1057,7 +1116,7 @@
               stroke-linejoin="round"
             />
           </svg>
-          <span th:text="${theme.config.basic.icp}"></span>
+          <span th:text="${theme.config.footer.icp}"></span>
         </a>
       </div>
       <div class="footer-powered" th:if="${showFooterPowered}">

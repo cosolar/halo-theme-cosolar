@@ -8,55 +8,45 @@
     refPage = ${posts.nextUrl != null ? posts.page + 1 : posts.page - 1}
   "
   th:attr="data-current=${current}, data-total=${totalPages}, data-prev-url=${posts.prevUrl}, data-next-url=${posts.nextUrl}"
+  aria-label="文章分页"
 >
-  <!-- 首页 -->
-  <a
-    class="page-first"
-    th:if="${posts.hasPrevious()}"
-    th:attr="href=@{${#strings.replace(baseUrl, #strings.toString(refPage), '1')}}"
-    aria-label="首页"
-  >
-    <span class="page-arrow">«</span><span class="page-label">首页</span>
-  </a>
+  <!-- 翻页主操作区 -->
+  <div class="pager">
+    <!-- 上一页 -->
+    <a
+      class="pager-btn page-prev"
+      th:if="${posts.hasPrevious()}"
+      th:attr="href=@{${posts.prevUrl}}"
+      aria-label="上一页"
+      title="上一页"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span class="pager-btn-label">上一页</span>
+    </a>
 
-  <!-- 上一页 -->
-  <a
-    class="page-prev"
-    th:if="${posts.hasPrevious()}"
-    th:attr="href=@{${posts.prevUrl}}"
-    aria-label="上一页"
-  >
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="15 18 9 12 15 6"/></svg>
-  </a>
+    <!-- 当前页码 -->
+    <span class="pager-current" aria-current="page">
+      <span class="pager-current-num" th:text="${current}"></span>
+      <span class="pager-current-sep">/</span>
+      <span class="pager-current-total" th:text="${totalPages}"></span>
+    </span>
 
-  <!-- 当前页码（不可点击） -->
-  <span class="page-num is-current" th:text="${current}"></span>
+    <!-- 下一页（主色强调） -->
+    <a
+      class="pager-btn page-next pager-btn-primary"
+      th:if="${posts.hasNext()}"
+      th:attr="href=@{${posts.nextUrl}}"
+      aria-label="下一页"
+      title="下一页"
+    >
+      <span class="pager-btn-label">下一页</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
 
-  <!-- 下一页 -->
-  <a
-    class="page-next"
-    th:if="${posts.hasNext()}"
-    th:attr="href=@{${posts.nextUrl}}"
-    aria-label="下一页"
-  >
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="9 18 15 12 9 6"/></svg>
-  </a>
-
-  <!-- 末页 -->
-  <a
-    class="page-last"
-    th:if="${posts.hasNext()}"
-    th:attr="href=@{${#strings.replace(baseUrl, #strings.toString(refPage), #strings.toString(totalPages))}}"
-    aria-label="末页"
-  >
-    <span class="page-label">末页</span><span class="page-arrow">»</span>
-  </a>
-
-  <!-- 跳转 -->
+  <!-- 跳转（与翻页区分隔） -->
   <form class="pagination-jump" aria-label="跳转页码">
-    <span class="jump-text">跳至</span>
-    <input type="number" class="jump-input" min="1" th:attr="max=${totalPages}" placeholder="页码" />
-    <span class="jump-text">页</span>
+    <input type="number" class="jump-input" min="1" th:attr="max=${totalPages}" placeholder="页码" aria-label="跳转页码" />
     <button type="submit" class="jump-btn" aria-label="跳转">Go</button>
   </form>
 </nav>

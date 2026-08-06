@@ -38,16 +38,6 @@ spec:
           label: 站点标语
           value: 记录技术成长，分享解决方案
           help: 显示在 Logo 下方的副标题
-        - $formkit: textarea
-          name: footer_text
-          label: 页脚版权文字
-          value: ""
-          help: 显示在页脚底部的版权信息，支持 HTML
-        - $formkit: text
-          name: icp
-          label: ICP 备案号
-          value: ""
-          help: 如：京ICP备XXXXXXXX号
 
     - group: footer
       label: 页脚设置
@@ -62,6 +52,16 @@ spec:
           label: 显示 Powered by 信息
           value: true
           help: 关闭后将隐藏页脚底部的"Powered by Halo"与主题信息
+        - $formkit: textarea
+          name: footer_text
+          label: 页脚版权文字
+          value: ""
+          help: 显示在页脚底部的版权信息，支持 HTML
+        - $formkit: text
+          name: icp
+          label: ICP 备案号
+          value: ""
+          help: 如：京ICP备XXXXXXXX号
         - $formkit: attachment
           name: logo_image
           label: 页脚 Logo 图片
@@ -98,62 +98,138 @@ spec:
           label: 页脚站点简介
           value: ""
           help: 页脚品牌区下方的站点简介，留空则使用页脚标语
-        - $formkit: attachment
-          name: bg_image
-          label: 页脚背景图片
-          value: ""
-          help: 页脚背景图片，建议浅色调、低饱和度图片以免影响内容阅读；留空则不显示背景图
-        - $formkit: range
-          name: bg_image_opacity
-          label: 背景图片透明度
-          value: 0.2
-          min: 0.05
-          max: 1
-          step: 0.05
-          help: 页脚背景图的不透明度，值越小越淡，避免影响内容阅读
-        - $formkit: attachment
-          name: bg_image_dark
-          label: 页脚背景图片（深色模式）
-          value: ""
-          help: 深色模式下页脚背景图片，留空则复用上方浅色模式的背景图
-        - $formkit: range
-          name: bg_image_opacity_dark
-          label: 背景图片透明度（深色模式）
-          value: 0.2
-          min: 0.05
-          max: 1
-          step: 0.05
-          help: 深色模式下页脚背景图的不透明度，留空则复用浅色模式的透明度
-        - $formkit: color
-          name: social_color
-          label: 页脚文字与图标颜色
-          value: ""
-          help: 页脚品牌区文字（名称、标语、简介）及社交图标的颜色，留空则使用主题默认文字色
-        - $formkit: color
-          name: social_color_dark
-          label: 页脚文字与图标颜色（深色模式）
-          value: ""
-          help: 深色模式下页脚品牌区文字及社交图标颜色，留空则复用上方浅色模式的颜色
+        - $formkit: group
+          name: light
+          label: 浅色模式
+          children:
+            - $formkit: attachment
+              name: bg_image
+              label: 页脚背景图片
+              value: ""
+              help: 页脚背景图片，建议浅色调、低饱和度图片以免影响内容阅读；留空则不显示背景图
+            - $formkit: range
+              name: bg_image_opacity
+              label: 背景图片透明度
+              value: 0.2
+              min: 0.05
+              max: 1
+              step: 0.05
+              help: 页脚背景图的不透明度，值越小越淡，避免影响内容阅读
+            - $formkit: color
+              name: social_color
+              label: 页脚文字与图标颜色
+              value: ""
+              help: 页脚品牌区文字（名称、标语、简介）及社交图标的颜色，留空则使用主题默认文字色
+        - $formkit: group
+          name: dark
+          label: 深色模式
+          children:
+            - $formkit: attachment
+              name: bg_image
+              label: 页脚背景图片（深色模式）
+              value: ""
+              help: 深色模式下页脚背景图片，留空则复用上方浅色模式的背景图
+            - $formkit: range
+              name: bg_image_opacity
+              label: 背景图片透明度（深色模式）
+              value: 0.2
+              min: 0.05
+              max: 1
+              step: 0.05
+              help: 深色模式下页脚背景图的不透明度，留空则复用浅色模式的透明度
+            - $formkit: color
+              name: social_color
+              label: 页脚文字与图标颜色（深色模式）
+              value: ""
+              help: 深色模式下页脚品牌区文字及社交图标颜色，留空则复用上方浅色模式的颜色
+        - $formkit: group
+          name: legal_links
+          label: 页脚导航链接
+          children:
+            - $formkit: switch
+              name: privacy_enabled
+              label: 显示"隐私政策"链接
+              value: true
+              help: 关闭后不显示页脚"隐私政策"链接
+            - $formkit: url
+              name: privacy_url
+              label: 隐私政策页面地址
+              value: "/privacy"
+              help: 留空则不显示页脚"隐私政策"链接
+            - $formkit: switch
+              name: terms_enabled
+              label: 显示"使用条款"链接
+              value: true
+              help: 关闭后不显示页脚"使用条款"链接
+            - $formkit: url
+              name: terms_url
+              label: 使用条款页面地址
+              value: "/terms"
+              help: 留空则不显示页脚"使用条款"链接
+            - $formkit: switch
+              name: links_enabled
+              label: 显示"友情链接"链接
+              value: true
+              help: 关闭后不显示页脚"友情链接"链接
+            - $formkit: url
+              name: links_url
+              label: 友情链接页面地址
+              value: "/links"
+              help: 留空则不显示页脚"友情链接"链接
+            - $formkit: switch
+              name: about_enabled
+              label: 显示"关于我们"链接
+              value: true
+              help: 关闭后不显示页脚"关于我们"链接
+            - $formkit: url
+              name: about_url
+              label: 关于我们页面地址
+              value: "/about"
+              help: 留空则不显示页脚"关于我们"链接
+        - $formkit: group
+          name: sponsor
+          label: 服务商/赞助商
+          children:
+            - $formkit: switch
+              name: enabled
+              label: 显示服务商信息
+              value: false
+              help: 在页脚底部显示服务商/赞助商信息（如云服务、CDN 提供商）
+            - $formkit: text
+              name: icon
+              label: 服务商图标
+              value: "ri:cloud-line"
+              help: "使用 Iconify 图标名（如 ri:cloud-line、ri:tencent-cloud-line）或完整图片 URL；参考 https://icon-sets.iconify.design"
+            - $formkit: text
+              name: name
+              label: 服务商名称
+              value: ""
+              help: 服务商/赞助商的显示名称，如 腾讯云、阿里云、京东云
+            - $formkit: url
+              name: url
+              label: 服务商链接
+              value: ""
+              help: 点击服务商名称跳转的链接，留空则显示为纯文本
+            - $formkit: text
+              name: prefix
+              label: 前缀文字
+              value: "本网站由"
+              help: 服务商名称之前显示的文字
+            - $formkit: text
+              name: suffix
+              label: 后缀文字
+              value: "提供CDN加速/云服务"
+              help: 服务商名称之后显示的文字
+            - $formkit: switch
+              name: name_is_link
+              label: 服务商名称为超链接
+              value: true
+              help: 开启后服务商名称可点击跳转；关闭则仅显示名称
         - $formkit: url
-          name: privacy_url
-          label: 隐私政策页面地址
+          name: footer_subscribe_action
+          label: 页脚订阅表单提交地址
           value: ""
-          help: 留空则不显示页脚"隐私政策"链接
-        - $formkit: url
-          name: terms_url
-          label: 使用条款页面地址
-          value: ""
-          help: 留空则不显示页脚"使用条款"链接
-        - $formkit: url
-          name: links_url
-          label: 友情链接页面地址
-          value: "/links"
-          help: 留空则不显示页脚"友情链接"链接
-        - $formkit: url
-          name: about_url
-          label: 关于我们页面地址
-          value: "/about"
-          help: 留空则不显示页脚"关于我们"链接
+          help: 第三方邮件订阅服务地址（如 Mailchimp），留空则仅展示表单不提交
 
     - group: style
       label: 主题样式
@@ -329,11 +405,6 @@ spec:
               label: 图标名（图标库）
               value: ""
               help: 所选图标库的图标名，颜色自动跟随文字色。Iconify 填 mdi:github，iconfont 填 icon-github
-        - $formkit: url
-          name: footer_subscribe_action
-          label: 页脚订阅表单提交地址
-          value: ""
-          help: 第三方邮件订阅服务地址（如 Mailchimp），留空则仅展示表单不提交
 
     - group: featured
       label: 首页轮播

@@ -9,12 +9,12 @@ spec:
     website: https://note.minims.cn
   description: 清风徐来，码迹自留 — 一款为开发者打造的现代博客主题，青绿美学、明暗双模、精选轮播、动态背景，让每一篇技术沉淀都赏心悦目。
   logo: /themes/halo-theme-cosolar/assets/images/logo.png
-  homepage: https://github.com/cosolar/halo-theme-cosolar
+  homepage: https://note.minims.cn
   repo: https://github.com/cosolar/halo-theme-cosolar
   issues: https://github.com/cosolar/halo-theme-cosolar/issues
   settingName: "cosolar-setting"
   configMapName: "cosolar-configMap"
-  version: 1.1.4
+  version: 1.1.3
   requires: ">=2.20.0"
   customTemplates:
     page:
