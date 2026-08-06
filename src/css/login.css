@@ -185,8 +185,8 @@ body {
 .cos-card .login-form button[type="submit"],
 .cos-card button.cos-btn-submit {
     display:inline-flex!important; align-items:center; justify-content:center; gap:8px;
-    width:100%; padding:13px 24px!important;
-    font-family:inherit; font-size:15px; font-weight:600; letter-spacing:.04em;
+    width:100%; min-height:48px; padding:13px 24px!important;
+    font-family:inherit; font-size:16px; font-weight:600; letter-spacing:.04em; line-height:1;
     color:#fff!important; background:var(--c-primary)!important; border:none!important;
     border-radius:var(--r-md)!important; cursor:pointer; box-sizing:border-box;
     transition:all .25s!important; box-shadow:0 4px 14px rgba(16,185,129,.32)!important;
@@ -313,7 +313,7 @@ body {
 
 /* 其他登录方式：胶囊按钮 */
 .pill-items { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:10px; }
-.pill-items li { margin:0; }
+.pill-items li { margin:0; border:none; }
 .pill-items a {
     display:inline-flex; align-items:center; gap:8px;
     padding:9px 16px; border-radius:999px;
@@ -327,28 +327,39 @@ body {
 }
 .pill-items img { width:20px; height:20px; border-radius:6px; object-fit:contain; }
 
-/* 社交登录 —— 圆形图标按钮 */
-.social-auth-providers,
-.form-auth-providers {
-    display:flex; justify-content:center; gap:16px !important; flex-wrap:wrap;
-}
-.social-auth-providers a,
-.form-auth-providers a {
-    display:inline-flex!important; align-items:center; justify-content:center;
-    width:48px !important; height:48px !important; padding:0!important; margin:0!important;
-    border-radius:50%!important; border:1.5px solid var(--c-border)!important;
-    background:var(--c-card)!important; color:var(--c-text2)!important;
-    box-sizing:border-box; text-decoration:none; transition:all .25s!important;
+/* 社交登录 —— 品牌化胶囊按钮
+   真实结构: ul.pill-items > li > form.social-auth-provider-form > button[type=submit] > (img + span)
+   注意：选择器特异性必须高于 .cos-card form button[type="submit"] 的覆盖规则，
+   否则会被绿底主按钮样式覆盖。故统一加 .cos-card .pill-items 前缀。 */
+.cos-card .pill-items .social-auth-provider-form { margin:0; }
+.cos-card .pill-items .social-auth-provider-form button[type="submit"] {
+    display:flex!important; align-items:center; justify-content:center; gap:10px;
+    width:100%!important; min-height:48px!important; padding:12px 18px!important; margin:0!important;
+    border-radius:var(--r-md)!important;
+    border:1.5px solid var(--c-border)!important;
+    border-color:var(--c-border)!important;
+    background:var(--c-card)!important; color:var(--c-text)!important;
+    font-size:14px; font-weight:600; letter-spacing:.2px; font-family:inherit; cursor:pointer;
+    box-sizing:border-box; transition:color .2s ease,border-color .2s ease!important;
     box-shadow:var(--s-sm)!important;
 }
-.social-auth-providers a svg,
-.form-auth-providers a svg { width:22px!important; height:22px!important; }
-.social-auth-providers a:hover,
-.form-auth-providers a:hover {
-    border-color:var(--c-primary)!important; color:var(--c-primary)!important;
-    background:var(--c-pbg)!important; transform:translateY(-2px)!important;
-    box-shadow:0 4px 12px rgba(16,185,129,.2)!important;
+.cos-card .pill-items .social-auth-provider-form button[type="submit"] img {
+    width:22px!important; height:22px!important; flex:none;
+    border-radius:6px; object-fit:contain;
 }
+/* 统一悬停：仅主题色文字/边框，无浮动、无阴影变化、无动画 */
+.cos-card .pill-items .social-auth-provider-form button[type="submit"]:hover {
+    color:var(--c-primary)!important;
+    border-color:var(--c-primary)!important;
+    transform:none!important;
+    box-shadow:var(--s-sm)!important;
+}
+/* 按下 */
+.cos-card .pill-items .social-auth-provider-form button[type="submit"]:active { box-shadow:var(--s-sm)!important; }
+/* 焦点可见性（键盘可访问） */
+.cos-card .pill-items .social-auth-provider-form button[type="submit"]:focus-visible { outline:2px solid var(--c-primary); outline-offset:2px; }
+
+
 
 /* 注册 / 返回 */
 .cos-footer-links { text-align:center; margin-top:36px; }
@@ -424,7 +435,7 @@ body {
 /* 平板及以下：隐藏左侧品牌区，表单占满，允许页面自然滚动（避免框内滚动） */
 @media (max-width:900px) {
     .cos-brand { display:none; }
-    .cos-page { height:auto; min-height:100dvh; overflow:visible; }
+    .cos-page { height:auto; min-height:100dvh; overflow:visible; background-image:none; background-color:var(--c-bg); }
     .cos-form-area {
         flex:0 0 100%;
         max-width:100%;
@@ -458,18 +469,53 @@ body {
     .cos-remember input[type="checkbox"] { width:19px; height:19px; }
 }
 
-/* 中小屏手机：卡片更紧凑 */
+/* 中小屏手机：独立移动端布局，不照搬 PC */
 @media (max-width:480px) {
-    .cos-card { padding:32px 22px 30px; }
-    .cos-title { font-size:23px; margin-bottom:8px; }
-    .cos-subtitle { margin-bottom:28px; font-size:13px; }
-    .form-item { margin-bottom:16px; }
-    /* 其他登录方式胶囊：缩小间距，更多换行 */
-    .pill-items { gap:8px; justify-content:center; }
-    .pill-items a { padding:8px 13px; font-size:12px; }
-    /* 社交登录圆形图标略缩 */
-    .social-auth-providers a,
-    .form-auth-providers a { width:44px!important; height:44px!important; }
+    /* 表单区贴边，卡片更宽、更沉浸 */
+    .cos-form-area { padding:0; }
+    .cos-card {
+        max-width:none; width:100%;
+        padding:48px 22px 40px;
+        border-radius:0;
+        box-shadow:none;
+        animation:none;
+    }
+    /* 标题更大气 */
+    .cos-title { font-size:27px; margin-bottom:10px; }
+    .cos-subtitle { margin-bottom:34px; font-size:15px; }
+    /* 输入框更大、更圆润 */
+    .cos-fg { margin-bottom:22px; }
+    .cos-label { font-size:14px; margin-bottom:10px; }
+    .cos-input {
+        height:54px; padding:14px 16px 14px 48px;
+        font-size:16px; border-radius:var(--r-lg);
+    }
+    .cos-iicon { width:20px; height:20px; left:16px; }
+    .cos-pwd-toggle { right:12px; }
+    /* 记住我 */
+    .cos-remember { margin-bottom:28px; font-size:15px; gap:11px; }
+    .cos-remember input[type="checkbox"] { width:20px; height:20px; border-radius:5px; }
+    /* 登录按钮：全宽、更高 */
+    .cos-card form button[type="submit"],
+    .cos-card .login-form button[type="submit"],
+    .cos-card button.cos-btn-submit {
+        min-height:52px; font-size:16px; border-radius:var(--r-lg);
+    }
+    /* 分隔线 */
+    .divider-wrapper { margin:34px 0 22px; font-size:14px; gap:12px; }
+    /* 社交登录：自适应排布，不写死列数（数量由后台配置） */
+    .pill-items { flex-direction:row; flex-wrap:wrap; gap:12px; align-items:stretch; justify-content:flex-start; }
+    .pill-items li { width:auto; flex:1 1 calc(50% - 6px); min-width:140px; }
+    .pill-items a { padding:10px 14px; font-size:13px; }
+    .cos-card .pill-items .social-auth-provider-form button[type="submit"] {
+        min-height:50px!important; padding:12px 14px!important;
+        font-size:15px; gap:10px; border-radius:var(--r-lg)!important; width:100%!important;
+    }
+    .cos-card .pill-items .social-auth-provider-form button[type="submit"]:hover { transform:none!important; }
+    /* 底部链接 */
+    .cos-footer-links { margin-top:36px; padding-top:0; }
+    .cos-register { font-size:15px; }
+    .cos-back { margin-top:18px; font-size:14px; }
 }
 
 /* 超小屏（320–360px）：极致紧凑，避免横向溢出 */
