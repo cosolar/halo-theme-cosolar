@@ -44,7 +44,7 @@
             src: el.getAttribute("data-lightbox-src") || "",
             title: el.getAttribute("data-lightbox-title") || "",
           };
-        }
+        },
       ) as Array<{ src: string; title: string }>;
     }
 
@@ -69,6 +69,22 @@
       lightbox!.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
+
+    function openItem(src: string, title: string): void {
+      items = [{ src: src, title: title }];
+      current = 0;
+      render();
+      lightbox!.classList.add("is-open");
+      lightbox!.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    // Allow other modules (e.g. photo card click) to open the lightbox for a
+    // single image without relying on a [data-lightbox] element in the DOM.
+    document.addEventListener("cosolar:open-lightbox", function (e: Event) {
+      const detail = (e as CustomEvent<{ src?: string; title?: string }>).detail;
+      if (detail && detail.src) openItem(detail.src, detail.title || "");
+    });
 
     function close(): void {
       resetZoom();
@@ -118,7 +134,7 @@
         zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom * factor));
         applyZoom();
       },
-      { passive: false }
+      { passive: false },
     );
 
     document.addEventListener("keydown", function (e: KeyboardEvent) {
@@ -191,37 +207,27 @@
   function renderPhotoCard(
     photo: PhotoItem,
     isLoggedIn: boolean,
-    showActions: boolean
+    showActions: boolean,
+    showMeta: boolean,
+    clickBehavior: string,
   ): HTMLElement {
     const spec = photo.spec || ({} as PhotoItem["spec"]);
     const meta = photo.metadata || ({} as { name: string });
-    const imgUrl = spec.url && spec.url !== "" ? spec.url : (spec.cover || "");
+    const imgUrl = spec.url && spec.url !== "" ? spec.url : spec.cover || "";
     const name = meta.name || "";
     const displayName = spec.displayName || "";
     const groupName = spec.groupName || "";
 
-    const a = document.createElement("a");
-    a.className = "photo-card";
-    a.href = detailUrl(name);
+    const card = document.createElement("div");
+    card.className = "photo-card";
+    card.setAttribute("data-photo-name", name);
 
     const img = document.createElement("img");
     img.className = "photo-card-img";
     img.src = imgUrl;
     img.alt = displayName;
     img.loading = "lazy";
-    a.appendChild(img);
-
-    const zoom = document.createElement("span");
-    zoom.className = "photo-zoom";
-    zoom.setAttribute("role", "button");
-    zoom.setAttribute("tabindex", "0");
-    zoom.setAttribute("data-lightbox", "");
-    zoom.setAttribute("data-lightbox-src", imgUrl);
-    zoom.setAttribute("data-lightbox-title", displayName);
-    zoom.setAttribute("aria-label", "查看大图");
-    zoom.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>';
-    a.appendChild(zoom);
+    card.appendChild(img);
 
     if (isLoggedIn && showActions) {
       const del = document.createElement("button");
@@ -233,24 +239,85 @@
       del.setAttribute("title", "删除");
       del.innerHTML =
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
-      a.appendChild(del);
+      card.appendChild(del);
     }
 
-    const overlay = document.createElement("div");
-    overlay.className = "photo-card-overlay";
-    const titleEl = document.createElement("span");
-    titleEl.className = "photo-card-title";
-    titleEl.textContent = displayName;
-    overlay.appendChild(titleEl);
-    if (groupName) {
-      const metaEl = document.createElement("span");
-      metaEl.className = "photo-card-meta";
-      metaEl.textContent = groupName;
-      overlay.appendChild(metaEl);
-    }
-    a.appendChild(overlay);
+    // 悬停时在图片中央显示操作按钮
+    const actions = document.createElement("div");
+    actions.className = "photo-card-actions";
 
-    return a;
+    if (clickBehavior !== "lightbox") {
+      // 仅当点击行为是"跳转详情页"时才显示"查看详情"按钮；
+      // 选择"直接放大查看"时视为不跳转详情页，故隐藏该按钮。
+      const detailBtn = document.createElement("button");
+      detailBtn.type = "button";
+      detailBtn.className = "photo-detail-btn";
+      detailBtn.setAttribute("aria-label", "查看详情");
+      detailBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      detailBtn.addEventListener("click", function (e: MouseEvent) {
+        e.stopPropagation();
+        window.location.href = detailUrl(name);
+      });
+      actions.appendChild(detailBtn);
+    }
+
+    const zoomBtn = document.createElement("button");
+    zoomBtn.type = "button";
+    zoomBtn.className = "photo-zoom-btn";
+    zoomBtn.setAttribute("role", "button");
+    zoomBtn.setAttribute("data-lightbox", "");
+    zoomBtn.setAttribute("data-lightbox-src", imgUrl);
+    zoomBtn.setAttribute("data-lightbox-title", displayName);
+    zoomBtn.setAttribute("aria-label", "放大查看");
+    zoomBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>';
+    actions.appendChild(zoomBtn);
+
+    if (showMeta) {
+      // 左上角胶囊分组
+      if (groupName) {
+        const overlay = document.createElement("div");
+        overlay.className = "photo-card-overlay";
+        const groupDisplayName = getGroupDisplayName(groupName);
+        const metaEl = document.createElement("span");
+        metaEl.className = "photo-card-meta";
+        metaEl.setAttribute("data-group-name", groupName);
+        metaEl.textContent = groupDisplayName;
+        overlay.appendChild(metaEl);
+        card.appendChild(overlay);
+      }
+
+      // 底部图片名称
+      const titleEl = document.createElement("div");
+      titleEl.className = "photo-card-title";
+      titleEl.textContent = displayName;
+      card.appendChild(titleEl);
+
+      // 中央操作按钮
+      card.appendChild(actions);
+    } else {
+      card.appendChild(actions);
+    }
+
+    // 点击卡片：根据设置跳转详情页或直接打开灯箱；删除模式与管理按钮不触发。
+    card.addEventListener("click", function (e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      if (target.closest(".photo-card-actions") || target.closest(".photo-delete-btn")) return;
+      const gridEl = document.getElementById("photoGrid");
+      if (gridEl && gridEl.classList.contains("manage-mode")) return;
+      if (clickBehavior === "detail") {
+        window.location.href = detailUrl(name);
+      } else {
+        document.dispatchEvent(
+          new CustomEvent("cosolar:open-lightbox", {
+            detail: { src: imgUrl, title: displayName },
+          }),
+        );
+      }
+    });
+
+    return card;
   }
 
   function initPhotos(): void {
@@ -264,6 +331,8 @@
     const emptyState = document.getElementById("photoEmptyState");
     const isLoggedIn = grid.getAttribute("data-logged-in") === "true";
     const showActions = grid.getAttribute("data-show-actions") === "true";
+    const showMeta = grid.getAttribute("data-show-meta") !== "false";
+    const clickBehavior = grid.getAttribute("data-click-behavior") || "detail";
 
     const pageSize = 12;
     const urlParams = new URLSearchParams(window.location.search);
@@ -310,21 +379,23 @@
       if (pager) pager.classList.add("loading");
 
       const url =
-        "/apis/api.photo.halo.run/v1alpha1/photos?" +
-        buildQuery(currentPage) +
-        "&_t=" +
-        Date.now();
+        "/apis/api.photo.halo.run/v1alpha1/photos?" + buildQuery(currentPage) + "&_t=" + Date.now();
 
-      fetch(url, { cache: "no-store", headers: { "Cache-Control": "no-cache" } })
-        .then(function (res: Response) {
+      Promise.all([
+        fetch(url, { cache: "no-store", headers: { "Cache-Control": "no-cache" } }).then(function (
+          res: Response,
+        ) {
           if (!res.ok) throw new Error("Network error");
           return res.json();
-        })
-        .then(function (data: PhotoListResult) {
+        }),
+        fetchGroups(),
+      ])
+        .then(function (results: [PhotoListResult, PhotoGroup[]]) {
+          const data = results[0];
           grid!.innerHTML = "";
           const items = data.items || [];
           items.forEach(function (p) {
-            grid!.appendChild(renderPhotoCard(p, isLoggedIn, showActions));
+            grid!.appendChild(renderPhotoCard(p, isLoggedIn, showActions, showMeta, clickBehavior));
           });
 
           const total = data.total || 0;
@@ -332,14 +403,8 @@
             typeof data.totalPages === "number" && data.totalPages > 0
               ? data.totalPages
               : Math.max(1, Math.ceil(total / pageSize));
-          hasNext =
-            typeof data.hasNext === "boolean"
-              ? data.hasNext
-              : currentPage < totalPages;
-          hasPrevious =
-            typeof data.hasPrevious === "boolean"
-              ? data.hasPrevious
-              : currentPage > 1;
+          hasNext = typeof data.hasNext === "boolean" ? data.hasNext : currentPage < totalPages;
+          hasPrevious = typeof data.hasPrevious === "boolean" ? data.hasPrevious : currentPage > 1;
 
           setEmpty(items.length === 0);
           updatePager();
@@ -445,6 +510,39 @@
     status: { photoCount?: number } | null;
   }
 
+  let groupsCache: PhotoGroup[] | null = null;
+  let groupsPromise: Promise<PhotoGroup[]> | null = null;
+
+  function fetchGroups(): Promise<PhotoGroup[]> {
+    if (groupsCache) return Promise.resolve(groupsCache);
+    if (groupsPromise) return groupsPromise;
+    groupsPromise = fetch("/apis/api.photo.halo.run/v1alpha1/photogroups")
+      .then(function (res: Response) {
+        if (!res.ok) throw new Error("Network error");
+        return res.json();
+      })
+      .then(function (groups: PhotoGroup[]) {
+        groupsCache = Array.isArray(groups) ? groups : [];
+        return groupsCache;
+      })
+      .catch(function () {
+        groupsCache = [];
+        return groupsCache;
+      });
+    return groupsPromise;
+  }
+
+  function getGroupDisplayName(slug: string): string {
+    if (!slug) return "";
+    if (groupsCache) {
+      const found = groupsCache.find(function (g) {
+        return g.metadata.name === slug;
+      });
+      if (found && found.spec.displayName) return found.spec.displayName;
+    }
+    return slug;
+  }
+
   function syncUngroupedVisibility(): void {
     const first = document.querySelector<HTMLElement>('[data-stat="ungrouped-photos"]');
     const count = first ? parseInt(first.textContent || "0", 10) || 0 : 0;
@@ -456,19 +554,20 @@
       }
     });
     // Sidebar widget list item
-    document
-      .querySelectorAll<HTMLElement>(".widget-photo-group")
-      .forEach(function (a) {
-        if ((a.getAttribute("href") || "").indexOf("ungrouped") !== -1) {
-          const li = a.closest<HTMLElement>("li");
-          if (li) li.style.display = visible ? "" : "none";
-        }
-      });
+    document.querySelectorAll<HTMLElement>(".widget-photo-group").forEach(function (a) {
+      if ((a.getAttribute("href") || "").indexOf("ungrouped") !== -1) {
+        const li = a.closest<HTMLElement>("li");
+        if (li) li.style.display = visible ? "" : "none";
+      }
+    });
   }
 
   function refreshStats(): void {
     // Fetch global photo total (ungrouped-aware) and groups in parallel
-    var photosApi = fetch("/apis/api.photo.halo.run/v1alpha1/photos?page=1&size=1&_t=" + Date.now(), { cache: "no-store" })
+    var photosApi = fetch(
+      "/apis/api.photo.halo.run/v1alpha1/photos?page=1&size=1&_t=" + Date.now(),
+      { cache: "no-store" },
+    )
       .then(function (res: Response) {
         if (!res.ok) throw new Error("Network error");
         return res.json();
@@ -476,19 +575,14 @@
       .then(function (data: { total?: number }) {
         return (data && data.total) || 0;
       })
-      .catch(function () { return 0; });
+      .catch(function () {
+        return 0;
+      });
 
-    var groupsApi = fetch("/apis/api.photo.halo.run/v1alpha1/photogroups")
-      .then(function (res: Response) {
-        if (!res.ok) throw new Error("Network error");
-        return res.json();
-      })
-      .catch(function () { return null; });
-
-    Promise.all([photosApi, groupsApi]).then(function (results) {
+    Promise.all([photosApi, fetchGroups()]).then(function (results) {
       var globalTotal = results[0] as number;
-      var groups = results[1] as PhotoGroup[] | null;
-      if (!Array.isArray(groups)) return;
+      var groups = results[1] as PhotoGroup[];
+      if (!groups.length) return;
 
       // Sum grouped photo counts
       var groupedTotal = 0;
@@ -497,11 +591,9 @@
       });
 
       // Update all total-photos elements with real global total
-      document
-        .querySelectorAll<HTMLElement>('[data-stat="total-photos"]')
-        .forEach(function (el) {
-          el.textContent = String(globalTotal);
-        });
+      document.querySelectorAll<HTMLElement>('[data-stat="total-photos"]').forEach(function (el) {
+        el.textContent = String(globalTotal);
+      });
 
       // Ungrouped count = global total - sum of all group counts
       var ungrouped = globalTotal - groupedTotal;
@@ -513,11 +605,9 @@
       syncUngroupedVisibility();
 
       // Update all group-count elements
-      document
-        .querySelectorAll<HTMLElement>('[data-stat="group-count"]')
-        .forEach(function (el) {
-          el.textContent = String(groups!.length);
-        });
+      document.querySelectorAll<HTMLElement>('[data-stat="group-count"]').forEach(function (el) {
+        el.textContent = String(groups!.length);
+      });
 
       // Update per-group counts
       groups!.forEach(function (g) {
@@ -748,10 +838,7 @@
         if (idx >= fileList.length) {
           if (progressWrap) progressWrap.hidden = true;
           if (failed > 0) {
-            showToast(
-              "上传完成：" + completed + " 张成功，" + failed + " 张失败",
-              "error"
-            );
+            showToast("上传完成：" + completed + " 张成功，" + failed + " 张失败", "error");
           } else {
             showToast("上传成功：" + completed + " 张照片", "success");
           }
@@ -844,9 +931,7 @@
 
     // Delegate delete button clicks
     document.addEventListener("click", function (e: MouseEvent) {
-      const deleteBtn = (e.target as HTMLElement)?.closest<HTMLElement>(
-        ".photo-delete-btn"
-      );
+      const deleteBtn = (e.target as HTMLElement)?.closest<HTMLElement>(".photo-delete-btn");
       if (!deleteBtn) return;
 
       e.preventDefault();
@@ -867,7 +952,7 @@
             "/apis/console.api.photo.halo.run/v1alpha1/photos/" +
               encodeURIComponent(photoName) +
               "?withAttachment=true",
-            { method: "DELETE" }
+            { method: "DELETE" },
           )
             .then(function (res: Response) {
               if (!res.ok) throw new Error("Delete failed: " + res.status);
@@ -878,9 +963,10 @@
               // which would re-add the card and look like "nothing happened".
               const card = deleteBtn.closest<HTMLElement>(".photo-card");
               // Read the card's group name (if any) BEFORE removing the card
-              const groupMeta =
-                card && card.querySelector<HTMLElement>(".photo-card-meta");
-              const cardGroupName = groupMeta ? groupMeta.textContent || "" : "";
+              const groupMeta = card && card.querySelector<HTMLElement>(".photo-card-meta");
+              const cardGroupName = groupMeta
+                ? groupMeta.getAttribute("data-group-name") || ""
+                : "";
               if (card) card.remove();
               // If this page is now empty, show empty state and hide pager
               const gridEl = document.getElementById("photoGrid");
@@ -902,17 +988,13 @@
               // and would overwrite these decrements, making it look unchanged.
               if (cardGroupName) {
                 document
-                  .querySelectorAll<HTMLElement>(
-                    '[data-group-name="' + cardGroupName + '"]'
-                  )
+                  .querySelectorAll<HTMLElement>('[data-group-name="' + cardGroupName + '"]')
                   .forEach(function (el) {
                     var n = parseInt(el.textContent || "0", 10) || 0;
                     el.textContent = String(n > 0 ? n - 1 : 0);
                   });
               } else {
-                var ugEl = document.querySelector<HTMLElement>(
-                  '[data-stat="ungrouped-photos"]'
-                );
+                var ugEl = document.querySelector<HTMLElement>('[data-stat="ungrouped-photos"]');
                 if (ugEl) {
                   var ug = parseInt(ugEl.textContent || "0", 10) || 0;
                   ugEl.textContent = String(ug > 0 ? ug - 1 : 0);
@@ -925,7 +1007,7 @@
               deleteBtn.classList.remove("deleting");
               showToast("删除失败，请重试", "error");
             });
-        }
+        },
       );
     });
   }
@@ -941,14 +1023,11 @@
     var el2 = el!;
     var gn = groupName!;
 
-    fetch("/apis/api.photo.halo.run/v1alpha1/photogroups")
-      .then(function (res: Response) {
-        if (!res.ok) throw new Error("Network error");
-        return res.json();
-      })
-      .then(function (groups: Array<{ metadata: { name: string }; spec: { displayName: string } }>) {
-        if (!Array.isArray(groups)) return;
-        var found = groups.find(function (g) { return g.metadata.name === gn; });
+    fetchGroups()
+      .then(function (groups: PhotoGroup[]) {
+        var found = groups.find(function (g) {
+          return g.metadata.name === gn;
+        });
         if (found && found.spec.displayName) {
           el2.textContent = found.spec.displayName;
         } else {

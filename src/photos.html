@@ -13,6 +13,8 @@
       photosSubtitle = ${theme.config?.photos?.photos_subtitle ?: '记录光影瞬间，收藏每一份美好'},
       showSidebar = ${theme.config?.photos?.photos_show_sidebar ?: true},
       showActions = ${theme.config?.photos?.photos_show_actions ?: true},
+      showMeta = ${theme.config?.photos?.photos_show_meta ?: true},
+      clickBehavior = ${theme.config?.photos?.photos_click_behavior ?: 'detail'},
       pluginInstalled = ${photoFinder != null},
       groups = ${pluginInstalled ? groups : null},
       photos = ${pluginInstalled ? photos : null},
@@ -84,7 +86,11 @@
                     </svg>
                   </div>
                   <div class="photo-hero-stat-text">
-                    <span class="photo-hero-stat-num" th:text="${totalPhotos}" data-format-number data-stat="total-photos"
+                    <span
+                      class="photo-hero-stat-num"
+                      th:text="${totalPhotos}"
+                      data-format-number
+                      data-stat="total-photos"
                       >0</span
                     >
                     <span class="photo-hero-stat-label">照片总数</span>
@@ -100,7 +106,11 @@
                     </svg>
                   </div>
                   <div class="photo-hero-stat-text">
-                    <span class="photo-hero-stat-num" th:text="${groupCount}" data-format-number data-stat="group-count"
+                    <span
+                      class="photo-hero-stat-num"
+                      th:text="${groupCount}"
+                      data-format-number
+                      data-stat="group-count"
                       >0</span
                     >
                     <span class="photo-hero-stat-label">分组数</span>
@@ -129,7 +139,10 @@
               th:classappend="${g.metadata.name == activeGroup} ? 'active'"
               th:attr="data-group-name=${g.metadata.name}"
             >
-              <span th:text="${g.spec.displayName != null and !#strings.isEmpty(g.spec.displayName) ? g.spec.displayName : g.metadata.name}">分组</span>
+              <span
+                th:text="${g.spec.displayName != null and !#strings.isEmpty(g.spec.displayName) ? g.spec.displayName : g.metadata.name}"
+                >分组</span
+              >
               <small
                 th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}"
                 th:attr="data-group-name=${g.metadata.name}"
@@ -192,7 +205,9 @@
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="3 6 5 6 21 6" />
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  />
                 </svg>
                 <span>删除</span>
               </button>
@@ -211,7 +226,7 @@
         <div
           class="photo-grid"
           id="photoGrid"
-          th:attr="data-logged-in=${isLoggedIn}, data-show-actions=${showActions}"
+          th:attr="data-logged-in=${isLoggedIn}, data-show-actions=${showActions}, data-show-meta=${showMeta}, data-click-behavior=${clickBehavior}"
         ></div>
 
         <!-- ===== Empty State (client-controlled) ===== -->
@@ -271,22 +286,38 @@
                 <path d="M21 15l-5-5L5 21" />
               </svg>
             </span>
-            <span class="widget-photo-stat-num" th:text="${totalPhotos}" data-format-number data-stat="total-photos">0</span>
+            <span
+              class="widget-photo-stat-num"
+              th:text="${totalPhotos}"
+              data-format-number
+              data-stat="total-photos"
+              >0</span
+            >
             <span class="widget-photo-stat-label">照片</span>
           </div>
           <div class="widget-photo-stat">
             <span class="widget-photo-stat-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                <path
+                  d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                />
               </svg>
             </span>
-            <span class="widget-photo-stat-num" th:text="${groupCount}" data-format-number data-stat="group-count">0</span>
+            <span
+              class="widget-photo-stat-num"
+              th:text="${groupCount}"
+              data-format-number
+              data-stat="group-count"
+              >0</span
+            >
             <span class="widget-photo-stat-label">分组</span>
           </div>
           <div class="widget-photo-stat">
             <span class="widget-photo-stat-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                <path
+                  d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+                />
                 <line x1="7" y1="7" x2="7.01" y2="7" />
               </svg>
             </span>
@@ -319,10 +350,16 @@
             >
               <span class="widget-photo-group-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                  <path
+                    d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                  />
                 </svg>
               </span>
-              <span class="widget-photo-group-name" th:text="${g.spec.displayName != null and !#strings.isEmpty(g.spec.displayName) ? g.spec.displayName : g.metadata.name}">分组</span>
+              <span
+                class="widget-photo-group-name"
+                th:text="${g.spec.displayName != null and !#strings.isEmpty(g.spec.displayName) ? g.spec.displayName : g.metadata.name}"
+                >分组</span
+              >
               <small
                 class="widget-photo-group-count"
                 th:text="${g.status != null and g.status.photoCount != null ? g.status.photoCount : 0}"
@@ -339,15 +376,13 @@
             >
               <span class="widget-photo-group-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                  <path
+                    d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                  />
                 </svg>
               </span>
               <span class="widget-photo-group-name">不分组</span>
-              <small
-                class="widget-photo-group-count"
-                data-stat="ungrouped-photos"
-                >0</small
-              >
+              <small class="widget-photo-group-count" data-stat="ungrouped-photos">0</small>
             </a>
           </li>
         </ul>
@@ -423,7 +458,9 @@
     <div class="photo-modal-dialog">
       <div class="photo-modal-icon photo-modal-icon--danger">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <path
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+          />
           <line x1="12" y1="9" x2="12" y2="13" />
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
@@ -433,8 +470,12 @@
         <p class="photo-modal-desc" id="photoConfirmDesc">删除后不可恢复</p>
       </div>
       <div class="photo-modal-actions">
-        <button type="button" class="photo-modal-btn photo-modal-btn--cancel" data-modal-close>取消</button>
-        <button type="button" class="photo-modal-btn photo-modal-btn--danger" id="photoConfirmOk">确认删除</button>
+        <button type="button" class="photo-modal-btn photo-modal-btn--cancel" data-modal-close>
+          取消
+        </button>
+        <button type="button" class="photo-modal-btn photo-modal-btn--danger" id="photoConfirmOk">
+          确认删除
+        </button>
       </div>
     </div>
   </div>
@@ -483,14 +524,25 @@
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
             <p class="photo-upload-dropzone-text">点击选择或拖拽图片到此处</p>
-            <p class="photo-upload-dropzone-hint">支持 JPEG / PNG / WebP / GIF / HEIC，单文件最大 50MB</p>
+            <p class="photo-upload-dropzone-hint">
+              支持 JPEG / PNG / WebP / GIF / HEIC，单文件最大 50MB
+            </p>
           </div>
           <ul class="photo-upload-filelist" id="photoUploadFilelist"></ul>
         </div>
       </div>
       <div class="photo-modal-actions">
-        <button type="button" class="photo-modal-btn photo-modal-btn--cancel" data-modal-close>取消</button>
-        <button type="button" class="photo-modal-btn photo-modal-btn--primary" id="photoUploadOk" disabled>开始上传</button>
+        <button type="button" class="photo-modal-btn photo-modal-btn--cancel" data-modal-close>
+          取消
+        </button>
+        <button
+          type="button"
+          class="photo-modal-btn photo-modal-btn--primary"
+          id="photoUploadOk"
+          disabled
+        >
+          开始上传
+        </button>
       </div>
     </div>
   </div>

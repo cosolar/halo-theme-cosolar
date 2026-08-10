@@ -875,6 +875,21 @@ spec:
           label: 显示操作按钮
           value: true
           help: 仅当访客已登录且开启此开关时，才显示上传、删除等图库操作按钮；关闭后所有访客（含登录用户）均看不到操作按钮
+        - $formkit: switch
+          name: photos_show_meta
+          label: 悬停显示图片信息
+          value: true
+          help: 鼠标移动到图片上时，在图片底部显示照片名称与所属分组信息
+        - $formkit: radio
+          name: photos_click_behavior
+          label: 点击图片的行为
+          value: detail
+          options:
+            - label: 跳转详情页
+              value: detail
+            - label: 直接放大查看
+              value: lightbox
+          help: 跳转详情页：点击图片进入照片详情页（悬停同时显示"查看详情"与"放大查看"两个按钮）；直接放大查看：点击图片直接打开大图灯箱（此时不跳转详情页，"查看详情"按钮自动隐藏）
 
     - group: background
       label: 页面背景

@@ -93,8 +93,12 @@
   background-image:
     radial-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
     radial-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px, 56px 56px;
-  background-position: 0 0, 14px 14px;
+  background-size:
+    28px 28px,
+    56px 56px;
+  background-position:
+    0 0,
+    14px 14px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
   -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
 }
@@ -109,11 +113,21 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, transparent 0%, transparent 50%, rgba(248, 250, 252, 0.3) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 50%,
+    rgba(248, 250, 252, 0.3) 100%
+  );
 }
 
 [data-theme="dark"] .photo-hero-overlay {
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.7) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
 }
 
 .photo-hero-content {
@@ -369,8 +383,8 @@
 }
 
 .photo-upload svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
 }
 
 /* Delete toggle button */
@@ -401,8 +415,8 @@
 }
 
 .photo-delete-toggle svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
 }
 
 /* ===== Photo Grid ===== */
@@ -498,11 +512,210 @@
   background: var(--color-primary);
 }
 
+/* ===== hover 遮罩：中性深灰蓝，不抢图片主体色 ===== */
+.photo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    160deg,
+    rgba(15, 23, 42, 0.55) 0%,
+    rgba(30, 41, 59, 0.42) 55%,
+    rgba(51, 65, 85, 0.3) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.photo-card:hover::after {
+  opacity: 1;
+}
+
+[data-theme="dark"] .photo-card::after {
+  background: linear-gradient(
+    160deg,
+    rgba(15, 23, 42, 0.68) 0%,
+    rgba(30, 41, 59, 0.52) 55%,
+    rgba(51, 65, 85, 0.4) 100%
+  );
+}
+
+/* ===== 左上角：胶囊状分组 ===== */
+.photo-card-overlay {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 4;
+  max-width: calc(100% - 20px);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.photo-card:hover .photo-card-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 分组：主题色胶囊 */
+.photo-card-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  text-shadow: none;
+}
+
+.photo-card-meta svg {
+  display: none;
+}
+
+/* ===== 底部：图片名称 ===== */
+.photo-card-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 10px 12px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    transparent 100%
+  );
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.photo-card:hover .photo-card-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-theme="dark"] .photo-card-title {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.48) 60%,
+    transparent 100%
+  );
+}
+
+/* 按钮组：浮在卡片正中央 */
+.photo-card-actions {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.85);
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.photo-card:hover .photo-card-actions {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.photo-card-actions button {
+  pointer-events: auto;
+}
+
+/* 中央操作按钮：主题色实心 + 白色图标 */
+.photo-detail-btn,
+.photo-zoom-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow:
+    0 4px 14px rgba(16, 185, 129, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.photo-detail-btn svg,
+.photo-zoom-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  stroke-width: 2;
+}
+
+.photo-detail-btn:hover,
+.photo-zoom-btn:hover {
+  background: #34d399;
+  transform: translateY(-2px) scale(1.08);
+  box-shadow:
+    0 6px 18px rgba(16, 185, 129, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+}
+
+.photo-detail-btn:active,
+.photo-zoom-btn:active {
+  transform: translateY(0) scale(1);
+}
+
+[data-theme="dark"] .photo-detail-btn,
+[data-theme="dark"] .photo-zoom-btn {
+  background: var(--color-primary);
+  box-shadow:
+    0 4px 14px rgba(16, 185, 129, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
 /* Delete button on photo card */
 .photo-delete-btn {
   position: absolute;
   top: 10px;
-  left: 10px;
+  right: 10px;
   width: 34px;
   height: 34px;
   display: flex;
@@ -550,39 +763,13 @@
   cursor: default;
 }
 
+/* 删除模式下隐藏中央操作按钮 */
+.photo-grid.manage-mode .photo-card-actions {
+  display: none;
+}
+
 .photo-grid.manage-mode .photo-card:hover {
   border-color: rgba(239, 68, 68, 0.4);
-}
-
-/* Hover overlay */
-.photo-card-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 2px;
-  padding: 14px;
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0) 55%);
-  opacity: 0;
-  transition: var(--transition);
-  pointer-events: none;
-}
-
-.photo-card:hover .photo-card-overlay {
-  opacity: 1;
-}
-
-.photo-card-title {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.photo-card-meta {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
 }
 
 /* ===== Empty State ===== */
@@ -735,8 +922,13 @@
 }
 
 @keyframes photo-stats-shimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .widget-photo-stats-grid {
@@ -834,8 +1026,8 @@
 }
 
 .widget-photo-group-icon svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
 }
 
 .widget-photo-group-name {
@@ -987,6 +1179,10 @@
   border-radius: var(--radius-lg);
   padding: 16px;
   box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
 .photo-viewer-stage {
@@ -994,16 +1190,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
   background: var(--color-bg);
   border-radius: var(--radius-md);
   overflow: hidden;
-  min-height: 220px;
   cursor: zoom-in;
 }
 
 .photo-viewer-img {
   max-width: 100%;
-  max-height: 72vh;
+  max-height: 100%;
   display: block;
   object-fit: contain;
 }
@@ -1022,6 +1219,7 @@
 }
 
 .photo-viewer-caption {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1348,8 +1546,8 @@
 }
 
 .widget-photo-nav-link svg {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
 }
 
 .widget-photo-nav-link:hover {
@@ -1391,7 +1589,9 @@
   background: rgba(15, 23, 42, 0.92);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
 }
 
 .photo-lightbox.is-open {
@@ -1612,7 +1812,9 @@
   text-align: center;
   transform: scale(0.92) translateY(8px);
   opacity: 0;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .photo-modal.is-open .photo-modal-backdrop {

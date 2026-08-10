@@ -18,15 +18,6 @@
     "
   >
     <div class="content-area">
-      <!-- ===== Back Link ===== -->
-      <a class="photo-back" th:href="${backHref}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="19" y1="12" x2="5" y2="12" />
-          <polyline points="12 19 5 12 12 5" />
-        </svg>
-        <span>返回图库</span>
-      </a>
-
       <!-- ===== Photo Viewer ===== -->
       <figure class="photo-viewer">
         <div
@@ -35,11 +26,7 @@
           th:attr="data-lightbox-src=${imgUrl}, data-lightbox-title=${photo.spec.displayName}"
         >
           <img class="photo-viewer-img" th:src="${imgUrl}" th:alt="${photo.spec.displayName}" />
-          <button
-            type="button"
-            class="photo-zoom photo-zoom--stage"
-            aria-label="查看大图"
-          >
+          <button type="button" class="photo-zoom photo-zoom--stage" aria-label="查看大图">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -48,9 +35,14 @@
             </svg>
           </button>
         </div>
-        <figcaption class="photo-viewer-caption" th:if="${photo.spec.displayName != null and !#strings.isEmpty(photo.spec.displayName)}">
+        <figcaption
+          class="photo-viewer-caption"
+          th:if="${photo.spec.displayName != null and !#strings.isEmpty(photo.spec.displayName)}"
+        >
           <span th:text="${photo.spec.displayName}">照片标题</span>
-          <span class="photo-viewer-counter" th:if="${total > 1}" th:text="|${position} / ${total}|">1 / 1</span>
+          <span class="photo-viewer-counter" th:if="${total > 1}" th:text="|${position} / ${total}|"
+            >1 / 1</span
+          >
         </figcaption>
       </figure>
 
@@ -105,7 +97,7 @@
     </div>
 
     <!-- ===== Sidebar (Meta) ===== -->
-    <aside class="sidebar">
+    <aside class="sidebar" data-sticky>
       <!-- 基础信息 -->
       <div class="widget widget-photo-basic">
         <div class="widget-title">
@@ -197,21 +189,42 @@
       </div>
 
       <div class="widget widget-photo-meta">
-        <h2 class="widget-photo-meta-title" th:text="${photo.spec.displayName ?: '未命名照片'}">照片标题</h2>
-        <p class="widget-photo-meta-desc" th:if="${photo.spec.description != null and !#strings.isEmpty(photo.spec.description)}" th:text="${photo.spec.description}">
+        <h2 class="widget-photo-meta-title" th:text="${photo.spec.displayName ?: '未命名照片'}">
+          照片标题
+        </h2>
+        <p
+          class="widget-photo-meta-desc"
+          th:if="${photo.spec.description != null and !#strings.isEmpty(photo.spec.description)}"
+          th:text="${photo.spec.description}"
+        >
           照片描述
         </p>
 
         <dl class="widget-photo-meta-list" th:if="${hasExif or createTime != null}">
-          <div class="widget-photo-meta-row" th:if="${createTime != null and !#strings.isEmpty(createTime)}">
+          <div
+            class="widget-photo-meta-row"
+            th:if="${createTime != null and !#strings.isEmpty(createTime)}"
+          >
             <dt>上传时间</dt>
-            <dd th:text="${#strings.replace(#strings.substring(createTime, 0, 16), 'T', ' ')}">时间</dd>
+            <dd th:text="${#strings.replace(#strings.substring(createTime, 0, 16), 'T', ' ')}">
+              时间
+            </dd>
           </div>
-          <div class="widget-photo-meta-row" th:if="${hasExif and exif.make != null and !#strings.isEmpty(exif.make)}">
+          <div
+            class="widget-photo-meta-row"
+            th:if="${hasExif and exif.make != null and !#strings.isEmpty(exif.make)}"
+          >
             <dt>相机</dt>
-            <dd th:text="${exif.make + (exif.model != null and !#strings.isEmpty(exif.model) ? ' ' + exif.model : '')}">相机</dd>
+            <dd
+              th:text="${exif.make + (exif.model != null and !#strings.isEmpty(exif.model) ? ' ' + exif.model : '')}"
+            >
+              相机
+            </dd>
           </div>
-          <div class="widget-photo-meta-row" th:if="${hasExif and exif.lensModel != null and !#strings.isEmpty(exif.lensModel)}">
+          <div
+            class="widget-photo-meta-row"
+            th:if="${hasExif and exif.lensModel != null and !#strings.isEmpty(exif.lensModel)}"
+          >
             <dt>镜头</dt>
             <dd th:text="${exif.lensModel}">镜头</dd>
           </div>
@@ -223,7 +236,10 @@
             <dt>光圈</dt>
             <dd th:text="${'f/' + exif.fNumber}">光圈</dd>
           </div>
-          <div class="widget-photo-meta-row" th:if="${hasExif and exif.exposureTime != null and !#strings.isEmpty(exif.exposureTime)}">
+          <div
+            class="widget-photo-meta-row"
+            th:if="${hasExif and exif.exposureTime != null and !#strings.isEmpty(exif.exposureTime)}"
+          >
             <dt>快门</dt>
             <dd th:text="${exif.exposureTime} + ' s'">快门</dd>
           </div>
@@ -231,9 +247,16 @@
             <dt>ISO</dt>
             <dd th:text="${exif.iso}">ISO</dd>
           </div>
-          <div class="widget-photo-meta-row" th:if="${hasExif and exif.dateTimeOriginal != null and !#strings.isEmpty(exif.dateTimeOriginal)}">
+          <div
+            class="widget-photo-meta-row"
+            th:if="${hasExif and exif.dateTimeOriginal != null and !#strings.isEmpty(exif.dateTimeOriginal)}"
+          >
             <dt>拍摄时间</dt>
-            <dd th:text="${#strings.replace(#strings.substring(exif.dateTimeOriginal, 0, 16), 'T', ' ')}">拍摄时间</dd>
+            <dd
+              th:text="${#strings.replace(#strings.substring(exif.dateTimeOriginal, 0, 16), 'T', ' ')}"
+            >
+              拍摄时间
+            </dd>
           </div>
         </dl>
       </div>
@@ -243,20 +266,32 @@
           <span class="title-text">浏览进度</span>
         </div>
         <div class="widget-photo-nav-progress">
-          <div class="widget-photo-nav-bar" th:if="${total > 1}" th:style="${'width:' + (position * 100 / total) + '%'}"></div>
+          <div
+            class="widget-photo-nav-bar"
+            th:if="${total > 1}"
+            th:style="${'width:' + (position * 100 / total) + '%'}"
+          ></div>
         </div>
         <div class="widget-photo-nav-info">
           <span>第 <strong th:text="${position}">1</strong> 张</span>
           <span>共 <strong th:text="${total}">1</strong> 张</span>
         </div>
         <div class="widget-photo-nav-actions">
-          <a class="widget-photo-nav-link" th:if="${prev != null}" th:href="@{${photoUrl.detail(prev)}}">
+          <a
+            class="widget-photo-nav-link"
+            th:if="${prev != null}"
+            th:href="@{${photoUrl.detail(prev)}}"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="15 18 9 12 15 6" />
             </svg>
             <span>上一张</span>
           </a>
-          <a class="widget-photo-nav-link widget-photo-nav-link--next" th:if="${next != null}" th:href="@{${photoUrl.detail(next)}}">
+          <a
+            class="widget-photo-nav-link widget-photo-nav-link--next"
+            th:if="${next != null}"
+            th:href="@{${photoUrl.detail(next)}}"
+          >
             <span>下一张</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 18 15 12 9 6" />
