@@ -11,19 +11,17 @@ interface LinkCard {
 }
 
 function collectCards(): LinkCard[] {
-  return Array.from(document.querySelectorAll<HTMLElement>(".link-card")).map(
-    (el, index) => {
-      const groupEl = el.closest<HTMLElement>(".link-group");
-      return {
-        el,
-        group: groupEl?.dataset.group || "all",
-        name: (el.dataset.name || "").toLowerCase(),
-        desc: (el.dataset.desc || "").toLowerCase(),
-        url: el.getAttribute("href") || "",
-        initialOrder: index,
-      };
-    },
-  );
+  return Array.from(document.querySelectorAll<HTMLElement>(".link-card")).map((el, index) => {
+    const groupEl = el.closest<HTMLElement>(".link-group");
+    return {
+      el,
+      group: groupEl?.dataset.group || "all",
+      name: (el.dataset.name || "").toLowerCase(),
+      desc: (el.dataset.desc || "").toLowerCase(),
+      url: el.getAttribute("href") || "",
+      initialOrder: index,
+    };
+  });
 }
 
 function initLinksPage() {
@@ -69,28 +67,21 @@ function initLinkApplication() {
       history.replaceState(null, "", url.toString());
     }
 
-    modal
-      .querySelectorAll<HTMLElement>(".link-application-alert")
-      .forEach((el) => {
-        el.style.display = "none";
-      });
+    modal.querySelectorAll<HTMLElement>(".link-application-alert").forEach((el) => {
+      el.style.display = "none";
+    });
   };
 
-  document
-    .querySelectorAll<HTMLElement>(".js-link-application-open")
-    .forEach((el) => {
-      el.addEventListener("click", openModal);
-    });
+  document.querySelectorAll<HTMLElement>(".js-link-application-open").forEach((el) => {
+    el.addEventListener("click", openModal);
+  });
 
-  modal
-    .querySelectorAll<HTMLElement>("[data-link-application-close]")
-    .forEach((el) => {
-      el.addEventListener("click", closeModal);
-    });
+  modal.querySelectorAll<HTMLElement>("[data-link-application-close]").forEach((el) => {
+    el.addEventListener("click", closeModal);
+  });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal.classList.contains("is-open"))
-      closeModal();
+    if (event.key === "Escape" && modal.classList.contains("is-open")) closeModal();
   });
 
   // 表单提交后插件 303 重定向回 /links?applied=...，自动打开弹窗展示结果
@@ -99,15 +90,11 @@ function initLinkApplication() {
 
 function initCategoryFilter(cards: LinkCard[]) {
   const categoryList = document.getElementById("categoryList");
-  const categorySelect = document.getElementById(
-    "categorySelect",
-  ) as HTMLSelectElement | null;
+  const categorySelect = document.getElementById("categorySelect") as HTMLSelectElement | null;
   if (!categoryList && !categorySelect) return;
 
   const setActiveFilter = (filter: string) => {
-    const activeBtn = categoryList?.querySelector(
-      ".links-category-item.active",
-    );
+    const activeBtn = categoryList?.querySelector(".links-category-item.active");
     activeBtn?.classList.remove("active");
     const btn = categoryList?.querySelector<HTMLButtonElement>(
       `.links-category-item[data-filter="${CSS.escape(filter)}"]`,
@@ -123,13 +110,11 @@ function initCategoryFilter(cards: LinkCard[]) {
     syncSortUI("default");
   };
 
-  categoryList
-    ?.querySelectorAll<HTMLButtonElement>(".links-category-item")
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        setActiveFilter(btn.dataset.filter || "all");
-      });
+  categoryList?.querySelectorAll<HTMLButtonElement>(".links-category-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setActiveFilter(btn.dataset.filter || "all");
     });
+  });
 
   categorySelect?.addEventListener("change", () => {
     setActiveFilter(categorySelect.value || "all");
@@ -137,9 +122,7 @@ function initCategoryFilter(cards: LinkCard[]) {
 }
 
 function applyFilter(filter: string, cards: LinkCard[]) {
-  const searchInput = document.getElementById(
-    "linkSearchInput",
-  ) as HTMLInputElement | null;
+  const searchInput = document.getElementById("linkSearchInput") as HTMLInputElement | null;
   const keyword = (searchInput?.value || "").trim().toLowerCase();
   const search = keyword
     ? new Set(
@@ -153,24 +136,21 @@ function applyFilter(filter: string, cards: LinkCard[]) {
     : null;
 
   cards.forEach((c) => {
-    const visible =
-      (filter === "all" || c.group === filter) && (!search || search.has(c));
+    const visible = (filter === "all" || c.group === filter) && (!search || search.has(c));
     c.el.style.display = visible ? "" : "none";
   });
 
   document.querySelectorAll<HTMLElement>(".link-group").forEach((group) => {
-    const hasVisible = Array.from(
-      group.querySelectorAll<HTMLElement>(".link-card"),
-    ).some((card) => card.style.display !== "none");
+    const hasVisible = Array.from(group.querySelectorAll<HTMLElement>(".link-card")).some(
+      (card) => card.style.display !== "none",
+    );
     group.style.display = hasVisible ? "" : "none";
   });
 
   const groupsContainer = document.getElementById("linksGroups");
   groupsContainer?.classList.toggle("is-filtered", filter !== "all");
 
-  const visibleCount = cards.filter(
-    (c) => c.el.style.display !== "none",
-  ).length;
+  const visibleCount = cards.filter((c) => c.el.style.display !== "none").length;
   updateEmptyState(visibleCount, !!keyword);
   updateGroupCount();
 }
@@ -193,9 +173,7 @@ function updateToolbarTitle(filter: string) {
 }
 
 function initSearch(cards: LinkCard[]) {
-  const searchInput = document.getElementById(
-    "linkSearchInput",
-  ) as HTMLInputElement | null;
+  const searchInput = document.getElementById("linkSearchInput") as HTMLInputElement | null;
   if (!searchInput) return;
 
   let timer: number | undefined;
@@ -220,24 +198,20 @@ function initSort(cards: LinkCard[]) {
   const sortWrap = document.getElementById("linksSort");
   if (!sortWrap) return;
 
-  sortWrap
-    .querySelectorAll<HTMLButtonElement>(".links-sort-btn")
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const active = sortWrap.querySelector(".links-sort-btn.active");
-        if (active) active.classList.remove("active");
-        btn.classList.add("active");
-        applySort(btn.dataset.sort || "default", cards);
-      });
+  sortWrap.querySelectorAll<HTMLButtonElement>(".links-sort-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const active = sortWrap.querySelector(".links-sort-btn.active");
+      if (active) active.classList.remove("active");
+      btn.classList.add("active");
+      applySort(btn.dataset.sort || "default", cards);
     });
+  });
 }
 
 function applySort(sort: string, cards: LinkCard[]) {
   const groups = document.querySelectorAll<HTMLElement>(".link-group");
   groups.forEach((group) => {
-    const cardEls = Array.from(
-      group.querySelectorAll<HTMLElement>(".link-card"),
-    );
+    const cardEls = Array.from(group.querySelectorAll<HTMLElement>(".link-card"));
     let sorted: HTMLElement[];
     if (sort === "newest") {
       sorted = cardEls.slice().reverse();
@@ -257,17 +231,13 @@ function applySort(sort: string, cards: LinkCard[]) {
 function syncSortUI(sort: string) {
   const sortWrap = document.getElementById("linksSort");
   if (!sortWrap) return;
-  sortWrap
-    .querySelectorAll<HTMLButtonElement>(".links-sort-btn")
-    .forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.sort === sort);
-    });
+  sortWrap.querySelectorAll<HTMLButtonElement>(".links-sort-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.sort === sort);
+  });
 }
 
 function getActiveFilter(): string {
-  const active = document.querySelector<HTMLElement>(
-    ".links-category-item.active",
-  );
+  const active = document.querySelector<HTMLElement>(".links-category-item.active");
   return active?.dataset.filter || "all";
 }
 
@@ -280,9 +250,9 @@ function updateEmptyState(visibleCount: number, searching: boolean) {
 function updateGroupCount() {
   const el = document.getElementById("linkGroupCount");
   if (!el) return;
-  const visible = Array.from(
-    document.querySelectorAll<HTMLElement>(".link-group"),
-  ).filter((g) => g.style.display !== "none");
+  const visible = Array.from(document.querySelectorAll<HTMLElement>(".link-group")).filter(
+    (g) => g.style.display !== "none",
+  );
   el.textContent = String(visible.length);
 }
 
@@ -297,33 +267,27 @@ function initViewToggle() {
     applyView(savedView, toggleWrap);
   }
 
-  toggleWrap
-    .querySelectorAll<HTMLButtonElement>(".links-view-btn")
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const view = btn.dataset.view || "detailed";
-        applyView(view, toggleWrap);
-        localStorage.setItem(VIEW_STORAGE_KEY, view);
-      });
+  toggleWrap.querySelectorAll<HTMLButtonElement>(".links-view-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const view = btn.dataset.view || "detailed";
+      applyView(view, toggleWrap);
+      localStorage.setItem(VIEW_STORAGE_KEY, view);
     });
+  });
 }
 
 function applyView(view: string, toggleWrap: HTMLElement) {
   const groups = document.querySelectorAll<HTMLElement>(".link-group");
   groups.forEach((group) => group.setAttribute("data-view", view));
 
-  toggleWrap
-    .querySelectorAll<HTMLButtonElement>(".links-view-btn")
-    .forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.view === view);
-      btn.setAttribute("aria-pressed", String(btn.dataset.view === view));
-    });
+  toggleWrap.querySelectorAll<HTMLButtonElement>(".links-view-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.view === view);
+    btn.setAttribute("aria-pressed", String(btn.dataset.view === view));
+  });
 }
 
 function initLazyImages() {
-  const imgs = document.querySelectorAll<HTMLImageElement>(
-    '.link-card-logo img[loading="lazy"]',
-  );
+  const imgs = document.querySelectorAll<HTMLImageElement>('.link-card-logo img[loading="lazy"]');
   if (!("IntersectionObserver" in window) || imgs.length === 0) return;
   const io = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {

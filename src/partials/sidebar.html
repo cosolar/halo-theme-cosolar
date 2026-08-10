@@ -7,7 +7,6 @@
 >
   <th:block th:each="m : ${theme.config?.sidebar?.sidebar_modules}">
     <th:block th:switch="${m.module}">
-
       <!-- Author Profile -->
       <th:block th:case="'author'">
         <div
@@ -29,7 +28,11 @@
         >
           <div class="author-profile">
             <div class="author-avatar">
-              <img th:if="${authorAvatar != null and !#strings.isEmpty(authorAvatar)}" th:src="${authorAvatar}" th:alt="${authorName}" />
+              <img
+                th:if="${authorAvatar != null and !#strings.isEmpty(authorAvatar)}"
+                th:src="${authorAvatar}"
+                th:alt="${authorName}"
+              />
               <span
                 th:unless="${authorAvatar != null and !#strings.isEmpty(authorAvatar)}"
                 class="author-avatar-fallback"
@@ -37,7 +40,11 @@
               ></span>
             </div>
             <h3 class="author-name" th:text="${authorName}"></h3>
-            <p class="author-bio" th:if="${authorBio != null and !#strings.isEmpty(authorBio)}" th:text="${authorBio}"></p>
+            <p
+              class="author-bio"
+              th:if="${authorBio != null and !#strings.isEmpty(authorBio)}"
+              th:text="${authorBio}"
+            ></p>
             <div class="author-divider"></div>
             <div class="author-stats">
               <a class="author-stat" th:href="@{${site.routes.archivesUri}}">
@@ -180,7 +187,9 @@
           <div class="widget-title">
             <span class="title-text">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                <path
+                  d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                />
               </svg>
               专题类别
             </span>
@@ -193,7 +202,16 @@
               class="category-item"
             >
               <span class="category-icon">
-                <svg viewBox="0 0 48 48" fill="none"><path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 6h34s4 2 4 7s-4 7-4 7H5s4-2 4-7s-4-7-4-7m38 22H9s-4 2-4 7s4 7 4 7h34s-4-2-4-7s4-7 4-7"/></svg>
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path
+                    fill="currentColor"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="4"
+                    d="M5 6h34s4 2 4 7s-4 7-4 7H5s4-2 4-7s-4-7-4-7m38 22H9s-4 2-4 7s4 7 4 7h34s-4-2-4-7s4-7 4-7"
+                  />
+                </svg>
               </span>
               <span class="category-info">
                 <span class="category-name" th:text="${cat.spec.displayName}"></span>
@@ -240,7 +258,11 @@
 
       <!-- 友情链接 -->
       <th:block th:case="'links'">
-        <div class="widget widget-sidebar-links" th:if="${theme.config?.sidebar?.show_sidebar_links != false and linkFinder != null}" th:with="randomLinks = ${linkFinder?.random(theme.config?.sidebar?.sidebar_links_count ?: 10) ?: {}}">
+        <div
+          class="widget widget-sidebar-links"
+          th:if="${theme.config?.sidebar?.show_sidebar_links != false and linkFinder != null}"
+          th:with="randomLinks = ${linkFinder?.random(theme.config?.sidebar?.sidebar_links_count ?: 10) ?: {}}"
+        >
           <div class="widget-title">
             <span class="title-text">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -265,7 +287,10 @@
                   th:src="${link.spec.logo}"
                   th:alt="${link.spec.displayName}"
                   loading="lazy"
-                  onerror="this.style.display='none';this.parentElement.classList.add('is-fallback');"
+                  onerror="
+                    this.style.display = 'none';
+                    this.parentElement.classList.add('is-fallback');
+                  "
                 />
                 <span
                   class="sidebar-link-logo-fallback"
@@ -304,7 +329,10 @@
             </span>
             <a class="widget-link" th:href="@{/feeds}">全部资讯 →</a>
           </div>
-          <div class="sidebar-feeds-list" th:if="${recentFeeds != null and !#lists.isEmpty(recentFeeds.items)}">
+          <div
+            class="sidebar-feeds-list"
+            th:if="${recentFeeds != null and !#lists.isEmpty(recentFeeds.items)}"
+          >
             <a
               th:each="feed : ${recentFeeds.items}"
               th:href="${feed.url}"
@@ -314,7 +342,10 @@
             >
               <span class="sidebar-feed-title" th:text="${feed.title}"></span>
               <span class="sidebar-feed-meta">
-                <span class="sidebar-feed-source" th:text="${feed.author != null and !#strings.isEmpty(feed.author) ? feed.author : feed.authorUrl}"></span>
+                <span
+                  class="sidebar-feed-source"
+                  th:text="${feed.author != null and !#strings.isEmpty(feed.author) ? feed.author : feed.authorUrl}"
+                ></span>
                 <span
                   class="sidebar-feed-date"
                   th:if="${feed.publishedAt != null}"
@@ -323,12 +354,19 @@
               </span>
             </a>
           </div>
-          <div class="empty-state" th:if="${recentFeeds == null or #lists.isEmpty(recentFeeds.items)}" style="padding: 16px 0;">
-            <p style="font-size: 13px; color: var(--color-text-muted); text-align: center; margin: 0;">暂无订阅资讯</p>
+          <div
+            class="empty-state"
+            th:if="${recentFeeds == null or #lists.isEmpty(recentFeeds.items)}"
+            style="padding: 16px 0"
+          >
+            <p
+              style="font-size: 13px; color: var(--color-text-muted); text-align: center; margin: 0"
+            >
+              暂无订阅资讯
+            </p>
           </div>
         </div>
       </th:block>
-
     </th:block>
   </th:block>
 </aside>

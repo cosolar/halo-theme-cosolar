@@ -103,7 +103,9 @@
               th:with="builtinCover = @{/assets/images/default_post_cover.png}, coverUrl = ${post.spec.cover != null and !#strings.isEmpty(post.spec.cover) ? post.spec.cover : (theme.config?.post?.default_post_cover != null and !#strings.isEmpty(theme.config.post.default_post_cover) ? theme.config.post.default_post_cover : builtinCover)}"
             >
               <img th:if="${coverUrl != null}" th:src="${coverUrl}" alt="" loading="lazy" />
-              <span class="article-thumb-placeholder" th:unless="${coverUrl != null}">&lt;/&gt;</span>
+              <span class="article-thumb-placeholder" th:unless="${coverUrl != null}"
+                >&lt;/&gt;</span
+              >
             </a>
             <div class="article-body">
               <h3 class="article-card-title">

@@ -93,8 +93,12 @@
   background-image:
     radial-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
     radial-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px, 56px 56px;
-  background-position: 0 0, 14px 14px;
+  background-size:
+    28px 28px,
+    56px 56px;
+  background-position:
+    0 0,
+    14px 14px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
   -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
 }
@@ -109,11 +113,21 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, transparent 0%, transparent 50%, rgba(248, 250, 252, 0.3) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 50%,
+    rgba(248, 250, 252, 0.3) 100%
+  );
 }
 
 [data-theme="dark"] .moments-hero-overlay {
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.7) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
 }
 
 .moments-hero-content {
@@ -1196,7 +1210,9 @@
   background: rgba(0, 0, 0, 0.92);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
 }
 
 .moment-lightbox.is-open {

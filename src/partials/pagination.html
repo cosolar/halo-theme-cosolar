@@ -20,7 +20,16 @@
       aria-label="上一页"
       title="上一页"
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
       <span class="pager-btn-label">上一页</span>
     </a>
 
@@ -40,13 +49,29 @@
       title="下一页"
     >
       <span class="pager-btn-label">下一页</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
     </a>
   </div>
 
   <!-- 跳转（与翻页区分隔） -->
   <form class="pagination-jump" aria-label="跳转页码">
-    <input type="number" class="jump-input" min="1" th:attr="max=${totalPages}" placeholder="页码" aria-label="跳转页码" />
+    <input
+      type="number"
+      class="jump-input"
+      min="1"
+      th:attr="max=${totalPages}"
+      placeholder="页码"
+      aria-label="跳转页码"
+    />
     <button type="submit" class="jump-btn" aria-label="跳转">Go</button>
   </form>
 </nav>

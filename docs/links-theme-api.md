@@ -44,11 +44,7 @@
 <ul>
   <li th:each="link : ${links}">
     <a th:href="${link.spec.url}" target="_blank" rel="noopener">
-      <img
-        th:if="${link.spec.logo}"
-        th:src="${link.spec.logo}"
-        th:alt="${link.spec.displayName}"
-      />
+      <img th:if="${link.spec.logo}" th:src="${link.spec.logo}" th:alt="${link.spec.displayName}" />
       <span th:text="${link.spec.displayName}"></span>
       <small th:text="${link.spec.description}"></small>
     </a>
@@ -144,9 +140,7 @@ Cookie 由浏览器自动处理。
 `value` 查询参数展示结果或回填出错字段。
 
 ```html
-<p th:if="${param.applied == 'success'}" role="status">
-  申请已提交，等待审核。
-</p>
+<p th:if="${param.applied == 'success'}" role="status">申请已提交，等待审核。</p>
 <p
   th:if="${param.applied == 'error' || param.applied == 'disabled'}"
   th:text="${param.message ?: '提交失败，请稍后再试'}"
@@ -162,12 +156,7 @@ Cookie 由浏览器自动处理。
   <input type="hidden" name="_csrf" th:value="${csrfToken}" />
   <label>
     网站地址
-    <input
-      name="url"
-      type="url"
-      required
-      th:value="${param.field == 'url' ? param.value : ''}"
-    />
+    <input name="url" type="url" required th:value="${param.field == 'url' ? param.value : ''}" />
   </label>
   <label>
     网站名称
@@ -179,11 +168,7 @@ Cookie 由浏览器自动处理。
   </label>
   <label>
     Logo 地址
-    <input
-      name="logo"
-      type="url"
-      th:value="${param.field == 'logo' ? param.value : ''}"
-    />
+    <input name="logo" type="url" th:value="${param.field == 'logo' ? param.value : ''}" />
   </label>
   <label>
     网站描述
@@ -194,19 +179,11 @@ Cookie 由浏览器自动处理。
   </label>
   <label>
     联系邮箱
-    <input
-      name="email"
-      type="email"
-      th:value="${param.field == 'email' ? param.value : ''}"
-    />
+    <input name="email" type="email" th:value="${param.field == 'email' ? param.value : ''}" />
   </label>
   <label>
     反链地址
-    <input
-      name="backlink"
-      type="url"
-      th:value="${param.field == 'backlink' ? param.value : ''}"
-    />
+    <input name="backlink" type="url" th:value="${param.field == 'backlink' ? param.value : ''}" />
   </label>
   <label>
     订阅地址
@@ -226,13 +203,7 @@ Cookie 由浏览器自动处理。
   />
   <label>
     验证码
-    <input
-      name="captchaCode"
-      required
-      minlength="5"
-      maxlength="5"
-      autocomplete="off"
-    />
+    <input name="captchaCode" required minlength="5" maxlength="5" autocomplete="off" />
   </label>
 
   <button type="submit">申请友链</button>
@@ -343,16 +314,12 @@ async function submitApplication(fields, captchaCode) {
     const problemKey = `${problem.status} ${problem.type}`;
     const messages = {
       "400 https://halo.run/probs/invalid-link-application": "请检查申请内容",
-      "400 https://halo.run/probs/invalid-link-application-captcha":
-        "验证码错误或已过期",
-      "403 https://halo.run/probs/link-application-disabled":
-        "友链申请暂未开放",
+      "400 https://halo.run/probs/invalid-link-application-captcha": "验证码错误或已过期",
+      "403 https://halo.run/probs/link-application-disabled": "友链申请暂未开放",
       "409 https://halo.run/probs/duplicate-link-application": "该链接已经申请",
-      "409 https://halo.run/probs/link-application-capacity-reached":
-        "待审核申请已满",
+      "409 https://halo.run/probs/link-application-capacity-reached": "待审核申请已满",
       "429 https://halo.run/probs/request-not-permitted": "请求过于频繁",
-      "503 https://halo.run/probs/link-application-unavailable":
-        "服务暂时不可用",
+      "503 https://halo.run/probs/link-application-unavailable": "服务暂时不可用",
     };
     result.textContent = messages[problemKey] ?? "暂时无法提交，请稍后再试";
   } catch {
@@ -417,12 +384,7 @@ Finder API 由两个独立对象提供，可在主题模板的任意位置使用
 ```html
 <section th:each="group : ${linkFinder.groupBy()}">
   <h2 th:text="${group.spec.displayName} ?: '未分组'"></h2>
-  <a
-    th:each="link : ${group.links}"
-    th:href="${link.spec.url}"
-    target="_blank"
-    rel="noopener"
-  >
+  <a th:each="link : ${group.links}" th:href="${link.spec.url}" target="_blank" rel="noopener">
     <span th:text="${link.spec.displayName}"></span>
   </a>
 </section>
@@ -546,8 +508,8 @@ linkFeedFinder.list({ limit: 20, linkName: 'link-name' })
 按下一页游标继续加载：
 
 ```html
-linkFeedFinder.list({ limit: 20, beforePublishedAt:
-linkFeeds.nextBeforePublishedAt, beforeId: linkFeeds.nextBeforeId })
+linkFeedFinder.list({ limit: 20, beforePublishedAt: linkFeeds.nextBeforePublishedAt, beforeId:
+linkFeeds.nextBeforeId })
 ```
 
 #### linkFeedFinder.groupBy(limit)
@@ -596,11 +558,7 @@ linkFeeds.nextBeforePublishedAt, beforeId: linkFeeds.nextBeforeId })
 
 ```html
 <div th:if="${haloCommentEnabled}">
-  <halo:comment
-    group="plugin.halo.run"
-    kind="Plugin"
-    th:attr="name=${pluginName}"
-  />
+  <halo:comment group="plugin.halo.run" kind="Plugin" th:attr="name=${pluginName}" />
 </div>
 ```
 
@@ -694,9 +652,7 @@ linkFeeds.nextBeforePublishedAt, beforeId: linkFeeds.nextBeforeId })
 `name()` 取枚举名称；公共 REST API 返回 JSON 时这些状态字段会序列化为字符串。
 
 ```html
-<th:block
-  th:with="accessState=${link.status?.verification?.access?.state?.name()}"
->
+<th:block th:with="accessState=${link.status?.verification?.access?.state?.name()}">
   <span th:if="${accessState == 'ACCESSIBLE'}">在线</span>
   <span th:if="${accessState == 'INACCESSIBLE'}">离线</span>
 </th:block>

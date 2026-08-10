@@ -5,7 +5,11 @@
 
   <div class="layout-grid no-sidebar">
     <div class="content-area">
-      <section class="page-hero" th:if="${theme.config?.tag?.show_hero != false}" th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.tag?.tags_cover) ? theme.config.tag.tags_cover : defaultCover}">
+      <section
+        class="page-hero"
+        th:if="${theme.config?.tag?.show_hero != false}"
+        th:with="defaultCover = @{/assets/images/featured-default.png}, cover = ${!#strings.isEmpty(theme.config?.tag?.tags_cover) ? theme.config.tag.tags_cover : defaultCover}"
+      >
         <div class="page-hero-bg" th:if="${cover != null and !#strings.isEmpty(cover)}">
           <img th:src="${cover}" alt="" loading="lazy" />
         </div>
@@ -32,7 +36,12 @@
       <div class="tag-cards" th:if="${not #lists.isEmpty(tags)}">
         <a th:each="tag : ${tags}" th:href="@{${tag.status.permalink}}" class="tag-card">
           <div class="tag-card-icon">
-            <svg viewBox="0 0 24 24" fill="none"><path fill="currentColor" d="M5.5 9A1.5 1.5 0 0 0 7 7.5A1.5 1.5 0 0 0 5.5 6A1.5 1.5 0 0 0 4 7.5A1.5 1.5 0 0 0 5.5 9m11.91 2.58c.36.36.59.86.59 1.42c0 .55-.22 1.05-.59 1.41l-5 5a1.996 1.996 0 0 1-2.83 0l-6.99-6.99C2.22 12.05 2 11.55 2 11V6c0-1.11.89-2 2-2h5c.55 0 1.05.22 1.41.58zm-3.87-5.87l1-1l6.87 6.87c.37.36.59.87.59 1.42s-.22 1.05-.58 1.41l-5.38 5.38l-1-1L20.75 13z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                fill="currentColor"
+                d="M5.5 9A1.5 1.5 0 0 0 7 7.5A1.5 1.5 0 0 0 5.5 6A1.5 1.5 0 0 0 4 7.5A1.5 1.5 0 0 0 5.5 9m11.91 2.58c.36.36.59.86.59 1.42c0 .55-.22 1.05-.59 1.41l-5 5a1.996 1.996 0 0 1-2.83 0l-6.99-6.99C2.22 12.05 2 11.55 2 11V6c0-1.11.89-2 2-2h5c.55 0 1.05.22 1.41.58zm-3.87-5.87l1-1l6.87 6.87c.37.36.59.87.59 1.42s-.22 1.05-.58 1.41l-5.38 5.38l-1-1L20.75 13z"
+              />
+            </svg>
           </div>
           <div class="tag-card-text">
             <div class="tag-card-name" th:text="${tag.spec.displayName}"></div>

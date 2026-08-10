@@ -1,6 +1,8 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|${theme.config?.feeds?.feeds_title ?: 'RSS 资讯'} - ${site.title}|">RSS 资讯</title>
+    <title th:text="|${theme.config?.feeds?.feeds_title ?: 'RSS 资讯'} - ${site.title}|">
+      RSS 资讯
+    </title>
     <script type="module" src="./js/feeds.ts"></script>
   </template>
 
@@ -37,7 +39,10 @@
           </svg>
         </div>
         <h2>RSS 资讯功能未启用</h2>
-        <p>本页面需要安装并启用「友情链接插件plugin-links」，并在插件设置的「RSS 订阅」中开启「公开 RSS 订阅动态」。</p>
+        <p>
+          本页面需要安装并启用「友情链接插件plugin-links」，并在插件设置的「RSS 订阅」中开启「公开
+          RSS 订阅动态」。
+        </p>
       </div>
 
       <!-- ===== Main Content ===== -->
@@ -59,7 +64,9 @@
               <span th:text="${feedsTitle}">RSS 资讯</span>
             </span>
             <h1 th:text="${feedsTitle}">RSS 资讯</h1>
-            <p class="page-hero-desc" th:text="${feedsSubtitle}">聚合优质信息源，掌握技术前沿动态</p>
+            <p class="page-hero-desc" th:text="${feedsSubtitle}">
+              聚合优质信息源，掌握技术前沿动态
+            </p>
 
             <!-- Hero Metrics -->
             <div class="feed-hero-stats">
@@ -69,7 +76,11 @@
               </div>
               <span class="feed-hero-stat-divider"></span>
               <div class="feed-hero-stat">
-                <span class="feed-hero-stat-num" th:text="${feedGroups != null ? #lists.size(feedGroups) : 0}">0</span>
+                <span
+                  class="feed-hero-stat-num"
+                  th:text="${feedGroups != null ? #lists.size(feedGroups) : 0}"
+                  >0</span
+                >
                 <span class="feed-hero-stat-label">分组</span>
               </div>
               <span class="feed-hero-stat-divider"></span>
@@ -98,7 +109,10 @@
                 我的频道
               </h3>
               <nav class="feed-channel-list">
-                <a th:href="@{${pageUrl}}" th:classappend="${selectedLink == null and selectedGroup == null} ? 'active'">
+                <a
+                  th:href="@{${pageUrl}}"
+                  th:classappend="${selectedLink == null and selectedGroup == null} ? 'active'"
+                >
                   <span>全部资讯</span>
                   <small th:text="${totalRssItems}">0</small>
                 </a>
@@ -134,11 +148,24 @@
                   <h2 th:if="${selectedLink == null and selectedGroup == null}">全部资讯</h2>
                   <th:block th:if="${selectedLink != null}" th:each="grp : ${feedGroups}">
                     <th:block th:each="link : ${grp.links}">
-                      <h2 th:if="${link.metadata.name == selectedLink}" th:text="${link.spec?.displayName ?: '订阅源'}">订阅源</h2>
+                      <h2
+                        th:if="${link.metadata.name == selectedLink}"
+                        th:text="${link.spec?.displayName ?: '订阅源'}"
+                      >
+                        订阅源
+                      </h2>
                     </th:block>
                   </th:block>
-                  <th:block th:if="${selectedLink == null and selectedGroup != null}" th:each="grp : ${feedGroups}">
-                    <h2 th:if="${grp.metadata.name == selectedGroup}" th:text="${grp.spec?.displayName ?: '资讯'}">分组</h2>
+                  <th:block
+                    th:if="${selectedLink == null and selectedGroup != null}"
+                    th:each="grp : ${feedGroups}"
+                  >
+                    <h2
+                      th:if="${grp.metadata.name == selectedGroup}"
+                      th:text="${grp.spec?.displayName ?: '资讯'}"
+                    >
+                      分组
+                    </h2>
                   </th:block>
                 </div>
                 <a
@@ -149,92 +176,102 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="23 4 23 10 17 10" />
                     <polyline points="1 20 1 14 7 14" />
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                    <path
+                      d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+                    />
                   </svg>
                   <span>重置筛选</span>
                 </a>
               </div>
 
-            <!-- Feed Items -->
-            <div class="feed-list" id="feedList" th:unless="${not hasFeeds}">
-              <article class="feed-item" th:each="feed : ${feedResult.items}">
-                <div class="feed-item-header">
-                  <div class="feed-item-source">
-                    <div class="feed-item-avatar">
-                      <img
-                        th:if="${!#strings.isEmpty(feed.authorLogo)}"
-                        th:src="${feed.authorLogo}"
-                        th:alt="${feed.author}"
-                        loading="lazy"
-                      />
-                      <span
-                        th:unless="${!#strings.isEmpty(feed.authorLogo)}"
-                        th:text="${feed.author != null and #strings.length(feed.author) > 0 ? feed.author.substring(0,1) : 'R'}"
-                        >R</span
+              <!-- Feed Items -->
+              <div class="feed-list" id="feedList" th:unless="${not hasFeeds}">
+                <article class="feed-item" th:each="feed : ${feedResult.items}">
+                  <div class="feed-item-header">
+                    <div class="feed-item-source">
+                      <div class="feed-item-avatar">
+                        <img
+                          th:if="${!#strings.isEmpty(feed.authorLogo)}"
+                          th:src="${feed.authorLogo}"
+                          th:alt="${feed.author}"
+                          loading="lazy"
+                        />
+                        <span
+                          th:unless="${!#strings.isEmpty(feed.authorLogo)}"
+                          th:text="${feed.author != null and #strings.length(feed.author) > 0 ? feed.author.substring(0,1) : 'R'}"
+                          >R</span
+                        >
+                      </div>
+                      <span class="feed-item-author" th:text="${feed.author ?: '未知来源'}"
+                        >来源</span
                       >
                     </div>
-                    <span class="feed-item-author" th:text="${feed.author ?: '未知来源'}">来源</span>
+                    <span class="feed-item-time" th:if="${feed.publishedAt != null}">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                        <polyline points="12 7 12 12 15 14" />
+                      </svg>
+                      <time
+                        th:datetime="${#temporals.format(feed.publishedAt, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+                        th:text="${#temporals.format(feed.publishedAt, 'yyyy-MM-dd HH:mm')}"
+                        data-relative-time
+                        >时间</time
+                      >
+                    </span>
                   </div>
-                  <span class="feed-item-time" th:if="${feed.publishedAt != null}">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="9" />
-                      <polyline points="12 7 12 12 15 14" />
-                    </svg>
-                    <time
-                      th:datetime="${#temporals.format(feed.publishedAt, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
-                      th:text="${#temporals.format(feed.publishedAt, 'yyyy-MM-dd HH:mm')}"
-                      data-relative-time
-                      >时间</time
-                    >
-                  </span>
-                </div>
-                <a
-                  class="feed-item-title"
-                  th:href="${feed.url}"
-                  target="_blank"
-                  rel="noopener"
-                  th:text="${feed.title}"
-                  >资讯标题</a
-                >
-                <p
-                  class="feed-item-summary"
-                  th:if="${!#strings.isEmpty(feed.summary)}"
-                  th:text="${feed.summary}"
-                >
-                  摘要内容
-                </p>
-              </article>
-            </div>
+                  <a
+                    class="feed-item-title"
+                    th:href="${feed.url}"
+                    target="_blank"
+                    rel="noopener"
+                    th:text="${feed.title}"
+                    >资讯标题</a
+                  >
+                  <p
+                    class="feed-item-summary"
+                    th:if="${!#strings.isEmpty(feed.summary)}"
+                    th:text="${feed.summary}"
+                  >
+                    摘要内容
+                  </p>
+                </article>
+              </div>
 
-            <!-- Empty State -->
-            <div class="feed-empty" th:if="${not hasFeeds}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path
-                  d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"
-                />
-              </svg>
-              <p>暂无 RSS 资讯</p>
-              <small th:if="${selectedLink != null}">该订阅源暂无资讯，请确认其已开启 RSS 抓取并配置了 RSS 地址</small>
-              <small th:if="${selectedLink == null and selectedGroup != null}">该分组下暂无资讯，请确认订阅源已开启 RSS 抓取</small>
-              <small th:if="${selectedLink == null and selectedGroup == null}"
-                >请在友情链接插件设置中开启「公开 RSS 订阅动态」，并确保订阅源配置了 RSS 地址</small
+              <!-- Empty State -->
+              <div class="feed-empty" th:if="${not hasFeeds}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path
+                    d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"
+                  />
+                </svg>
+                <p>暂无 RSS 资讯</p>
+                <small th:if="${selectedLink != null}"
+                  >该订阅源暂无资讯，请确认其已开启 RSS 抓取并配置了 RSS 地址</small
+                >
+                <small th:if="${selectedLink == null and selectedGroup != null}"
+                  >该分组下暂无资讯，请确认订阅源已开启 RSS 抓取</small
+                >
+                <small th:if="${selectedLink == null and selectedGroup == null}"
+                  >请在友情链接插件设置中开启「公开 RSS 订阅动态」，并确保订阅源配置了 RSS
+                  地址</small
+                >
+              </div>
+
+              <!-- Load More -->
+              <a
+                th:if="${feedResult?.hasNext}"
+                th:href="@{${pageUrl}(group=${selectedGroup},link=${selectedLink},beforePublishedAt=${feedResult?.nextBeforePublishedAt},beforeId=${feedResult?.nextBeforeId})}"
+                class="feed-load-more"
+                id="feedLoadMore"
+                data-feed-load-more
               >
+                <span>加载更多资讯</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </a>
             </div>
-
-            <!-- Load More -->
-            <a
-              th:if="${feedResult?.hasNext}"
-              th:href="@{${pageUrl}(group=${selectedGroup},link=${selectedLink},beforePublishedAt=${feedResult?.nextBeforePublishedAt},beforeId=${feedResult?.nextBeforeId})}"
-              class="feed-load-more"
-              id="feedLoadMore"
-              data-feed-load-more
-            >
-              <span>加载更多资讯</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </a>
-            </div><!-- /.feed-section -->
+            <!-- /.feed-section -->
           </div>
 
           <!-- ===== Right: Stats Panel ===== -->
@@ -262,7 +299,13 @@
 
               <div class="feed-overview-grid">
                 <div class="feed-overview-cell">
-                  <svg class="feed-overview-cell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg
+                    class="feed-overview-cell-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                   </svg>
@@ -270,22 +313,50 @@
                   <span class="feed-overview-cell-label">订阅源</span>
                 </div>
                 <div class="feed-overview-cell">
-                  <svg class="feed-overview-cell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z" />
+                  <svg
+                    class="feed-overview-cell-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"
+                    />
                   </svg>
                   <span class="feed-overview-cell-num" th:text="${rssEnabledCount}">0</span>
                   <span class="feed-overview-cell-label">启用 RSS</span>
                 </div>
                 <div class="feed-overview-cell">
-                  <svg class="feed-overview-cell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                  <svg
+                    class="feed-overview-cell-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                    />
                   </svg>
-                  <span class="feed-overview-cell-num" th:text="${feedGroups != null ? #lists.size(feedGroups) : 0}">0</span>
+                  <span
+                    class="feed-overview-cell-num"
+                    th:text="${feedGroups != null ? #lists.size(feedGroups) : 0}"
+                    >0</span
+                  >
                   <span class="feed-overview-cell-label">分组</span>
                 </div>
                 <div class="feed-overview-cell">
-                  <svg class="feed-overview-cell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 6h4l2 3h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
+                  <svg
+                    class="feed-overview-cell-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M6 6h4l2 3h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+                    />
                     <polyline points="14 12 16 14 14 16" />
                     <line x1="10" y1="14" x2="8" y2="14" />
                   </svg>
@@ -298,8 +369,13 @@
                 class="feed-overview-status"
                 th:with="failTotal = ${feedGroups != null ? #aggregates.sum(feedGroups.![#aggregates.sum((links ?: {}).![status?.rss?.failureCount ?: 0])]) : 0}"
               >
-                <span class="feed-overview-dot" th:classappend="${failTotal > 0} ? 'is-warn' : 'is-ok'"></span>
-                <span th:text="${failTotal > 0} ? '部分订阅源抓取异常' : 'RSS 抓取正常'">RSS 抓取正常</span>
+                <span
+                  class="feed-overview-dot"
+                  th:classappend="${failTotal > 0} ? 'is-warn' : 'is-ok'"
+                ></span>
+                <span th:text="${failTotal > 0} ? '部分订阅源抓取异常' : 'RSS 抓取正常'"
+                  >RSS 抓取正常</span
+                >
               </div>
             </div>
 
@@ -343,13 +419,19 @@
                         >
                       </div>
                       <div class="feed-active-channel-info">
-                        <span class="feed-active-channel-name" th:text="${link.spec?.displayName}">频道名</span>
+                        <span class="feed-active-channel-name" th:text="${link.spec?.displayName}"
+                          >频道名</span
+                        >
                         <div
                           class="feed-active-channel-meta"
                           th:if="${link.status?.verification != null}"
                           th:with="accessState=${link.status?.verification?.access?.state?.name()}"
                         >
-                          <span class="feed-rss-count" th:text="|RSS × ${#lists.size(link.status?.rss?.feeds ?: {})}|">RSS × 0</span>
+                          <span
+                            class="feed-rss-count"
+                            th:text="|RSS × ${#lists.size(link.status?.rss?.feeds ?: {})}|"
+                            >RSS × 0</span
+                          >
                           <span
                             class="feed-verify-dot"
                             th:classappend="${accessState == 'ACCESSIBLE'} ? 'is-ok' : (${accessState == 'INACCESSIBLE'} ? 'is-warn' : 'is-gray')"
@@ -359,15 +441,27 @@
                             th:text="${accessState == 'ACCESSIBLE'} ? '正常' : (${accessState == 'INACCESSIBLE'} ? '异常' : '未检测')"
                             >正常</span
                           >
-                          
+
                           <span class="feed-verify-arrow" th:if="${accessState == 'ACCESSIBLE'}">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                            >
                               <path d="M7 17l9.2-9.2M17 17V7H7" />
                             </svg>
                           </span>
                         </div>
-                        <div class="feed-active-channel-meta" th:unless="${link.status?.verification != null}">
-                          <span class="feed-rss-count" th:text="|RSS × ${#lists.size(link.status?.rss?.feeds ?: {})}|">RSS × 0</span>
+                        <div
+                          class="feed-active-channel-meta"
+                          th:unless="${link.status?.verification != null}"
+                        >
+                          <span
+                            class="feed-rss-count"
+                            th:text="|RSS × ${#lists.size(link.status?.rss?.feeds ?: {})}|"
+                            >RSS × 0</span
+                          >
                           <span class="feed-verify-dot is-gray"></span>
                           <span class="feed-verify-text">未检测</span>
                         </div>

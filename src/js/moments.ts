@@ -265,11 +265,7 @@
       html +=
         '<button class="widget-moments-calendar-prev" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>';
       html +=
-        '<span class="widget-moments-calendar-month">' +
-        year +
-        "年" +
-        (month + 1) +
-        "月</span>";
+        '<span class="widget-moments-calendar-month">' + year + "年" + (month + 1) + "月</span>";
       html +=
         '<button class="widget-moments-calendar-next" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>';
       html += "</div>";
@@ -287,11 +283,7 @@
       // Days of the month
       for (let d = 1; d <= daysInMonth; d++) {
         const dateStr =
-          year +
-          "-" +
-          String(month + 1).padStart(2, "0") +
-          "-" +
-          String(d).padStart(2, "0");
+          year + "-" + String(month + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
         const hasMoment = momentDays.has(dateStr);
         const isToday = dateStr === todayStr;
         let classes = "widget-moments-day";
@@ -305,12 +297,8 @@
       calEl.innerHTML = html;
 
       // Attach navigation handlers
-      const prevBtn = calEl.querySelector<HTMLElement>(
-        ".widget-moments-calendar-prev"
-      );
-      const nextBtn = calEl.querySelector<HTMLElement>(
-        ".widget-moments-calendar-next"
-      );
+      const prevBtn = calEl.querySelector<HTMLElement>(".widget-moments-calendar-prev");
+      const nextBtn = calEl.querySelector<HTMLElement>(".widget-moments-calendar-next");
 
       if (prevBtn) {
         prevBtn.addEventListener("click", function () {
@@ -357,7 +345,7 @@
         document.querySelectorAll<HTMLElement>("[data-moment-lightbox]"),
         function (el: HTMLElement) {
           return el.getAttribute("data-lightbox-src") || el.getAttribute("href") || "";
-        }
+        },
       ) as string[];
     }
 
@@ -442,13 +430,17 @@
     });
 
     // Wheel zoom
-    lb.addEventListener("wheel", function (e: WheelEvent) {
-      if (!lb.classList.contains("is-open")) return;
-      e.preventDefault();
-      const delta = e.deltaY > 0 ? -0.15 : 0.15;
-      scale = Math.max(0.5, Math.min(5, scale + delta));
-      applyTransform();
-    }, { passive: false });
+    lb.addEventListener(
+      "wheel",
+      function (e: WheelEvent) {
+        if (!lb.classList.contains("is-open")) return;
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.15 : 0.15;
+        scale = Math.max(0.5, Math.min(5, scale + delta));
+        applyTransform();
+      },
+      { passive: false },
+    );
 
     // Drag to move (when zoomed in)
     img.addEventListener("mousedown", function (e: MouseEvent) {
@@ -477,37 +469,53 @@
     let touchStartX = 0;
     let touchStartY = 0;
 
-    img.addEventListener("touchstart", function (e: TouchEvent) {
-      if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX - offsetX;
-        touchStartY = e.touches[0].clientY - offsetY;
-      }
-    }, { passive: true });
+    img.addEventListener(
+      "touchstart",
+      function (e: TouchEvent) {
+        if (e.touches.length === 1) {
+          touchStartX = e.touches[0].clientX - offsetX;
+          touchStartY = e.touches[0].clientY - offsetY;
+        }
+      },
+      { passive: true },
+    );
 
-    img.addEventListener("touchmove", function (e: TouchEvent) {
-      if (e.touches.length === 1 && scale > 1) {
-        e.preventDefault();
-        offsetX = e.touches[0].clientX - touchStartX;
-        offsetY = e.touches[0].clientY - touchStartY;
-        applyTransform();
-      }
-    }, { passive: false });
+    img.addEventListener(
+      "touchmove",
+      function (e: TouchEvent) {
+        if (e.touches.length === 1 && scale > 1) {
+          e.preventDefault();
+          offsetX = e.touches[0].clientX - touchStartX;
+          offsetY = e.touches[0].clientY - touchStartY;
+          applyTransform();
+        }
+      },
+      { passive: false },
+    );
 
     // Swipe left/right on mobile (when not zoomed)
     let swipeStartX = 0;
-    lb.addEventListener("touchstart", function (e: TouchEvent) {
-      if (e.touches.length === 1) {
-        swipeStartX = e.touches[0].clientX;
-      }
-    }, { passive: true });
+    lb.addEventListener(
+      "touchstart",
+      function (e: TouchEvent) {
+        if (e.touches.length === 1) {
+          swipeStartX = e.touches[0].clientX;
+        }
+      },
+      { passive: true },
+    );
 
-    lb.addEventListener("touchend", function (e: TouchEvent) {
-      if (scale > 1) return;
-      const diff = swipeStartX - (e.changedTouches[0]?.clientX || 0);
-      if (Math.abs(diff) > 50) {
-        step(diff > 0 ? 1 : -1);
-      }
-    }, { passive: true });
+    lb.addEventListener(
+      "touchend",
+      function (e: TouchEvent) {
+        if (scale > 1) return;
+        const diff = swipeStartX - (e.changedTouches[0]?.clientX || 0);
+        if (Math.abs(diff) > 50) {
+          step(diff > 0 ? 1 : -1);
+        }
+      },
+      { passive: true },
+    );
   }
 
   /* ===== Initialize Enhancements ===== */
@@ -600,7 +608,9 @@
           input.value = fullUrl;
           document.body.appendChild(input);
           input.select();
-          try { document.execCommand("copy"); } catch {}
+          try {
+            document.execCommand("copy");
+          } catch {}
           document.body.removeChild(input);
           if (span) span.textContent = "已复制";
           setTimeout(function () {

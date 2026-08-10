@@ -15,15 +15,15 @@ https://raw.githubusercontent.com/halo-sigs/plugin-links/refs/heads/main/api-doc
 
 ### 端点列表
 
-| 端点 | 方法 | 说明                                                                                       |
-| ---- | ---- |------------------------------------------------------------------------------------------|
-| `/apis/api.link.halo.run/v1alpha1/links` | `GET` | 分页列出链接，支持 `keyword`、`group`、`labelSelector`、`fieldSelector`、`sort`、`page`、`size` 查询参数    |
-| `/apis/api.link.halo.run/v1alpha1/links/-/random` | `GET` | 随机返回一组链接；必填查询参数 `maxSize`，取值范围为 `1` 到 `100`                                              |
-| `/apis/api.link.halo.run/v1alpha1/links/-/count` | `GET` | 返回链接总数                                                                                   |
-| `/apis/api.link.halo.run/v1alpha1/linkgroups` | `GET` | 返回所有链接分组数组，按 `spec.priority`、创建时间、`metadata.name` 升序排列                                   |
-| `/apis/api.link.halo.run/v1alpha1/linkfeeds` | `GET` | 查询链接 RSS 条目，支持 `linkName`、`groupName`、`beforePublishedAt`、`beforeId`、`limit` 查询参数；默认关闭，需要在插件设置中开启“公开 RSS 订阅动态” |
-| `/apis/api.link.halo.run/v1alpha1/link-applications/captcha` | `POST` | 获取无 Cookie 的友链申请 CAPTCHA 挑战；访客提交关闭时返回 `404` |
-| `/apis/api.link.halo.run/v1alpha1/link-applications` | `POST` | 使用 JSON 和显式 CAPTCHA 创建友链申请，成功返回 `201`；不提供匿名查询、修改或取消 |
+| 端点                                                         | 方法   | 说明                                                                                                                                                  |
+| ------------------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/apis/api.link.halo.run/v1alpha1/links`                     | `GET`  | 分页列出链接，支持 `keyword`、`group`、`labelSelector`、`fieldSelector`、`sort`、`page`、`size` 查询参数                                              |
+| `/apis/api.link.halo.run/v1alpha1/links/-/random`            | `GET`  | 随机返回一组链接；必填查询参数 `maxSize`，取值范围为 `1` 到 `100`                                                                                     |
+| `/apis/api.link.halo.run/v1alpha1/links/-/count`             | `GET`  | 返回链接总数                                                                                                                                          |
+| `/apis/api.link.halo.run/v1alpha1/linkgroups`                | `GET`  | 返回所有链接分组数组，按 `spec.priority`、创建时间、`metadata.name` 升序排列                                                                          |
+| `/apis/api.link.halo.run/v1alpha1/linkfeeds`                 | `GET`  | 查询链接 RSS 条目，支持 `linkName`、`groupName`、`beforePublishedAt`、`beforeId`、`limit` 查询参数；默认关闭，需要在插件设置中开启“公开 RSS 订阅动态” |
+| `/apis/api.link.halo.run/v1alpha1/link-applications/captcha` | `POST` | 获取无 Cookie 的友链申请 CAPTCHA 挑战；访客提交关闭时返回 `404`                                                                                       |
+| `/apis/api.link.halo.run/v1alpha1/link-applications`         | `POST` | 使用 JSON 和显式 CAPTCHA 创建友链申请，成功返回 `201`；不提供匿名查询、修改或取消                                                                     |
 
 ### 匿名访问说明
 
@@ -55,16 +55,16 @@ Console API 位于 `console.api.link.halo.run/v1alpha1`，供 Console 前端使�
 
 ### 端点列表
 
-| 端点 | 方法 | 说明 |
-| ---- | ---- | ---- |
-| `/apis/console.api.link.halo.run/v1alpha1/links` | `GET` | 列出链接，支持 `keyword`、`groupName`、`page`、`size`、`labelSelector`、`fieldSelector`、`sort` 等查询参数 |
-| `/apis/console.api.link.halo.run/v1alpha1/links/-/detail` | `GET` | 根据 `url` 查询参数抓取站点标题、描述、图标和预览图信息，用于链接创建和批量导入 |
-| `/apis/console.api.link.halo.run/v1alpha1/links/-/sort` | `POST` | 按请求体中的链接 `metadata.name` 顺序更新链接 `spec.priority` |
-| `/apis/console.api.link.halo.run/v1alpha1/linkgroups/-/sort` | `POST` | 按请求体中的分组 `metadata.name` 顺序更新分组 `spec.priority` |
-| `/apis/console.api.link.halo.run/v1alpha1/linkgroups/{name}` | `DELETE` | 删除指定分组；可选查询参数 `deleteLinks` 控制是否同时删除组内链接，默认 `false`，此时组内链接会变为未分组 |
-| `/apis/console.api.link.halo.run/v1alpha1/rss/items` | `GET` | 游标分页查询 RSS 条目；支持 `linkName`、`groupName`、`read`、`favorite`、`readLater`、`hidden`、`beforePublishedAt`、`beforeId`、`limit`，省略 `hidden` 时仅返回未隐藏条目 |
-| `/apis/console.api.link.halo.run/v1alpha1/rss/items/-/summary` | `GET` | 返回全局隐藏、可见收藏和可见稍后阅读 RSS 条目的精确总数 |
-| `/apis/console.api.link.halo.run/v1alpha1/rss/items/-/hidden` | `POST` | 按稳定 ID 批量设置 RSS 条目的隐藏状态；重复 ID 只计算一次，不存在的 ID 会被忽略 |
+| 端点                                                           | 方法     | 说明                                                                                                                                                                       |
+| -------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/apis/console.api.link.halo.run/v1alpha1/links`               | `GET`    | 列出链接，支持 `keyword`、`groupName`、`page`、`size`、`labelSelector`、`fieldSelector`、`sort` 等查询参数                                                                 |
+| `/apis/console.api.link.halo.run/v1alpha1/links/-/detail`      | `GET`    | 根据 `url` 查询参数抓取站点标题、描述、图标和预览图信息，用于链接创建和批量导入                                                                                            |
+| `/apis/console.api.link.halo.run/v1alpha1/links/-/sort`        | `POST`   | 按请求体中的链接 `metadata.name` 顺序更新链接 `spec.priority`                                                                                                              |
+| `/apis/console.api.link.halo.run/v1alpha1/linkgroups/-/sort`   | `POST`   | 按请求体中的分组 `metadata.name` 顺序更新分组 `spec.priority`                                                                                                              |
+| `/apis/console.api.link.halo.run/v1alpha1/linkgroups/{name}`   | `DELETE` | 删除指定分组；可选查询参数 `deleteLinks` 控制是否同时删除组内链接，默认 `false`，此时组内链接会变为未分组                                                                  |
+| `/apis/console.api.link.halo.run/v1alpha1/rss/items`           | `GET`    | 游标分页查询 RSS 条目；支持 `linkName`、`groupName`、`read`、`favorite`、`readLater`、`hidden`、`beforePublishedAt`、`beforeId`、`limit`，省略 `hidden` 时仅返回未隐藏条目 |
+| `/apis/console.api.link.halo.run/v1alpha1/rss/items/-/summary` | `GET`    | 返回全局隐藏、可见收藏和可见稍后阅读 RSS 条目的精确总数                                                                                                                    |
+| `/apis/console.api.link.halo.run/v1alpha1/rss/items/-/hidden`  | `POST`   | 按稳定 ID 批量设置 RSS 条目的隐藏状态；重复 ID 只计算一次，不存在的 ID 会被忽略                                                                                            |
 
 `rss/items/-/summary` 返回 `hiddenCount`、`favoriteCount` 和 `readLaterCount` 三个数值字段：
 `hiddenCount` 统计所有 `hidden = 1` 的条目，另外两个字段分别统计同时满足
@@ -99,7 +99,7 @@ Console API 位于 `console.api.link.halo.run/v1alpha1`，供 Console 前端使�
 
 链接和分组的增删改查还可通过 Halo 标准 Extension CRUD 端点操作：
 
-| 端点 | 说明 |
-| ---- | ---- |
-| `/apis/core.halo.run/v1alpha1/links` | 链接资源的标准 CRUD |
+| 端点                                      | 说明                    |
+| ----------------------------------------- | ----------------------- |
+| `/apis/core.halo.run/v1alpha1/links`      | 链接资源的标准 CRUD     |
 | `/apis/core.halo.run/v1alpha1/linkgroups` | 链接分组资源的标准 CRUD |

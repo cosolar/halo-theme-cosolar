@@ -7,23 +7,40 @@
   th:method="${authProvider.spec.method}"
 >
   <!-- 错误提示 -->
-  <div class="alert alert-error" role="alert" th:if="${param.error.size() > 0}" th:with="error = ${param.error[0]}">
+  <div
+    class="alert alert-error"
+    role="alert"
+    th:if="${param.error.size() > 0}"
+    th:with="error = ${param.error[0]}"
+  >
     <strong th:if="${error == 'invalid-credential'}">无效的凭证。</strong>
     <strong th:if="${error == 'rate-limit-exceeded'}">请求过于频繁，请稍后再试。</strong>
     <strong th:if="${error == 'account-disabled'}">账号已被禁用。</strong>
   </div>
   <!-- 成功 / 提示信息 -->
   <div class="alert alert-success" role="alert" th:if="${param.logout.size() > 0}">登出成功。</div>
-  <div class="alert alert-success" role="alert" th:if="${param.signup.size() > 0}">恭喜！注册成功，请立即登录。</div>
-  <div class="alert alert-info" role="alert" th:if="${param.oauth2_bind.size() > 0}">当前登录未绑定账号，请尝试通过其他方式登录，登录成功后会自动绑定账号。</div>
-  <div class="alert alert-success" role="alert" th:if="${param.password_reset.size() > 0}">密码重置成功，请立即登录。</div>
+  <div class="alert alert-success" role="alert" th:if="${param.signup.size() > 0}">
+    恭喜！注册成功，请立即登录。
+  </div>
+  <div class="alert alert-info" role="alert" th:if="${param.oauth2_bind.size() > 0}">
+    当前登录未绑定账号，请尝试通过其他方式登录，登录成功后会自动绑定账号。
+  </div>
+  <div class="alert alert-success" role="alert" th:if="${param.password_reset.size() > 0}">
+    密码重置成功，请立即登录。
+  </div>
 
   <!-- 具体认证方式表单（用户名 / 密码等由对应 provider 片段注入） -->
   <div th:replace="~{__${fragmentTemplateName}__::form}"></div>
 
   <!-- 记住我 -->
   <div th:if="${authProvider.spec.rememberMeSupport}" class="form-item-compact">
-    <input type="checkbox" id="remember-me" name="remember-me" value="true" th:checked="${rememberMe}" />
+    <input
+      type="checkbox"
+      id="remember-me"
+      name="remember-me"
+      value="true"
+      th:checked="${rememberMe}"
+    />
     <label for="remember-me">保持登录会话</label>
   </div>
 

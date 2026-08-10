@@ -288,7 +288,7 @@
     targetPage: number,
     currentPage: number,
     nextUrl: string | undefined,
-    prevUrl: string | undefined
+    prevUrl: string | undefined,
   ): string | null {
     const refUrl = targetPage > currentPage ? nextUrl : prevUrl;
     if (!refUrl) return null;
@@ -306,7 +306,6 @@
     return refUrl.replace(new RegExp("(?<![\\d])" + refPage + "(?![\\d])"), String(targetPage));
   }
 
-
   // 从已加载页面中提取「下一页」地址（优先取「查看更多」按钮）
   function getNextUrl(doc: Document): string | null {
     const vm = doc.querySelector(".mt-4.text-center a.btn-outline") as HTMLAnchorElement | null;
@@ -318,7 +317,7 @@
     const nu = getNextUrl(doc);
     const sentinel = contentArea!.querySelector(".load-sentinel") as HTMLElement | null;
     const viewMore = contentArea!.querySelector(
-      ".mt-4.text-center a.btn-outline"
+      ".mt-4.text-center a.btn-outline",
     ) as HTMLAnchorElement | null;
     if (nu) {
       if (sentinel) sentinel.dataset.nextUrl = nu;
@@ -428,7 +427,7 @@
             if (url) await loadNext(url, true);
           }
         },
-        { rootMargin: "400px 0px" }
+        { rootMargin: "400px 0px" },
       );
       io.observe(sentinel);
     }

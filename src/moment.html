@@ -1,6 +1,10 @@
 <include src="layout.html">
   <template name="head">
-    <title th:text="|${#strings.abbreviate((moment.spec.content.raw ?: '瞬间详情'), 30)} - ${site.title}|">瞬间详情</title>
+    <title
+      th:text="|${#strings.abbreviate((moment.spec.content.raw ?: '瞬间详情'), 30)} - ${site.title}|"
+    >
+      瞬间详情
+    </title>
     <link rel="stylesheet" href="./css/moments.css" />
     <script type="module" src="./js/moments.ts"></script>
   </template>
@@ -71,10 +75,16 @@
                 >
                   <img th:src="${media.url}" alt="" loading="lazy" />
                 </a>
-                <div class="moment-media-item moment-media-video" th:if="${media.type.name == 'VIDEO'}">
+                <div
+                  class="moment-media-item moment-media-video"
+                  th:if="${media.type.name == 'VIDEO'}"
+                >
                   <video th:src="${media.url}" controls="true" preload="none"></video>
                 </div>
-                <div class="moment-media-item moment-media-audio" th:if="${media.type.name == 'AUDIO'}">
+                <div
+                  class="moment-media-item moment-media-audio"
+                  th:if="${media.type.name == 'AUDIO'}"
+                >
                   <audio th:src="${media.url}" controls="true"></audio>
                 </div>
                 <a
@@ -94,7 +104,10 @@
             </div>
           </th:block>
 
-          <div class="moment-tags-inline" th:if="${moment.spec.tags != null and not #lists.isEmpty(moment.spec.tags)}">
+          <div
+            class="moment-tags-inline"
+            th:if="${moment.spec.tags != null and not #lists.isEmpty(moment.spec.tags)}"
+          >
             <a
               class="moment-tag-inline"
               th:each="t : ${moment.spec.tags}"
@@ -124,26 +137,57 @@
               id="momentLikeBtn"
               th:attr="data-moment-name=${moment.metadata.name}"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                />
               </svg>
-              <span class="moment-like-count" id="momentLikeCount" th:text="${moment.stats != null ? moment.stats.upvote : 0}">0</span>
+              <span
+                class="moment-like-count"
+                id="momentLikeCount"
+                th:text="${moment.stats != null ? moment.stats.upvote : 0}"
+                >0</span
+              >
             </button>
             <a
               class="moment-interaction moment-comment"
               th:href="@{|/moments/${moment.metadata.name}#comments|}"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
-              <span th:text="${moment.stats != null ? (moment.stats.approvedComment ?: moment.stats.totalComment ?: 0) : 0}">0</span>
+              <span
+                th:text="${moment.stats != null ? (moment.stats.approvedComment ?: moment.stats.totalComment ?: 0) : 0}"
+                >0</span
+              >
             </a>
             <button
               type="button"
               class="moment-interaction moment-share"
               th:attr="data-share-url=@{|/moments/${moment.metadata.name}|}"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <circle cx="18" cy="5" r="3" />
                 <circle cx="6" cy="12" r="3" />
                 <circle cx="18" cy="19" r="3" />
@@ -158,7 +202,11 @@
 
       <!-- ===== Comments ===== -->
       <div id="comments" th:if="${haloCommentEnabled}" style="margin-top: 24px">
-        <halo:comment group="moment.moment.halo.run" kind="Moment" th:attr="name=${moment.metadata.name}" />
+        <halo:comment
+          group="moment.moment.halo.run"
+          kind="Moment"
+          th:attr="name=${moment.metadata.name}"
+        />
       </div>
     </div>
   </div>
@@ -166,16 +214,23 @@
   <!-- ===== Image Lightbox ===== -->
   <div class="moment-lightbox" id="momentLightbox" aria-hidden="true">
     <button type="button" class="moment-lightbox-close" aria-label="关闭">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
     </button>
     <button type="button" class="moment-lightbox-nav moment-lightbox-prev" aria-label="上一张">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6" /></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
     </button>
     <div class="moment-lightbox-stage">
       <img class="moment-lightbox-img" src="" alt="" />
     </div>
     <button type="button" class="moment-lightbox-nav moment-lightbox-next" aria-label="下一张">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6" /></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
     </button>
     <span class="moment-lightbox-counter"></span>
     <span class="moment-lightbox-hint">滚轮缩放 · 拖动移动 · ESC 关闭</span>

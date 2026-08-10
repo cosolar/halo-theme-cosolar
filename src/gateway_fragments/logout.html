@@ -16,7 +16,9 @@
       th:unless="${user.spec.avatar != null and !#strings.isEmpty(user.spec.avatar)}"
       class="cos-user-avatar cos-user-avatar-placeholder"
       th:text="${#strings.isEmpty(user.spec.displayName) ? '?' : #strings.substring(user.spec.displayName,0,1)}"
-    >U</div>
+    >
+      U
+    </div>
     <div class="cos-user-meta">
       <p class="cos-user-name" th:text="${user.spec.displayName}">User</p>
       <p class="cos-user-handle" th:text="|@${user.metadata.name}|">@username</p>
