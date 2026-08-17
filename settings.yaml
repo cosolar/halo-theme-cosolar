@@ -480,185 +480,221 @@ spec:
     - group: sidebar
       label: 侧边栏设置
       formSchema:
-        - $formkit: switch
-          name: show_sidebar
-          label: 显示侧边栏
-          value: true
-          help: 在首页和列表页显示右侧侧边栏；小屏（≤768px）下自动隐藏
-        - $formkit: switch
-          name: show_author
-          label: 显示博主展示
-          value: true
-          help: 在侧边栏顶部显示博主个人信息卡片
-        - $formkit: attachment
-          name: author_bg_image
-          label: 博主背景图
-          value: ""
-          help: 博主展示模块的背景封面图，建议深色图片配合文字效果更佳。与"博主背景色"二选一，同时设置时背景图优先
-        - $formkit: color
-          name: author_bg_color
-          label: 博主背景色
-          value: ""
-          help: 博主展示模块的背景色，与"博主背景图"二选一，同时设置时背景图优先；留空则使用默认卡片样式
-        - $formkit: color
-          name: author_bg_overlay_color
-          label: 遮罩层颜色
-          value: "#000000"
-          help: 博主背景图上的遮罩层颜色，配合下方"遮罩层透明度"一起使用
-        - $formkit: range
-          name: author_bg_overlay_opacity
-          label: 遮罩层透明度
-          value: 0.35
-          min: 0
-          max: 1
-          step: 0.05
-          help: 遮罩层的不透明度，0 为完全透明，1 为完全不透明
-        - $formkit: color
-          name: author_bg_text_color
-          label: 博主栏文字颜色
-          value: "#FFFFFF"
-          help: 设置背景图/背景色后，博主卡片内所有文字和图标的颜色
-        - $formkit: color
-          name: author_bg_overlay_color_dark
-          label: 遮罩层颜色（深色模式）
-          value: "#000000"
-          help: 深色模式下博主背景图上的遮罩层颜色
-        - $formkit: range
-          name: author_bg_overlay_opacity_dark
-          label: 遮罩层透明度（深色模式）
-          value: 0.45
-          min: 0
-          max: 1
-          step: 0.05
-          help: 深色模式下遮罩层的不透明度，默认略高于浅色模式
-        - $formkit: color
-          name: author_bg_text_color_dark
-          label: 博主栏文字颜色（深色模式）
-          value: "#FFFFFF"
-          help: 深色模式下博主卡片内所有文字和图标的颜色
-        - $formkit: switch
-          name: show_announcement
-          label: 显示公告栏
-          value: true
-          help: 在侧边栏博主信息下方显示公告栏
-        - $formkit: textarea
-          name: announcement_content
-          label: 公告内容
-          value: ""
-          help: 公告栏显示的文本内容，支持 HTML
-        - $formkit: switch
-          name: show_tag_cloud
-          label: 显示热门标签
-          value: true
-          help: 以词云形式展示标签，标签大小随文章数自动变化
-        - $formkit: number
-          name: tag_cloud_count
-          label: 热门标签数量
-          value: 20
-          min: 5
-          max: 50
-          step: 1
-          help: 标签云中最多显示的标签数量
-        - $formkit: switch
-          name: show_wechat_qr
-          label: 显示公众号二维码
-          value: false
-          help: 在侧边栏显示微信公众号二维码图片
-        - $formkit: attachment
-          name: wechat_qr_image
-          label: 公众号二维码图片
-          value: ""
-          help: 上传微信公众号二维码图片，建议 1:1 正方形
-        - $formkit: text
-          name: wechat_qr_title
-          label: 公众号名称
-          value: ""
-          help: 显示在二维码下方的公众号名称，留空则显示"扫码关注"
-        - $formkit: switch
-          name: show_categories
-          label: 显示分类导航
-          value: true
-        - $formkit: number
-          name: categories_count
-          label: 分类显示数量
-          value: 6
-          min: 1
-          max: 30
-          help: 侧边栏分类导航最多显示的分类数量
-        - $formkit: switch
-          name: show_recent
-          label: 显示近期更新
-          value: true
-        - $formkit: number
-          name: recent_count
-          label: 近期更新数量
-          value: 4
-          min: 1
-          max: 30
-        - $formkit: switch
-          name: show_sidebar_links
-          label: 显示友情链接模块
-          value: true
-          help: 在侧边栏显示友情链接模块，展示随机友链
-        - $formkit: number
-          name: sidebar_links_count
-          label: 友情链接显示数量
-          value: 5
-          min: 1
-          max: 30
-          step: 1
-          help: 侧边栏友情链接模块最多展示的友链数量
-        - $formkit: switch
-          name: show_sidebar_feeds
-          label: 显示订阅资讯模块
-          value: true
-          help: 在侧边栏显示订阅资讯模块，展示友站 RSS 最新动态；需启用插件 RSS 订阅公开功能
-        - $formkit: number
-          name: sidebar_feeds_count
-          label: 订阅资讯显示数量
-          value: 5
-          min: 1
-          max: 30
-          step: 1
-          help: 侧边栏订阅资讯模块最多展示的资讯条目数量
-        - $formkit: array
-          name: sidebar_modules
-          label: 侧边栏模块顺序
-          help: 拖动每行可调整模块上下顺序；点击删除可隐藏对应模块，点击"添加模块"可重新加入；模块需在下方各自设置中已开启才会显示
-          addLabel: 添加模块
-          min: 0
-          max: 8
-          value:
-            - module: author
-            - module: announcement
-            - module: tag_cloud
-            - module: wechat
-            - module: categories
-            - module: recent
-            - module: links
-            - module: feeds
+        - $formkit: group
+          name: general
+          label: 常规
           children:
-            - $formkit: select
-              name: module
-              label: 模块
-              value: author
-              options:
-                - label: 博主展示
+            - $formkit: switch
+              name: show_sidebar
+              label: 显示侧边栏
+              value: true
+              help: 在首页和列表页显示右侧侧边栏；小屏（≤768px）下自动隐藏
+            - $formkit: array
+              name: sidebar_modules
+              label: 侧边栏模块顺序
+              help: 拖动每行可调整模块上下顺序；点击删除可隐藏对应模块，点击"添加模块"可重新加入；模块需在下方各自设置中已开启才会显示
+              addLabel: 添加模块
+              min: 0
+              max: 8
+              value:
+                - module: author
+                - module: announcement
+                - module: tag_cloud
+                - module: wechat
+                - module: categories
+                - module: recent
+                - module: links
+                - module: feeds
+              children:
+                - $formkit: select
+                  name: module
+                  label: 模块
                   value: author
-                - label: 公告
-                  value: announcement
-                - label: 热门标签
-                  value: tag_cloud
-                - label: 公众号
-                  value: wechat
-                - label: 专题类别
-                  value: categories
-                - label: 近期更新
-                  value: recent
-                - label: 友情链接
-                  value: links
-                - label: 订阅资讯
-                  value: feeds
+                  options:
+                    - label: 博主展示
+                      value: author
+                    - label: 公告
+                      value: announcement
+                    - label: 热门标签
+                      value: tag_cloud
+                    - label: 公众号
+                      value: wechat
+                    - label: 专题类别
+                      value: categories
+                    - label: 近期更新
+                      value: recent
+                    - label: 友情链接
+                      value: links
+                    - label: 订阅资讯
+                      value: feeds
+        - $formkit: group
+          name: author
+          label: 博主展示
+          children:
+            - $formkit: switch
+              name: show_author
+              label: 显示博主展示
+              value: true
+              help: 在侧边栏顶部显示博主个人信息卡片
+            - $formkit: attachment
+              name: author_bg_image
+              label: 博主背景图
+              value: ""
+              help: 博主展示模块的背景封面图，建议深色图片配合文字效果更佳。与"博主背景色"二选一，同时设置时背景图优先
+            - $formkit: color
+              name: author_bg_color
+              label: 博主背景色
+              value: ""
+              help: 博主展示模块的背景色，与"博主背景图"二选一，同时设置时背景图优先；留空则使用默认卡片样式
+            - $formkit: color
+              name: author_bg_overlay_color
+              label: 遮罩层颜色
+              value: "#000000"
+              help: 博主背景图上的遮罩层颜色，配合下方"遮罩层透明度"一起使用
+            - $formkit: range
+              name: author_bg_overlay_opacity
+              label: 遮罩层透明度
+              value: 0.35
+              min: 0
+              max: 1
+              step: 0.05
+              help: 遮罩层的不透明度，0 为完全透明，1 为完全不透明
+            - $formkit: color
+              name: author_bg_text_color
+              label: 博主栏文字颜色
+              value: "#FFFFFF"
+              help: 设置背景图/背景色后，博主卡片内所有文字和图标的颜色
+            - $formkit: color
+              name: author_bg_overlay_color_dark
+              label: 遮罩层颜色（深色模式）
+              value: "#000000"
+              help: 深色模式下博主背景图上的遮罩层颜色
+            - $formkit: range
+              name: author_bg_overlay_opacity_dark
+              label: 遮罩层透明度（深色模式）
+              value: 0.45
+              min: 0
+              max: 1
+              step: 0.05
+              help: 深色模式下遮罩层的不透明度，默认略高于浅色模式
+            - $formkit: color
+              name: author_bg_text_color_dark
+              label: 博主栏文字颜色（深色模式）
+              value: "#FFFFFF"
+              help: 深色模式下博主卡片内所有文字和图标的颜色
+        - $formkit: group
+          name: announcement
+          label: 公告栏
+          children:
+            - $formkit: switch
+              name: show_announcement
+              label: 显示公告栏
+              value: true
+              help: 在侧边栏博主信息下方显示公告栏
+            - $formkit: textarea
+              name: announcement_content
+              label: 公告内容
+              value: ""
+              help: 公告栏显示的文本内容，支持 HTML
+        - $formkit: group
+          name: tag_cloud
+          label: 热门标签
+          children:
+            - $formkit: switch
+              name: show_tag_cloud
+              label: 显示热门标签
+              value: true
+              help: 以词云形式展示标签，标签大小随文章数自动变化
+            - $formkit: number
+              name: tag_cloud_count
+              label: 热门标签数量
+              value: 20
+              min: 5
+              max: 50
+              step: 1
+              help: 标签云中最多显示的标签数量
+        - $formkit: group
+          name: wechat
+          label: 公众号
+          children:
+            - $formkit: switch
+              name: show_wechat_qr
+              label: 显示公众号二维码
+              value: false
+              help: 在侧边栏显示微信公众号二维码图片
+            - $formkit: attachment
+              name: wechat_qr_image
+              label: 公众号二维码图片
+              value: ""
+              help: 上传微信公众号二维码图片，建议 1:1 正方形
+            - $formkit: text
+              name: wechat_qr_title
+              label: 公众号名称
+              value: ""
+              help: 显示在二维码下方的公众号名称，留空则显示"扫码关注"
+        - $formkit: group
+          name: categories
+          label: 分类导航
+          children:
+            - $formkit: switch
+              name: show_categories
+              label: 显示分类导航
+              value: true
+            - $formkit: number
+              name: categories_count
+              label: 分类显示数量
+              value: 6
+              min: 1
+              max: 30
+              help: 侧边栏分类导航最多显示的分类数量
+        - $formkit: group
+          name: recent
+          label: 近期更新
+          children:
+            - $formkit: switch
+              name: show_recent
+              label: 显示近期更新
+              value: true
+            - $formkit: number
+              name: recent_count
+              label: 近期更新数量
+              value: 4
+              min: 1
+              max: 30
+        - $formkit: group
+          name: links
+          label: 友情链接
+          children:
+            - $formkit: switch
+              name: show_sidebar_links
+              label: 显示友情链接模块
+              value: true
+              help: 在侧边栏显示友情链接模块，展示随机友链
+            - $formkit: number
+              name: sidebar_links_count
+              label: 友情链接显示数量
+              value: 5
+              min: 1
+              max: 30
+              step: 1
+              help: 侧边栏友情链接模块最多展示的友链数量
+        - $formkit: group
+          name: feeds
+          label: 订阅资讯
+          children:
+            - $formkit: switch
+              name: show_sidebar_feeds
+              label: 显示订阅资讯模块
+              value: true
+              help: 在侧边栏显示订阅资讯模块，展示友站 RSS 最新动态；需启用插件 RSS 订阅公开功能
+            - $formkit: number
+              name: sidebar_feeds_count
+              label: 订阅资讯显示数量
+              value: 5
+              min: 1
+              max: 30
+              step: 1
+              help: 侧边栏订阅资讯模块最多展示的资讯条目数量
 
     - group: category
       label: 分类页设置

@@ -5394,6 +5394,7 @@ body.nav-open {
     left: 0;
     right: 0;
     bottom: 0;
+    margin-left: 0;
     flex-direction: column;
     align-items: stretch;
     padding: 12px 14px calc(24px + env(safe-area-inset-bottom));
@@ -5728,6 +5729,15 @@ body.nav-open {
 
   .menu-toggle {
     display: flex;
+  }
+
+  /* 抽屉打开时强制顶栏固定在最上层，避免滚动后顶栏被卷走 */
+  body.nav-open .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 101;
   }
 
   .layout-grid {

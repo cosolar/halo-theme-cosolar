@@ -955,12 +955,17 @@
   align-items: center;
   text-align: center;
   padding: 14px 10px 12px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .link-group[data-view="compact"] .link-card-head {
   flex-direction: column;
   gap: 7px;
   margin-bottom: 0;
+  width: 100%;
+  min-width: 0;
+  align-self: stretch;
 }
 
 .link-group[data-view="compact"] .link-card-logo {
@@ -977,19 +982,21 @@
 .link-group[data-view="compact"] .link-card-name-row {
   justify-content: center;
   gap: 4px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .link-group[data-view="compact"] .link-card-name {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
   font-size: 13px;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.link-group[data-view="compact"] .link-card-name-row {
-  max-width: 100%;
-  overflow: hidden;
 }
 
 .link-group[data-view="compact"] .link-card-external,

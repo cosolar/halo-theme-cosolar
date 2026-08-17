@@ -5,7 +5,7 @@
 
   <div
     class="layout-grid"
-    th:classappend="${theme.config?.sidebar?.show_sidebar == false ? ' no-sidebar' : ''}"
+    th:classappend="${theme.config?.sidebar?.general?.show_sidebar == false ? ' no-sidebar' : ''}"
   >
     <div class="content-area">
       <section
@@ -177,7 +177,7 @@
       <include src="pagination.html"></include>
     </div>
 
-    <th:block th:if="${theme.config?.sidebar?.show_sidebar != false}">
+    <th:block th:if="${theme.config?.sidebar?.general?.show_sidebar != false}">
       <include src="sidebar.html"></include>
     </th:block>
   </div>

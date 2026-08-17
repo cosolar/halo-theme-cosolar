@@ -5,19 +5,19 @@
     iconProvider=${theme.config?.style?.icon_provider ?: 'iconify'}
   "
 >
-  <th:block th:each="m : ${theme.config?.sidebar?.sidebar_modules}">
+  <th:block th:each="m : ${theme.config?.sidebar?.general?.sidebar_modules}">
     <th:block th:switch="${m.module}">
       <!-- Author Profile -->
       <th:block th:case="'author'">
         <div
           class="widget widget-author"
-          th:if="${theme.config?.sidebar?.show_author != false}"
+          th:if="${theme.config?.sidebar?.author?.show_author != false}"
           th:with="
                authorName=${theme.config?.social?.author_name ?: site.title},
                authorAvatar=${theme.config?.social?.author_avatar},
                authorBio=${theme.config?.social?.author_bio},
-               authorBg=${theme.config?.sidebar?.author_bg_image},
-               authorBgCol=${theme.config?.sidebar?.author_bg_color},
+               authorBg=${theme.config?.sidebar?.author?.author_bg_image},
+               authorBgCol=${theme.config?.sidebar?.author?.author_bg_color},
                hasBg=${authorBg != null and !#strings.isEmpty(authorBg)},
                hasBgCol=${authorBgCol != null and !#strings.isEmpty(authorBgCol)},
                postStats=${postFinder.list({page: 1, size: 1})},
@@ -98,7 +98,7 @@
       <th:block th:case="'announcement'">
         <div
           class="widget widget-announcement"
-          th:if="${theme.config?.sidebar?.show_announcement != false and theme.config?.sidebar?.announcement_content != null and !#strings.isEmpty(theme.config.sidebar.announcement_content)}"
+          th:if="${theme.config?.sidebar?.announcement?.show_announcement != false and theme.config?.sidebar?.announcement?.announcement_content != null and !#strings.isEmpty(theme.config.sidebar.announcement?.announcement_content)}"
         >
           <div class="widget-title">
             <span class="title-text">
@@ -111,7 +111,7 @@
           </div>
           <div
             class="announcement-content"
-            th:utext="${theme.config?.sidebar?.announcement_content}"
+            th:utext="${theme.config?.sidebar?.announcement?.announcement_content}"
           ></div>
         </div>
       </th:block>
@@ -120,8 +120,8 @@
       <th:block th:case="'tag_cloud'">
         <div
           class="widget widget-tag-cloud"
-          th:if="${theme.config?.sidebar?.show_tag_cloud == true}"
-          th:with="tagCloud = ${tagFinder.list(1, theme.config?.sidebar?.tag_cloud_count ?: 20)}"
+          th:if="${theme.config?.sidebar?.tag_cloud?.show_tag_cloud == true}"
+          th:with="tagCloud = ${tagFinder.list(1, theme.config?.sidebar?.tag_cloud?.tag_cloud_count ?: 20)}"
         >
           <div class="widget-title">
             <span class="title-text">
@@ -152,8 +152,8 @@
       <th:block th:case="'wechat'">
         <div
           class="widget widget-wechat"
-          th:if="${theme.config?.sidebar?.show_wechat_qr == true and theme.config?.sidebar?.wechat_qr_image != null and !#strings.isEmpty(theme.config.sidebar.wechat_qr_image)}"
-          th:with="qrTitle = ${theme.config?.sidebar?.wechat_qr_title}"
+          th:if="${theme.config?.sidebar?.wechat?.show_wechat_qr == true and theme.config?.sidebar?.wechat?.wechat_qr_image != null and !#strings.isEmpty(theme.config.sidebar.wechat?.wechat_qr_image)}"
+          th:with="qrTitle = ${theme.config?.sidebar?.wechat?.wechat_qr_title}"
         >
           <div class="widget-title">
             <span class="title-text">
@@ -166,7 +166,7 @@
           <div class="wechat-qr-body">
             <img
               class="wechat-qr-img"
-              th:src="${theme.config?.sidebar?.wechat_qr_image}"
+              th:src="${theme.config?.sidebar?.wechat?.wechat_qr_image}"
               alt="公众号二维码"
             />
             <p
@@ -181,8 +181,8 @@
       <th:block th:case="'categories'">
         <div
           class="widget"
-          th:if="${theme.config?.sidebar?.show_categories != false}"
-          th:with="catResult = ${categoryFinder.list(1, theme.config?.sidebar?.categories_count ?: 6)}"
+          th:if="${theme.config?.sidebar?.categories?.show_categories != false}"
+          th:with="catResult = ${categoryFinder.list(1, theme.config?.sidebar?.categories?.categories_count ?: 6)}"
         >
           <div class="widget-title">
             <span class="title-text">
@@ -226,8 +226,8 @@
       <th:block th:case="'recent'">
         <div
           class="widget"
-          th:if="${theme.config?.sidebar?.show_recent != false}"
-          th:with="recentPosts = ${postFinder.list({page: 1, size: theme.config?.sidebar?.recent_count ?: 4, sort: {'spec.publishTime,desc'}})}"
+          th:if="${theme.config?.sidebar?.recent?.show_recent != false}"
+          th:with="recentPosts = ${postFinder.list({page: 1, size: theme.config?.sidebar?.recent?.recent_count ?: 4, sort: {'spec.publishTime,desc'}})}"
         >
           <div class="widget-title">
             <span class="title-text">
@@ -260,8 +260,8 @@
       <th:block th:case="'links'">
         <div
           class="widget widget-sidebar-links"
-          th:if="${theme.config?.sidebar?.show_sidebar_links != false and linkFinder != null}"
-          th:with="randomLinks = ${linkFinder?.random(theme.config?.sidebar?.sidebar_links_count ?: 10) ?: {}}"
+          th:if="${theme.config?.sidebar?.links?.show_sidebar_links != false and linkFinder != null}"
+          th:with="randomLinks = ${linkFinder?.random(theme.config?.sidebar?.links?.sidebar_links_count ?: 10) ?: {}}"
         >
           <div class="widget-title">
             <span class="title-text">
@@ -315,8 +315,8 @@
       <th:block th:case="'feeds'">
         <div
           class="widget widget-sidebar-feeds"
-          th:if="${linkFeedFinder != null and theme.config?.sidebar?.show_sidebar_feeds != false}"
-          th:with="recentFeeds = ${linkFeedFinder.list({limit: theme.config?.sidebar?.sidebar_feeds_count ?: 10})}"
+          th:if="${linkFeedFinder != null and theme.config?.sidebar?.feeds?.show_sidebar_feeds != false}"
+          th:with="recentFeeds = ${linkFeedFinder.list({limit: theme.config?.sidebar?.feeds?.sidebar_feeds_count ?: 10})}"
         >
           <div class="widget-title">
             <span class="title-text">

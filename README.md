@@ -8,7 +8,7 @@
 
 **青绿美学** · **明暗双模** · **精选轮播** · **分类导航** · **全局搜索** · **完美移动端适配**
 
-[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.1.3](https://img.shields.io/badge/Version-1.1.1-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Halo >=2.20](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6Ii8+PC9zdmc+)](https://halo.run) [![License GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE) [![Version 1.1.5](https://img.shields.io/badge/Version-1.1.5-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
 **🚀 [在线预览 →](https://note.minims.cn)** · **📘 [配置手册 / 使用教程](docs/使用教程.md)**
 
