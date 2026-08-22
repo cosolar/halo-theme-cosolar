@@ -1,3 +1,5 @@
+
+
 ﻿<div align="center">
 
 <img src="./public/assets/images/logo.png" width="150" height="100" alt="halo-theme-cosolar Logo" />
@@ -255,7 +257,7 @@ pnpm build            # 产物：templates/ + halo-theme-cosolar-<version>.zip
 ```bash
 pnpm install
 pnpm dev              # 监听文件变化，实时构建到 templates/
-pnpm check            # 检查模板与配置
+pnpm check            # 检查并自动修复模板与配置
 pnpm build-only       # 仅构建（不打 ZIP），用于本地联调
 pnpm build            # 完整构建 + 打 ZIP 包
 ```
