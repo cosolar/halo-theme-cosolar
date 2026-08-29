@@ -4857,15 +4857,19 @@ body.nav-open {
   );
 }
 
-/* 关闭页脚主区域后压缩内边距，避免版权条上下出现大面积留白 */
+/* 关闭页脚主区域后压缩内边距并去掉分隔线，避免版权条上下出现大面积留白 */
 .site-footer.is-minimal {
-  padding-top: 20px;
-  padding-bottom: 12px;
+  padding-top: 12px;
+  padding-bottom: 8px;
 }
 
 .site-footer.is-minimal .footer-bottom {
-  padding-top: 12px;
+  padding-top: 0;
   margin-top: 0;
+}
+
+.site-footer.is-minimal .footer-bottom::before {
+  display: none;
 }
 
 /* 版权信息 + 备案徽章 */
