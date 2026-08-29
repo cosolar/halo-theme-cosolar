@@ -927,6 +927,36 @@ spec:
               value: lightbox
           help: 跳转详情页：点击图片进入照片详情页（悬停同时显示"查看详情"与"放大查看"两个按钮）；直接放大查看：点击图片直接打开大图灯箱（此时不跳转详情页，"查看详情"按钮自动隐藏）
 
+    - group: docs
+      label: 知识库页设置
+      formSchema:
+        - $formkit: switch
+          name: show_stats
+          label: 显示统计栏
+          value: true
+          help: 在知识库列表页顶部显示统计数据栏（知识库总数、文档总数、标签数量、访问量、点赞量）；关闭后隐藏整个统计栏
+        - $formkit: switch
+          name: show_sidebar
+          label: 显示左侧边栏
+          value: true
+          help: 在知识库列表页左侧显示信息侧栏（今日动态、最近更新、标签分类）；关闭后隐藏整个侧栏，内容区占满宽度
+        - $formkit: number
+          name: recent_count
+          label: 最近更新显示条数
+          value: 5
+          min: 1
+          max: 20
+          step: 1
+          help: 左侧"最近更新"模块显示的条目数量，超出部分在模块内部滚动
+        - $formkit: number
+          name: tag_count
+          label: 标签云显示条数
+          value: 10
+          min: 1
+          max: 50
+          step: 1
+          help: 左侧"标签分类"模块显示的标签数量，超出部分在模块内部滚动
+
     - group: background
       label: 页面背景
       formSchema:

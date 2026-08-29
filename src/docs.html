@@ -1,0 +1,190 @@
+<include src="layout.html">
+  <template name="head">
+    <title th:text="|知识库 - ${site.title}|">知识库</title>
+    <link rel="stylesheet" href="./css/docs.css" />
+    <script type="module" src="./js/docs.ts"></script>
+  </template>
+
+  <div class="layout-grid no-sidebar kb-page">
+    <div class="content-area">
+      <div class="md-app" th:with="result=${minidocsFinder.listKnowledgeBases(1, 1000)}">
+        <div class="md-content">
+          <!-- ===== 顶部看板 ===== -->
+          <div class="md-stats" th:if="${theme.config?.docs?.show_stats != false}">
+            <div class="md-stat">
+              <span class="md-stat-ico is-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+              <div style="min-width:0"><div class="md-stat-val" id="md-stat-kb">0</div><div class="md-stat-label">知识库总数</div></div>
+            </div>
+            <div class="md-stat">
+              <span class="md-stat-ico is-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg></span>
+              <div style="min-width:0"><div class="md-stat-val" id="md-stat-docs">0</div><div class="md-stat-label">文档总数</div></div>
+            </div>
+            <div class="md-stat">
+              <span class="md-stat-ico is-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+              <div style="min-width:0"><div class="md-stat-val" id="md-stat-tags">0</div><div class="md-stat-label">标签数量</div></div>
+            </div>
+            <div class="md-stat">
+              <span class="md-stat-ico is-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+              <div style="min-width:0"><div class="md-stat-val" id="md-stat-avg">0</div><div class="md-stat-label">访问量</div></div>
+            </div>
+            <div class="md-stat">
+              <span class="md-stat-ico is-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+              <div style="min-width:0"><div class="md-stat-val" id="md-stat-new">0</div><div class="md-stat-label">点赞量</div></div>
+            </div>
+          </div>
+
+          <!-- ===== 工具栏：标题 + 搜索 + 排序 + 视图切换 ===== -->
+          <div class="md-toolbar">
+            <div class="md-sec-title">
+              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M9 21V12h6v9"/></svg></span>
+              <span>全部知识库</span>
+            </div>
+            <div class="md-search">
+              <svg class="lens" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.1" y2="16.1"></line></svg>
+              <input type="search" id="md-search-input" placeholder="搜索知识库，或输入标签筛选..." aria-label="搜索知识库" />
+              <span class="kbd" id="md-kbd">/</span>
+            </div>
+            <div class="md-toolbar-right">
+              <label class="md-sort">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3l-4 8h8l-4-8V3"/><path d="M16 12h6M19 9v6"/></svg>
+                <select id="md-sort" aria-label="排序方式">
+                  <option value="update" selected>最近更新</option>
+                  <option value="docs">文档最多</option>
+                  <option value="name">名称 A-Z</option>
+                  <option value="created">最新创建</option>
+                </select>
+              </label>
+              <div class="md-view" aria-label="视图切换">
+                <button type="button" data-view="card" class="active" title="卡片视图"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+                <button type="button" data-view="list" title="列表视图"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== 主区：侧栏 + 内容 ===== -->
+          <div class="md-main">
+            <!-- 左侧信息侧栏 -->
+            <aside class="md-sidebar" id="md-sidebar"
+                   th:if="${theme.config?.docs?.show_sidebar != false}"
+                   th:attr="data-recent-count=${theme.config?.docs?.recent_count != null ? theme.config.docs.recent_count : 5},
+                             data-tag-count=${theme.config?.docs?.tag_count != null ? theme.config.docs.tag_count : 10}">
+              <div class="sb-card sb-dynamic">
+                <div class="sb-head">
+                  <svg class="h-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>
+                  今日动态
+                  <span class="sb-live"><span class="sb-live-dot"></span>实时</span>
+                </div>
+                <div class="dyn-stats">
+                  <div class="dyn-stat">
+                    <span class="dyn-stat-num" id="dyn-today">0</span>
+                    <span class="dyn-stat-lbl">今日更新</span>
+                  </div>
+                  <span class="dyn-stat-div"></span>
+                  <div class="dyn-stat">
+                    <span class="dyn-stat-num" id="dyn-docs">0</span>
+                    <span class="dyn-stat-lbl">文档总数</span>
+                  </div>
+                </div>
+                <div class="welcome-tip" id="welcome-tip"></div>
+                <div class="owner-row" id="sb-owners"></div>
+              </div>
+
+              <div class="sb-card">
+                <div class="sb-head">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  最近更新
+                </div>
+                <div class="sb-list" id="sb-recent"></div>
+              </div>
+
+              <div class="sb-card">
+                <div class="sb-head">
+                  <svg class="h-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r=".5" fill="currentColor"/></svg>
+                  标签云
+                </div>
+                <div class="tag-cloud" id="sb-tags"></div>
+              </div>
+            </aside>
+
+            <!-- 右内容 -->
+            <section class="md-col">
+              <div class="md-count-line">
+                共 <b id="md-count">0</b> 个知识库
+              </div>
+              <div class="md-list-area" id="md-list-area">
+                <div class="md-grid is-card" id="md-grid">
+                  <a class="md-kb-card"
+                     th:each="kb : ${result.items}"
+                     th:attr="data-search=${kb.spec?.displayName ?: ''} + ' ' +
+                               ${kb.spec?.description != null ? kb.spec.description : ''} + ' ' +
+                               ${kb.spec?.tags != null ? #strings.listJoin(kb.spec.tags, ' ') : ''} + ' ' +
+                               ${kb.spec?.creatorName != null ? kb.spec.creatorName : ''},
+                       data-tags=${kb.spec?.tags != null ? #strings.listJoin(kb.spec.tags, ' ') : ''},
+                       data-owner=${kb.spec?.creatorName != null ? kb.spec.creatorName : ''},
+                       data-name=${#strings.toLowerCase(#strings.defaultString(kb.spec?.displayName, ''))},
+                       data-slug=${kb.spec?.slug != null and !kb.spec.slug.isEmpty() ? kb.spec.slug : kb.metadata.name},
+                       data-docs=${kb.status?.docCount != null ? kb.status.docCount : 0},
+                       data-access=${kb.spec?.accessCount != null ? kb.spec.accessCount : 0},
+                       data-like=${kb.spec?.likeCount != null ? kb.spec.likeCount : 0},
+                       data-update=${kb.spec?.updateTime != null ? kb.spec.updateTime : ''},
+                       data-created=${kb.spec?.creationTime != null ? kb.spec.creationTime : ''}"
+                     th:href="@{'/docs/view/' +
+                               ${kb.spec?.slug != null and !kb.spec.slug.isEmpty()
+                                 ? kb.spec.slug : kb.metadata.name}}">
+                    <div class="md-cover" th:if="${kb.spec?.cover != null and !kb.spec.cover.isEmpty()}">
+                      <div class="img-inner"><img th:src="${kb.spec.cover}" alt="" loading="lazy" /></div>
+                    </div>
+                    <div class="md-cover md-cover-static" th:unless="${kb.spec?.cover != null and !kb.spec.cover.isEmpty()}">
+                      <span class="md-cover-static-bg" aria-hidden="true"></span>
+                      <div class="img-inner">
+                        <span class="fallback-mark" th:text="${!#strings.isEmpty(kb.spec?.displayName) ? #strings.substring(kb.spec.displayName, 0, 1) : '库'}">库</span>
+                      </div>
+                    </div>
+                    <span class="md-cover-chip" th:if="${kb.spec?.tags != null and !kb.spec.tags.isEmpty()}" th:text="${kb.spec.tags[0]}"></span>
+                    <span class="md-like-btn" role="button" tabindex="0" aria-label="点赞这个知识库" title="点赞">
+                      <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </span>
+                    <div class="md-body">
+                      <h3 class="md-title" th:text="${kb.spec?.displayName}"></h3>
+                      <p class="md-desc" th:text="${kb.spec?.description != null and !kb.spec.description.isEmpty() ? kb.spec.description : '暂无简介'}">暂无简介</p>
+                    </div>
+                    <div class="md-foot">
+                      <div class="md-meta-row">
+                        <span class="md-title-badge" title="包含文档数">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                          <span th:text="${kb.status?.docCount != null ? kb.status.docCount : 0}">0</span>
+                        </span>
+                        <span class="md-title-badge" title="访问量">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                          <span th:text="${kb.spec?.accessCount != null ? kb.spec.accessCount : 0}">0</span>
+                        </span>
+                        <span class="md-title-badge md-like-badge" title="点赞量">
+                          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                          <span th:text="${kb.spec?.likeCount != null ? kb.spec.likeCount : 0}">0</span>
+                        </span>
+                      </div>
+                      <span class="md-foot-meta">
+                        <time class="md-time" th:attr="datetime=${kb.spec?.updateTime}"></time>
+                      </span>
+                    </div>
+                  </a>
+
+                  <div class="md-empty" id="md-empty" style="display:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                    <span class="md-empty-text">暂无公开知识库，去管理后台创建第一个吧。</span>
+                    <button type="button" class="md-empty-btn" id="md-empty-reset">清除筛选条件</button>
+                  </div>
+                </div>
+              </div>
+
+              <nav class="md-pager-wrap">
+                <div class="md-pager" id="md-pager"></div>
+                <span class="md-count" id="md-count-total"></span>
+              </nav>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</include>
