@@ -2,6 +2,7 @@
   <!-- ===== Footer ===== -->
   <footer
     class="site-footer"
+    th:classappend="${theme.config?.footer?.show_footer_main == false ? ' is-minimal' : ''}"
     th:style="${footerStyle}"
     th:with="
               showFooterMain=${theme.config?.footer?.show_footer_main ?: true},
