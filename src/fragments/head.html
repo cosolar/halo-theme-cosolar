@@ -1,0 +1,87 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="head-resources">
+  <!-- 图标库资源加载：Iconify 默认，iconfont 可自定义 CSS -->
+  <th:block th:with="iconProvider=${theme.config?.style?.icon_provider ?: 'iconify'}">
+    <script
+      th:if="${iconProvider == 'iconify'}"
+      src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"
+    ></script>
+    <link
+      th:if="${iconProvider == 'iconfont' and theme.config?.style?.icon_css_url != null and !#strings.isEmpty(theme.config.style.icon_css_url)}"
+      rel="stylesheet"
+      th:href="${theme.config.style.icon_css_url}"
+    />
+  </th:block>
+  <link
+    rel="stylesheet"
+    th:if="${theme.config?.style?.font_css_url != null and !#strings.isEmpty(theme.config.style.font_css_url)}"
+    th:href="${theme.config.style.font_css_url}"
+    media="print"
+    onload="this.media = 'all'"
+  />
+  <link
+    rel="stylesheet"
+    th:unless="${theme.config?.style?.font_css_url != null and !#strings.isEmpty(theme.config.style.font_css_url)}"
+    href="//npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css"
+    media="print"
+    onload="this.media = 'all'"
+  />
+  <!-- 导航栏字体：小米 MiSans（CDN 异步加载，Regular 400；粗体由浏览器合成） -->
+  <link
+    rel="stylesheet"
+    href="https://fastly.jsdelivr.net/npm/misans-webfont@4.3.1/misans/misans-regular/result.min.css"
+    media="print"
+    onload="this.media = 'all'"
+  />
+  <link
+    rel="stylesheet"
+    th:if="${theme.config?.style?.mono_css_url != null and !#strings.isEmpty(theme.config.style.mono_css_url)}"
+    th:href="${theme.config.style.mono_css_url}"
+    media="print"
+    onload="this.media = 'all'"
+  />
+  <link
+    rel="icon"
+    th:if="${site.favicon != null and !#strings.isEmpty(site.favicon)}"
+    th:href="${site.favicon}"
+  />
+  <th:block
+    th:if="${theme.config?.style?.primary_color != null or theme.config?.style?.content_width != null or theme.config?.style?.sidebar_width != null or theme.config?.style?.content_gap != null or theme.config?.post?.toc_width != null or (theme.config?.style?.font_family != null and !#strings.isEmpty(theme.config.style.font_family)) or (theme.config?.style?.mono_family != null and !#strings.isEmpty(theme.config.style.mono_family)) or theme.config?.sidebar?.author?.author_bg_overlay_color != null or theme.config?.sidebar?.author?.author_bg_overlay_opacity != null or theme.config?.sidebar?.author?.author_bg_text_color != null or theme.config?.sidebar?.author?.author_bg_overlay_color_dark != null or theme.config?.sidebar?.author?.author_bg_overlay_opacity_dark != null or theme.config?.sidebar?.author?.author_bg_text_color_dark != null}"
+  >
+    <style th:inline="text">
+      :root {
+        [(${theme.config?.style?.primary_color != null ? '--color-primary: ' + theme.config.style.primary_color + ' !important;' : ''})]
+      [(${theme.config?.style?.content_width != null ? '--container-max: ' + theme.config.style.content_width + 'px !important;' : ''})]
+      [(${theme.config?.style?.sidebar_width != null ? '--sidebar-width: ' + theme.config.style.sidebar_width + 'px !important;' : ''})]
+      [(${theme.config?.style?.content_gap != null ? '--content-gap: ' + theme.config.style.content_gap + 'px !important;' : ''})]
+      [(${theme.config?.post?.toc_width != null ? '--toc-width: ' + theme.config.post.toc_width + 'px !important;' : ''})]
+      [(${theme.config?.style?.font_family != null and !#strings.isEmpty(theme.config.style.font_family) ? '--font-sans: ' + theme.config.style.font_family + ' !important;' : ''})]
+      [(${theme.config?.style?.mono_family != null and !#strings.isEmpty(theme.config.style.mono_family) ? '--font-mono: ' + theme.config.style.mono_family + ' !important;' : ''})]
+      [(${theme.config?.sidebar?.author?.author_bg_overlay_color != null ? '--author-bg-overlay-color: ' + theme.config.sidebar.author?.author_bg_overlay_color + ' !important;' : ''})]
+      [(${theme.config?.sidebar?.author?.author_bg_overlay_opacity != null ? '--author-bg-overlay-opacity: ' + theme.config.sidebar.author?.author_bg_overlay_opacity + ' !important;' : ''})]
+      [(${theme.config?.sidebar?.author?.author_bg_text_color != null ? '--author-bg-text-color: ' + theme.config.sidebar.author?.author_bg_text_color + ' !important;' : ''})]
+      }
+      [data-theme="dark"] {
+        [(${theme.config?.sidebar?.author?.author_bg_overlay_color_dark != null ? '--author-bg-overlay-color: ' + theme.config.sidebar.author?.author_bg_overlay_color_dark + ' !important;' : ''})]
+      [(${theme.config?.sidebar?.author?.author_bg_overlay_opacity_dark != null ? '--author-bg-overlay-opacity: ' + theme.config.sidebar.author?.author_bg_overlay_opacity_dark + ' !important;' : ''})]
+      [(${theme.config?.sidebar?.author?.author_bg_text_color_dark != null ? '--author-bg-text-color: ' + theme.config.sidebar.author?.author_bg_text_color_dark + ' !important;' : ''})]
+      }
+    </style>
+  </th:block>
+  <!-- 代码高亮由 Halo plugin-shiki (shiki-code Web Component) 负责，主题不再加载 Prism -->
+  <!-- 主题色防闪烁：必须在 head 同步执行，仅读 data-color-scheme 设 data-theme，auto 时跟随系统 -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem("cosolar-theme");
+      var scheme = document.documentElement.getAttribute("data-color-scheme") || "auto";
+      var theme =
+        saved ||
+        (scheme === "auto"
+          ? window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+          : scheme);
+      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.setAttribute("data-color-scheme", theme);
+    })();
+  </script>
+</th:block>

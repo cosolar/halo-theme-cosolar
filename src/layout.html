@@ -2,14 +2,17 @@
 <html
   lang="zh-CN"
   xmlns:th="http://www.thymeleaf.org"
+  th:fragment="html (head, content)"
+  th:lang="${#locale.toLanguageTag}"
   th:data-color-scheme="${theme.config?.style?.color_scheme ?: 'auto'}"
 >
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <slot name="head">
-      <title th:text="${site.title}">Site Title</title>
-    </slot>
+    <title th:text="${site.title}">Site Title</title>
+    <th:block th:if="${head != null}">
+      <th:block th:replace="${head}" />
+    </th:block>
     <link rel="stylesheet" href="./css/main.css" />
     <th:block th:replace="~{fragments/head :: head-resources}"></th:block>
     <script type="module" src="./js/main.ts"></script>
@@ -73,7 +76,7 @@
     <!-- ===== Main Content ===== -->
     <main class="site-main">
       <div class="container">
-        <slot />
+        <th:block th:replace="${content}" />
       </div>
     </main>
 
