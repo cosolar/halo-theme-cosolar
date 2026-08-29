@@ -96,7 +96,9 @@
   white-space: nowrap;
   cursor: default;
   user-select: none;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 .nav-stat.nav-stat--view svg {
   width: 15px;

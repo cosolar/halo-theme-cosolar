@@ -78,12 +78,10 @@
       return "昨天 " + pad(d.getHours()) + ":" + pad(d.getMinutes());
     if (d.getFullYear() === now.getFullYear())
       return pad(d.getMonth() + 1) + "-" + pad(d.getDate());
-    return (
-      d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())
-    );
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
   }
 
-  /* ---- 点赞（一次性；与阅读页共用 localStorage 键，匿名也可点赞） ---- */
+  /* ---- 点赞（每次点击都请求后端，由服务端幂等去重；localStorage 仅用于红心初始状态） ---- */
   function likeKey(slug: string): string {
     return "minidocs:like:" + slug;
   }
@@ -110,14 +108,11 @@
     btn.setAttribute("aria-label", "点赞：" + card.title);
     btn.setAttribute("title", "点赞：" + card.title);
     function doLike(): void {
-      if (locallyLiked(slug)) {
-        markLiked();
-        return;
-      }
+      /* 总是发起请求并保存：登录用户由后端 likedUsers 幂等去重（只+1一次），
+         匿名用户每次点击+1；本地标记仅用于刷新后红心的初始高亮 */
       fetch(
-        "/apis/api.minidocs.halo.run/v1alpha1/knowledgebases/" +
-          encodeURIComponent(slug) + "/like",
-        { method: "POST", credentials: "include" }
+        "/apis/api.minidocs.halo.run/v1alpha1/knowledgebases/" + encodeURIComponent(slug) + "/like",
+        { method: "POST", credentials: "include" },
       )
         .then((r) => {
           if (!r.ok) throw 0;
@@ -131,10 +126,16 @@
           }
           markLiked();
           if (data && typeof data.likeCount === "number") {
+            const oldVal = badge ? parseInt(badge.textContent || "0", 10) : 0;
             if (badge) badge.textContent = String(data.likeCount);
-            const stat = document.getElementById("md-stat-new");
-            if (stat)
-              stat.textContent = String((parseInt(stat.textContent, 10) || 0) + 1);
+            /* 顶部看板只按真实增量累加（登录用户重复点击幂等时为 0） */
+            if (data.likeCount > oldVal) {
+              const stat = document.getElementById("md-stat-new");
+              if (stat)
+                stat.textContent = String(
+                  (parseInt(stat.textContent, 10) || 0) + (data.likeCount - oldVal),
+                );
+            }
           }
         })
         .catch(() => {
@@ -157,9 +158,7 @@
 
   /* 无封面渐变 + 时间 */
   cards.forEach((card) => {
-    const staticBg = card.el.querySelector<HTMLElement>(
-      ".md-cover-static .md-cover-static-bg"
-    );
+    const staticBg = card.el.querySelector<HTMLElement>(".md-cover-static .md-cover-static-bg");
     if (staticBg)
       staticBg.style.background = PALETTE[hash(card.name || card.search) % PALETTE.length];
     const t = card.el.querySelector<HTMLElement>(".md-time");
@@ -178,10 +177,10 @@
     if (c.owner) ownerCounter[c.owner] = (ownerCounter[c.owner] || 0) + 1;
   });
   const tagList = Object.keys(tagCounter).sort(
-    (a, b) => tagCounter[b] - tagCounter[a] || a.localeCompare(b)
+    (a, b) => tagCounter[b] - tagCounter[a] || a.localeCompare(b),
   );
   const ownerList = Object.keys(ownerCounter).sort(
-    (a, b) => ownerCounter[b] - ownerCounter[a] || a.localeCompare(b)
+    (a, b) => ownerCounter[b] - ownerCounter[a] || a.localeCompare(b),
   );
   const totalAccess = cards.reduce((s, c) => s + c.access, 0);
   const totalLike = cards.reduce((s, c) => s + c.like, 0);
@@ -311,10 +310,7 @@
           state.owner = state.owner === owner ? "" : owner;
           state.page = 1;
           document.querySelectorAll(".owner-chip").forEach((o) => {
-            o.classList.toggle(
-              "active",
-              (o.getAttribute("data-owner") || "") === state.owner
-            );
+            o.classList.toggle("active", (o.getAttribute("data-owner") || "") === state.owner);
           });
           render();
         });
@@ -365,19 +361,21 @@
       if (!total) {
         const t = emptyEl.querySelector<HTMLElement>(".md-empty-text");
         if (t) {
-          t.textContent = state.q || state.tag || state.owner
-            ? state.tag
-              ? "没有找到标签为「" + state.tag + "」的知识库，试试其他标签或清除筛选。"
-              : state.owner
-                ? "「" + state.owner + "」暂无公开知识库。"
-                : "没有找到与「" + (inputEl ? inputEl.value.trim() : "") + "」相关的知识库，换个关键词试试。"
-            : "暂无公开知识库，去管理后台创建第一个吧。";
+          t.textContent =
+            state.q || state.tag || state.owner
+              ? state.tag
+                ? "没有找到标签为「" + state.tag + "」的知识库，试试其他标签或清除筛选。"
+                : state.owner
+                  ? "「" + state.owner + "」暂无公开知识库。"
+                  : "没有找到与「" +
+                    (inputEl ? inputEl.value.trim() : "") +
+                    "」相关的知识库，换个关键词试试。"
+              : "暂无公开知识库，去管理后台创建第一个吧。";
         }
       }
     }
     if (emptyBtnEl)
-      emptyBtnEl.style.display =
-        state.q || state.tag || state.owner ? "inline-flex" : "none";
+      emptyBtnEl.style.display = state.q || state.tag || state.owner ? "inline-flex" : "none";
     buildPager(pages);
     /* 按当前排序/筛选物理重排卡片节点，使顺序变化在视觉上可见 */
     const order: HTMLElement[] = shown.map((c) => c.el);
@@ -405,10 +403,11 @@
       b.innerHTML = dir < 0 ? "‹" : "›";
       b.setAttribute("aria-label", label);
       if (disabled) b.disabled = true;
-      else b.addEventListener("click", () => {
-        state.page = cur + dir;
-        render();
-      });
+      else
+        b.addEventListener("click", () => {
+          state.page = cur + dir;
+          render();
+        });
       add(b);
     };
     const num = (n: number, active: boolean): void => {
@@ -437,8 +436,7 @@
     } else {
       num(1, cur === 1);
       if (cur > 3) sep();
-      for (let j = Math.max(2, cur - 1); j <= Math.min(pages - 1, cur + 1); j++)
-        num(j, j === cur);
+      for (let j = Math.max(2, cur - 1); j <= Math.min(pages - 1, cur + 1); j++) num(j, j === cur);
       if (cur < pages - 2) sep();
       num(pages, cur === pages);
     }
@@ -494,9 +492,7 @@
     if (!gridEl) return;
     gridEl.classList.toggle("is-card", v === "card");
     gridEl.classList.toggle("is-list", v === "list");
-    viewBtns.forEach((b) =>
-      b.classList.toggle("active", b.getAttribute("data-view") === v)
-    );
+    viewBtns.forEach((b) => b.classList.toggle("active", b.getAttribute("data-view") === v));
   }
   viewBtns.forEach((b) => {
     b.addEventListener("click", () => {

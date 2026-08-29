@@ -20,19 +20,52 @@
     <div class="md-topbar">
       <div class="nav-trails">
         <a class="nav-btn nav-btn--kb" th:href="@{/docs}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
           <span>返回知识库</span>
         </a>
-        <button class="nav-btn icon-only nav-btn--bm" type="button" id="md-bookmark" title="加入浏览器书签" aria-label="加入浏览器书签">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button
+          class="nav-btn icon-only nav-btn--bm"
+          type="button"
+          id="md-bookmark"
+          title="加入浏览器书签"
+          aria-label="加入浏览器书签"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path>
           </svg>
         </button>
-        <button class="nav-btn icon-only nav-btn--sh" type="button" id="md-share" title="复制链接" aria-label="复制链接">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button
+          class="nav-btn icon-only nav-btn--sh"
+          type="button"
+          id="md-share"
+          title="复制链接"
+          aria-label="复制链接"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="18" cy="5" r="3"></circle>
             <circle cx="6" cy="12" r="3"></circle>
             <circle cx="18" cy="19" r="3"></circle>
@@ -43,13 +76,30 @@
       </div>
       <div class="nav-stats">
         <button class="nav-btn nav-btn--like" id="md-like" type="button" title="点赞这个知识库">
-          <svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          <svg
+            class="heart"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+            ></path>
           </svg>
           <span class="nav-stat-num" id="md-like-count">0</span>
         </button>
         <span class="nav-stat nav-stat--view" title="访问量">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
@@ -64,25 +114,45 @@
       <aside class="md-sb" id="md-sb">
         <div class="md-sb-head">
           <span class="md-sb-logo">
-            <img th:if="${knowledgeBase != null and knowledgeBase.spec.cover != null and !knowledgeBase.spec.cover.isEmpty()}"
-                 th:src="${knowledgeBase.spec.cover}" alt="知识库图标" />
-            <span class="md-sb-logo-fallback"
-                  th:unless="${knowledgeBase != null and knowledgeBase.spec.cover != null and !knowledgeBase.spec.cover.isEmpty()}"
-                  th:text="${knowledgeBase != null and knowledgeBase.spec.displayName != null and !knowledgeBase.spec.displayName.isEmpty() ? #strings.substring(knowledgeBase.spec.displayName, 0, 1) : '知'}">知</span>
+            <img
+              th:if="${knowledgeBase != null and knowledgeBase.spec.cover != null and !knowledgeBase.spec.cover.isEmpty()}"
+              th:src="${knowledgeBase.spec.cover}"
+              alt="知识库图标"
+            />
+            <span
+              class="md-sb-logo-fallback"
+              th:unless="${knowledgeBase != null and knowledgeBase.spec.cover != null and !knowledgeBase.spec.cover.isEmpty()}"
+              th:text="${knowledgeBase != null and knowledgeBase.spec.displayName != null and !knowledgeBase.spec.displayName.isEmpty() ? #strings.substring(knowledgeBase.spec.displayName, 0, 1) : '知'}"
+              >知</span
+            >
           </span>
           <div class="md-sb-name">
             <h2 th:text="${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"></h2>
             <p>
-              <span th:text="${knowledgeBase != null and knowledgeBase.status != null and knowledgeBase.status.docCount != null ? '共 ' + knowledgeBase.status.docCount + ' 篇' : ''}"></span>
+              <span
+                th:text="${knowledgeBase != null and knowledgeBase.status != null and knowledgeBase.status.docCount != null ? '共 ' + knowledgeBase.status.docCount + ' 篇' : ''}"
+              ></span>
               <span th:if="${knowledgeBase != null and knowledgeBase.spec.updateTime != null}">
-                · 更新 <span class="md-ts" th:attr="data-ts=${knowledgeBase.spec.updateTime}" th:text="${knowledgeBase.spec.updateTime}"></span>
+                · 更新
+                <span
+                  class="md-ts"
+                  th:attr="data-ts=${knowledgeBase.spec.updateTime}"
+                  th:text="${knowledgeBase.spec.updateTime}"
+                ></span>
               </span>
             </p>
           </div>
         </div>
 
         <div class="md-sb-search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="11" cy="11" r="7"></circle>
             <line x1="21" y1="21" x2="16.1" y2="16.1"></line>
           </svg>
@@ -95,7 +165,13 @@
               <th:block th:replace="~{:: treenode(node=${rootNode})}"></th:block>
             </th:block>
           </ul>
-          <div class="md-empty md-tree-empty" th:if="${treeList == null or treeList.isEmpty()}" style="display:none">暂无文档。</div>
+          <div
+            class="md-empty md-tree-empty"
+            th:if="${treeList == null or treeList.isEmpty()}"
+            style="display: none"
+          >
+            暂无文档。
+          </div>
         </div>
       </aside>
 
@@ -108,9 +184,18 @@
         </div>
 
         <div th:unless="${doc}" class="md-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+            <path
+              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"
+            ></path>
           </svg>
           <span>该知识库暂无已发布文档</span>
           <p>去管理后台发布文档后，内容将在这里展示</p>
@@ -122,7 +207,14 @@
       <!-- 右侧：文章大纲 -->
       <nav class="md-toc" id="md-toc" th:if="${doc}">
         <div class="md-toc-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="8" y1="6" x2="21" y2="6"></line>
             <line x1="8" y1="12" x2="21" y2="12"></line>
             <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -139,9 +231,12 @@
     <!-- 底部：文章信息栏 -->
     <div class="md-bottom" th:if="${doc}">
       <div class="md-bottom-info">
-        <span class="md-bottom-title" id="md-route"
-              th:attr="data-root=${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"
-              title="文档路由路径">
+        <span
+          class="md-bottom-title"
+          id="md-route"
+          th:attr="data-root=${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"
+          title="文档路由路径"
+        >
           <span th:text="${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"></span>
           <span class="sep">/</span>
           <span th:text="${doc.spec.title}"></span>
@@ -151,30 +246,61 @@
         <span class="sep"></span>
         <span><b id="md-lines">0</b> 行</span>
         <span class="md-mi" th:if="${doc.spec.author != null and !doc.spec.author.isEmpty()}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
-          <span th:text="${doc.spec.author}"></span>
+          <span class="md-author-text" th:text="${doc.spec.author}"></span>
         </span>
       </div>
 
       <div class="md-bottom-meta">
         <span class="md-mi" th:if="${doc.metadata.creationTimestamp != null}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <rect x="3" y="4" width="18" height="18" rx="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
             <line x1="8" y1="2" x2="8" y2="6"></line>
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-          <span class="md-ts" th:attr="data-ts=${doc.metadata.creationTimestamp}" th:text="${doc.metadata.creationTimestamp}"></span>
+          <span
+            class="md-ts"
+            id="md-created"
+            th:attr="data-ts=${doc.metadata.creationTimestamp}"
+            th:text="${doc.metadata.creationTimestamp}"
+          ></span>
         </span>
         <span class="md-mi" th:if="${doc.spec.updateTime != null}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
-          <span class="md-ts" th:attr="data-ts=${doc.spec.updateTime}" th:text="${doc.spec.updateTime}"></span>
+          <span
+            class="md-ts"
+            id="md-updated"
+            th:attr="data-ts=${doc.spec.updateTime}"
+            th:text="${doc.spec.updateTime}"
+          ></span>
         </span>
       </div>
       <button class="md-back-top" type="button" id="md-back-top">回到顶部</button>
@@ -186,20 +312,37 @@
   <!-- 顶部未登录/登录由主题导航栏统一处理；此处仅补充文档树递归片段 -->
   <th:block th:fragment="treenode(node)" th:with="node=${node}">
     <th:block th:if="${node != null}">
-      <li th:classappend="${node.children != null and !node.children.isEmpty()} ? 'md-has-child' : 'md-leaf'">
-        <a href="#"
-           class="md-tree-link"
-           th:attr="data-slug=${node.slug},
+      <li
+        th:classappend="${node.children != null and !node.children.isEmpty()} ? 'md-has-child' : 'md-leaf'"
+      >
+        <a
+          class="md-tree-link"
+          th:href="@{'/docs/view/' + ${kbSlug} + '?docSlug=' + ${node.slug}}"
+          th:attr="data-slug=${node.slug},
                     data-name=${node.name},
                     data-title=${node.title}"
-           th:classappend="${docSlug != null and docSlug == node.slug} ? ' active' : ''"
-           onclick="event.preventDefault(); location.search = '?docSlug=' + (this.dataset.slug || this.dataset.name);">
-          <span class="md-tree-caret" th:if="${node.children != null and !node.children.isEmpty()}" title="展开 / 收起">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          th:classappend="${docSlug != null and docSlug == node.slug} ? ' active' : ''"
+        >
+          <span
+            class="md-tree-caret"
+            th:if="${node.children != null and !node.children.isEmpty()}"
+            title="展开 / 收起"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </span>
-          <span class="md-dot" th:unless="${node.children != null and !node.children.isEmpty()}"></span>
+          <span
+            class="md-dot"
+            th:unless="${node.children != null and !node.children.isEmpty()}"
+          ></span>
           <span class="md-title-text" th:text="${node.title}"></span>
         </a>
         <ul th:if="${node.children != null and !node.children.isEmpty()}">

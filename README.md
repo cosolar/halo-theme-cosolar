@@ -2,7 +2,6 @@
 
 <img src="./public/assets/images/logo.png" width="150" height="100" alt="halo-theme-cosolar Logo" />
 
-
 # halo-theme-cosolar
 
 **极简笔记** — 面向开发者的现代 Halo 博客主题
@@ -11,7 +10,7 @@
 
 [![Halo](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square)](https://halo.run)
 [![License](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.1.5-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases)
+[![Version](https://img.shields.io/badge/Version-1.1.6-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
@@ -53,14 +52,15 @@
 - 🔤 **双图标库 + 离线友好** — Iconify（默认，按需加载）与 iconfont 双模式；导航 / 分类 / 标签等内置 SVG 图标已本地化，配合本地字体即可完全离线部署。
 - 👤 **深度可定制登录页** — 左右分栏布局，品牌区占比、遮罩层开关、渐变主色与透明度（明暗双模各自可配）全部后台可调；主题色防闪烁。
 - 🔗 **友链 / RSS / 图库三大扩展页** — 友链页含分组筛选、实时搜索、在线 / 回链状态徽章与邮件申请 CTA；RSS 资讯页三栏聚合订阅动态；图库页照片墙支持分组浏览与登录态可控的上传 / 删除权限。
+- 📚 **知识库阅读体验** — 配合 MiniDocs 插件：列表页含统计看板、标签 / 创建者筛选、四种排序与卡片 / 列表双视图；阅读页为「文档树 + 正文 + 大纲」三栏布局，两侧栏宽度可拖拽，支持匿名点赞与链接分享。
 
 ## 💻 环境要求
 
-| 依赖      | 版本        |
-| --------- | ----------- |
-| Halo      | `>= 2.20.0` |
-| Node.js   | 推荐 LTS    |
-| 包管理器  | pnpm        |
+| 依赖     | 版本        |
+| -------- | ----------- |
+| Halo     | `>= 2.20.0` |
+| Node.js  | 推荐 LTS    |
+| 包管理器 | pnpm        |
 
 ## 📦 安装
 
@@ -85,7 +85,7 @@ pnpm build            # 产物：templates/ 目录 + halo-theme-cosolar-<version
 
 ## ⚙️ 配置
 
-主题配置集中在 **Halo 后台 → 主题管理 → halo-theme-cosolar → 设置**，按分组管理：基础 / 页脚 / 主题样式 / 博主信息 / 首页轮播 / 侧边栏 / 分类 / 标签 / 归档 / 友链 / RSS / 图库 / 页面背景 / 登录页。
+主题配置集中在 **Halo 后台 → 主题管理 → halo-theme-cosolar → 设置**，按分组管理：基础 / 页脚 / 主题样式 / 文章页 / 博主信息 / 首页轮播 / 侧边栏 / 分类 / 标签 / 归档 / 友链 / RSS / 瞬间 / 图库 / 知识库 / 页面背景 / 登录页。
 
 每个字段的类型、默认值、取值范围与配置建议见 [配置手册（使用教程.md）](docs/使用教程.md)。
 
@@ -120,13 +120,18 @@ pnpm build        # 完整构建 + 打包 ZIP
 
 ## 🔌 依赖插件
 
-| 插件            | 用途                                                          | 必需度                                              |
-| --------------- | ------------------------------------------------------------- | --------------------------------------------------- |
-| `plugin-links`  | 管理友情链接、检测链接可访问性与回链状态、聚合 RSS / Atom 动态 | 友情链接页、侧边栏友链 / 订阅模块、RSS 资讯页**必需** |
-| `plugin-photos` | 官方图库插件，提供照片管理与分组                              | 图库页**必需**                                      |
-| `plugin-shiki`  | 代码高亮（亮 / 暗主题在插件设置中配置）                       | 代码高亮**必需**                                    |
+| 插件              | 用途                                                           | 必需度                                                |
+| ----------------- | -------------------------------------------------------------- | ----------------------------------------------------- |
+| `plugin-links`    | 管理友情链接、检测链接可访问性与回链状态、聚合 RSS / Atom 动态 | 友情链接页、侧边栏友链 / 订阅模块、RSS 资讯页**必需** |
+| `plugin-photos`   | 官方图库插件，提供照片管理与分组                               | 图库页**必需**                                        |
+| `plugin-minidocs` | MiniDocs 知识库插件，提供知识库 / 文档模型与 `minidocsFinder`  | 知识库列表页 `/docs` 与阅读页**必需**                 |
+| `plugin-shiki`    | 代码高亮（亮 / 暗主题在插件设置中配置）                        | 代码高亮**必需**                                      |
 
 > ⚠️ 未安装 `plugin-links` 时：友情链接页列表为空、RSS 资讯页提示「功能未启用」、侧边栏相关模块自动隐藏。安装后需在插件「RSS 订阅」中开启「公开 RSS 订阅动态」。
+>
+> ⚠️ 未安装 `plugin-minidocs` 时：`/docs` 与 `/docs/view/{kbSlug}` 不可用；安装后还需在插件设置中开启「允许未登录用户阅读」，并创建至少一个公开知识库与已发布文档。
+>
+> ⚠️ 知识库与友链的插件 API 说明见 [`docs/minidocs-theme-api.md`](docs/minidocs-theme-api.md) 与 [`docs/links-theme-api.md`](docs/links-theme-api.md)。
 
 搜索功能依赖官方搜索插件。
 
@@ -158,6 +163,10 @@ Canvas 2D 渲染，粒子数随屏幕尺寸自适应（≤80 粒子 / ≤150 星
 **🔗 友情链接 / RSS 资讯页无内容？**
 
 确认已在 **插件管理** 安装并启用 `plugin-links`；RSS 资讯还需在插件「RSS 订阅」中开启「公开 RSS 订阅动态」。
+
+**📚 知识库页（`/docs`）打不开或没有内容？**
+
+确认已安装并启用 `plugin-minidocs`，在插件设置中开启「允许未登录用户阅读」，并创建至少一个**公开知识库**与一篇**已发布**文档。未登录访客只能看到公开知识库。
 
 **📋 侧边栏模块顺序如何调整？**
 

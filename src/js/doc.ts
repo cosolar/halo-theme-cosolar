@@ -7,6 +7,12 @@
 
   const readEl = document.querySelector<HTMLElement>(".md-read");
   const kbSlug: string = (readEl && readEl.getAttribute("data-kb-slug")) || "";
+  /* 从当前 URL 实时解析所属知识库 slug：阅读页路由为 /docs/view/{kbSlug}，
+     pathname 永远反映「当前正在阅读的库」，避免软切换知识库后仍读旧常量 */
+  const kbSlugFromUrl = (): string => {
+    const m = location.pathname.match(/\/docs\/view\/([^/?#]+)/);
+    return m ? decodeURIComponent(m[1]) : kbSlug;
+  };
 
   /* ===== Toast ===== */
   const toastFn = document.getElementById("md-toast");
@@ -155,18 +161,64 @@
   );
 
   const prose = document.getElementById("md-prose");
-  if (prose) {
-    try {
-      enhanceProse();
-    } catch (e) {
-      console.error("[doc] enhanceProse failed", e);
+
+  /* ===== 无刷新切文章（SPA 局部加载）状态 ===== */
+  let currentHeads: HTMLHeadingElement[] = [];
+  let currentTocItems: Element[] = [];
+
+  /* scroll-spy 委托：一次性绑定，读取 currentHeads/currentTocItems（每次渲染刷新） */
+  const onScrollSpy = (): void => {
+    const tocList = document.getElementById("md-toc-list");
+    if (!tocList || !currentHeads.length) return;
+    let cur: HTMLHeadingElement | null = null;
+    const topBias = mainEl ? mainEl.getBoundingClientRect().top + 12 : 80;
+    for (let i = 0; i < currentHeads.length; i++) {
+      if (currentHeads[i].getBoundingClientRect().top <= topBias) cur = currentHeads[i];
     }
+    const activeId = "#" + (cur ? cur.id : "");
+    currentTocItems.forEach((item) => {
+      const a = item.querySelector("a");
+      item.classList.toggle("active", !!a && a.getAttribute("href") === activeId);
+    });
+    const activeItem = tocList.querySelector(".md-toc-item.active");
+    if (activeItem) {
+      let liEl = activeItem.parentElement;
+      while (liEl) {
+        const pLi = liEl.parentElement ? liEl.parentElement.closest("li") : null;
+        if (!pLi) break;
+        pLi.classList.remove("toc-fold");
+        liEl = pLi;
+      }
+    }
+  };
+  mainEl?.addEventListener("scroll", onScrollSpy, { passive: true });
+  window.addEventListener("scroll", onScrollSpy, { passive: true });
+
+  /* 文档树：点击「文档链接」整体区域 → 无刷新切换正文（折叠箭头在捕获阶段已被拦截） */
+  treeRoot?.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    const link =
+      target && target.closest
+        ? (target.closest<HTMLElement>(".md-tree-link") as HTMLElement | null)
+        : null;
+    if (!link) return;
+    e.preventDefault();
+    const slug = link.getAttribute("data-slug") || link.getAttribute("data-name") || "";
+    if (!slug) return;
+    switchDoc(slug, link);
+  });
+
+  if (prose) {
     try {
       enableCherryMermaidTabs();
     } catch (e) {
       console.error("[doc] mermaid tabs failed", e);
     }
-    fillBottomMeta();
+    try {
+      buildPostRender();
+    } catch (e) {
+      console.error("[doc] render enhance failed", e);
+    }
   }
   formatTimes();
 
@@ -177,7 +229,17 @@
     if (isNaN(d.getTime())) return iso;
     const p = (n: number): string => (n < 10 ? "0" : "") + n;
     return (
-      d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()) + ":" + p(d.getSeconds())
+      d.getFullYear() +
+      "-" +
+      p(d.getMonth() + 1) +
+      "-" +
+      p(d.getDate()) +
+      " " +
+      p(d.getHours()) +
+      ":" +
+      p(d.getMinutes()) +
+      ":" +
+      p(d.getSeconds())
     );
   }
   function formatTimes(): void {
@@ -207,9 +269,15 @@
   bookmarkBtn?.addEventListener("click", () => {
     const url = location.href;
     const title = window.document.title || "知识库";
-    if (window.external && typeof (window.external as unknown as { AddFavorite?: never }).AddFavorite === "function") {
+    if (
+      window.external &&
+      typeof (window.external as unknown as { AddFavorite?: never }).AddFavorite === "function"
+    ) {
       try {
-        (window.external as unknown as { AddFavorite: (u: string, t: string) => void }).AddFavorite(url, title);
+        (window.external as unknown as { AddFavorite: (u: string, t: string) => void }).AddFavorite(
+          url,
+          title,
+        );
         toast("已添加到浏览器书签");
         return;
       } catch (_) {
@@ -227,8 +295,45 @@
     toast("当前浏览器不支持自动添加，请按 " + (mac ? "⌘D" : "Ctrl+D") + " 将本页加入浏览器书签");
   });
 
-  /* ===== 正文增强：代码块 + 目录 + 滚动监听 + 路由 ===== */
-  function enhanceProse(): void {
+  /* ============================ 正文渲染（SPA 局部切换） ============================ */
+
+  /* 底部文档路由路径：知识库名 / 树中祖先链 / 文档名 */
+  function renderRoute(): void {
+    const el = document.getElementById("md-route");
+    if (!el) return;
+    const activeA = document.querySelector<HTMLElement>(".md-tree-link.active");
+    const parts: string[] = [];
+    if (activeA) {
+      const walk = (a: HTMLElement): void => {
+        parts.unshift(a.getAttribute("data-title") || "");
+        const li = a.closest("li");
+        const pLi = li && li.parentElement ? li.parentElement.closest("li") : null;
+        if (pLi) {
+          const pa = pLi.querySelector<HTMLElement>(":scope > a");
+          if (pa) walk(pa);
+        }
+      };
+      walk(activeA);
+    }
+    const root = el.getAttribute("data-root") || "";
+    const chain = [root].concat(parts).filter((s) => s);
+    el.textContent = "";
+    chain.forEach((s, i) => {
+      if (i > 0) {
+        const sep = document.createElement("span");
+        sep.className = "sep";
+        sep.textContent = "/";
+        el.appendChild(sep);
+      }
+      const span = document.createElement("span");
+      span.textContent = s;
+      el.appendChild(span);
+    });
+    el.setAttribute("title", chain.join(" / "));
+  }
+
+  /* 重建正文相关的所有增强（代码块 + 目录 + 底部统计 + 时间 + 路由） */
+  function buildPostRender(): void {
     if (!prose) return;
 
     /* 代码块：语言标签 + 复制按钮 */
@@ -257,9 +362,7 @@
       pre.appendChild(btn);
     });
 
-    /* 大纲：为标题生成锚点 + 目录 */
-    const tocList = document.getElementById("md-toc-list");
-    if (!tocList) return;
+    /* 大纲：为标题生成锚点 + 目录（可反复重建） */
     const cache: Record<string, number> = {};
     const slideId = (text: string): string => {
       const s = String(text || "")
@@ -281,142 +384,213 @@
       text: string;
       children?: TocItem[];
     }
-    const heads = prose.querySelectorAll<HTMLHeadingElement>("h1,h2,h3,h4,h5,h6");
-    const tree: TocItem[] = [];
-    const stack: TocItem[] = [];
-    heads.forEach((h) => {
-      h.id = h.id || slideId(h.textContent || "");
-      const lvl = parseInt(h.tagName.charAt(1), 10);
-      const item: TocItem = { lvl: lvl, id: h.id, text: h.textContent || "" };
-      while (stack.length && stack[stack.length - 1].lvl >= lvl) stack.pop();
-      if (stack.length) {
-        const parent = stack[stack.length - 1];
-        (parent.children = parent.children || []).push(item);
-      } else {
-        tree.push(item);
-      }
-      stack.push(item);
-    });
-
-    /* 手风琴：嵌套生成目录，点击分组切换展开/收起 */
-    const build = (items: TocItem[], parentList: HTMLElement): void => {
-      items.forEach((it) => {
-        const li = document.createElement("li");
-        const hasKids = !!(it.children && it.children.length);
-        const item = document.createElement("div");
-        item.className = "md-toc-item";
-
-        if (hasKids) {
-          const caret = document.createElement("span");
-          caret.className = "md-toc-caret";
-          caret.innerHTML =
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
-          item.appendChild(caret);
-        } else {
-          const spacer = document.createElement("span");
-          spacer.className = "md-toc-spacer";
-          item.appendChild(spacer);
-        }
-
-        const link = document.createElement("a");
-        link.href = "#" + it.id;
-        link.textContent = it.text;
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          const t = document.getElementById(it.id);
-          if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
-          history.replaceState(null, "", location.pathname + location.search + "#" + it.id);
-        });
-        item.appendChild(link);
-
-        // 手风琴：点击分组非链接区域 → 切换子项展开/收起
-        item.addEventListener("click", (e) => {
-          const target = e.target as HTMLElement | null;
-          if (target && target.closest && target.closest("a")) return;
-          const sub = li.querySelector(":scope > ul");
-          if (sub) li.classList.toggle("toc-fold");
-        });
-
-        li.appendChild(item);
-        parentList.appendChild(li);
-        if (hasKids) {
-          li.classList.add("toc-fold");
-          const childUl = document.createElement("ul");
-          li.appendChild(childUl);
-          build(it.children!, childUl);
-        }
-      });
-    };
-    build(tree, tocList);
-
+    const tocList = document.getElementById("md-toc-list");
     const tocRoot = document.getElementById("md-toc");
-    if (tocList.children.length === 0 && tocRoot) tocRoot.style.display = "none";
+    const tocHandle = document.querySelector<HTMLElement>(".resize-handle.toc-resize");
+    if (tocList) tocList.innerHTML = "";
+    if (tocRoot) tocRoot.style.display = "";
+    if (tocHandle) tocHandle.style.display = "";
 
-    /* scroll spy（监听正文滚动容器） */
-    const tocItems = tocList.querySelectorAll(".md-toc-item");
-    const onScroll = (): void => {
-      if (!heads.length) return;
-      let cur: HTMLHeadingElement | null = null;
-      const topBias = mainEl ? mainEl.getBoundingClientRect().top + 12 : 80;
-      for (let i = 0; i < heads.length; i++) {
-        if (heads[i].getBoundingClientRect().top <= topBias) cur = heads[i];
-      }
-      const activeId = "#" + (cur ? cur.id : "");
-      tocItems.forEach((item) => {
-        const a = item.querySelector("a");
-        item.classList.toggle("active", !!a && a.getAttribute("href") === activeId);
-      });
-      // 展开 active 标题的祖先链（滚动联动）
-      const activeItem = tocList.querySelector(".md-toc-item.active");
-      if (activeItem) {
-        let liEl = activeItem.parentElement;
-        while (liEl) {
-          const pLi = liEl.parentElement ? liEl.parentElement.closest("li") : null;
-          if (!pLi) break;
-          pLi.classList.remove("toc-fold");
-          liEl = pLi;
+    if (tocList) {
+      const heads = Array.from(prose.querySelectorAll<HTMLHeadingElement>("h1,h2,h3,h4,h5,h6"));
+      currentHeads = heads;
+      const tree: TocItem[] = [];
+      const stack: TocItem[] = [];
+      heads.forEach((h) => {
+        h.id = h.id || slideId(h.textContent || "");
+        const lvl = parseInt(h.tagName.charAt(1), 10);
+        const item: TocItem = { lvl: lvl, id: h.id, text: h.textContent || "" };
+        while (stack.length && stack[stack.length - 1].lvl >= lvl) stack.pop();
+        if (stack.length) {
+          const parent = stack[stack.length - 1];
+          (parent.children = parent.children || []).push(item);
+        } else {
+          tree.push(item);
         }
-      }
-    };
-    mainEl?.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+        stack.push(item);
+      });
 
-    /* 底部文档路由路径：知识库名 / 树中祖先链 / 文档名 */
-    const renderRoute = (): void => {
-      const el = document.getElementById("md-route");
-      if (!el) return;
-      const activeA = document.querySelector<HTMLElement>(".md-tree-link.active");
-      const parts: string[] = [];
-      if (activeA) {
-        const walk = (a: HTMLElement): void => {
-          parts.unshift(a.getAttribute("data-title") || "");
-          const li = a.closest("li");
-          const pLi = li && li.parentElement ? li.parentElement.closest("li") : null;
-          if (pLi) {
-            const pa = pLi.querySelector<HTMLElement>(":scope > a");
-            if (pa) walk(pa);
+      /* 手风琴：嵌套生成目录，点击分组切换展开/收起 */
+      const build = (items: TocItem[], parentList: HTMLElement): void => {
+        items.forEach((it) => {
+          const li = document.createElement("li");
+          const hasKids = !!(it.children && it.children.length);
+          const item = document.createElement("div");
+          item.className = "md-toc-item";
+
+          if (hasKids) {
+            const caret = document.createElement("span");
+            caret.className = "md-toc-caret";
+            caret.innerHTML =
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            item.appendChild(caret);
+          } else {
+            const spacer = document.createElement("span");
+            spacer.className = "md-toc-spacer";
+            item.appendChild(spacer);
           }
-        };
-        walk(activeA);
+
+          const link = document.createElement("a");
+          link.href = "#" + it.id;
+          link.textContent = it.text;
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const t = document.getElementById(it.id);
+            if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.replaceState(null, "", location.pathname + location.search + "#" + it.id);
+          });
+          item.appendChild(link);
+
+          // 手风琴：点击分组非链接区域 → 切换子项展开/收起
+          item.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement | null;
+            if (target && target.closest && target.closest("a")) return;
+            const sub = li.querySelector(":scope > ul");
+            if (sub) li.classList.toggle("toc-fold");
+          });
+
+          li.appendChild(item);
+          parentList.appendChild(li);
+          if (hasKids) {
+            li.classList.add("toc-fold");
+            const childUl = document.createElement("ul");
+            li.appendChild(childUl);
+            build(it.children!, childUl);
+          }
+        });
+      };
+      build(tree, tocList);
+      currentTocItems = Array.from(tocList.querySelectorAll(".md-toc-item"));
+      if (tocList.children.length === 0) {
+        if (tocRoot) tocRoot.style.display = "none";
+        if (tocHandle) tocHandle.style.display = "none";
       }
-      const root = el.getAttribute("data-root") || "";
-      const chain = [root].concat(parts).filter((s) => s);
-      el.textContent = "";
-      chain.forEach((s, i) => {
-        if (i > 0) {
-          const sep = document.createElement("span");
-          sep.className = "sep";
-          sep.textContent = "/";
-          el.appendChild(sep);
-        }
-        const span = document.createElement("span");
-        span.textContent = s;
-        el.appendChild(span);
-      });
-      el.setAttribute("title", chain.join(" / "));
-    };
+    } else {
+      currentHeads = [];
+      currentTocItems = [];
+    }
+
+    fillBottomMeta();
+    formatTimes();
     renderRoute();
+  }
+
+  /* 切换文档时刷新底部信息栏（作者/创建/更新时间） */
+  function updateDocFooter(
+    spec: { author?: unknown; updateTime?: unknown },
+    createdTs: string,
+  ): void {
+    const authorEl = document.querySelector<HTMLElement>("#md-bottom .md-author-text");
+    const authorMi = authorEl ? authorEl.closest<HTMLElement>(".md-mi") : null;
+    const author = typeof spec.author === "string" ? spec.author : "";
+    if (authorEl) authorEl.textContent = author;
+    if (authorMi) authorMi.style.display = author ? "" : "none";
+
+    const createdEl = document.getElementById("md-created");
+    const createdMi = createdEl ? createdEl.closest<HTMLElement>(".md-mi") : null;
+    if (createdEl) {
+      createdEl.setAttribute("data-ts", createdTs);
+      createdEl.textContent = formatDateTime(createdTs);
+    }
+    if (createdMi) createdMi.style.display = createdTs ? "" : "none";
+
+    const updatedEl = document.getElementById("md-updated");
+    const updatedMi = updatedEl ? updatedEl.closest<HTMLElement>(".md-mi") : null;
+    const updatedTs = typeof spec.updateTime === "string" ? spec.updateTime : "";
+    if (updatedEl) {
+      updatedEl.setAttribute("data-ts", updatedTs);
+      updatedEl.textContent = formatDateTime(updatedTs);
+    }
+    if (updatedMi) updatedMi.style.display = updatedTs ? "" : "none";
+  }
+
+  /* 无刷新切换文章：拉取文档 API → 局部更新正文 / 目录 / 底部 / 树高亮 / 地址栏 */
+  async function switchDoc(slug: string, link: HTMLElement): Promise<void> {
+    const curKb = kbSlugFromUrl();
+    if (!curKb || !slug) return;
+    const docName = link.getAttribute("data-name") || ""; // metadata.name(UUID)，Console API 定位文档用
+    type DocMeta = {
+      spec?: Record<string, unknown>;
+      metadata?: { creationTimestamp?: string };
+    } | null;
+    let meta: DocMeta = null;
+    try {
+      /* 优先公共 API（无需登录）；公共 API 仅服务公开库，私有库返回 404 时改走 Console API（需登录/成员/管理） */
+      const r = await fetch(
+        "/apis/api.minidocs.halo.run/v1alpha1/knowledgebases/" +
+          encodeURIComponent(curKb) +
+          "/docs/" +
+          encodeURIComponent(slug),
+        { credentials: "include" },
+      );
+      if (r.ok) {
+        meta = (await r.json()) as DocMeta;
+      } else if (r.status === 404 && docName) {
+        const c = await fetch(
+          "/apis/console.api.minidocs.halo.run/v1alpha1/knowledgebases/" +
+            encodeURIComponent(curKb) +
+            "/docs/" +
+            encodeURIComponent(docName),
+          { credentials: "include" },
+        );
+        if (c.ok) {
+          meta = (await c.json()) as DocMeta;
+        } else if (c.status === 401 || c.status === 403) {
+          toast("无权限查看该文档，请先登录或确认账号可访问此知识库");
+          return;
+        }
+      }
+      const spec = (meta && meta.spec) || null;
+      if (!spec) {
+        toast("未能获取该文档内容，请稍后重试");
+        return;
+      }
+
+      /* 正文（#md-prose 常驻容器，仅替换 innerHTML） */
+      if (prose) prose.innerHTML = (spec.content as string) || "";
+
+      /* 树高亮 + 展开祖先链，确保新文档可见 */
+      document
+        .querySelectorAll<HTMLElement>(".md-tree-link.active")
+        .forEach((a) => a.classList.remove("active"));
+      link.classList.add("active");
+      let li = link.closest("li");
+      while (li) {
+        const p = li.parentElement ? li.parentElement.closest("li") : null;
+        if (!p) break;
+        p.classList.remove("md-fold");
+        li = p;
+      }
+
+      /* 重建目录 / 代码块 / 底部统计 / 路由 */
+      try {
+        buildPostRender();
+      } catch (err) {
+        console.error("[doc] render enhance failed", err);
+      }
+
+      /* 底部作者与时间 */
+      updateDocFooter(spec, (meta && meta.metadata && meta.metadata.creationTimestamp) || "");
+
+      /* 页面标题：文档名 - 知识库名 */
+      const root = document.getElementById("md-route")?.getAttribute("data-root") || "";
+      const title = typeof spec.title === "string" ? spec.title : "";
+      document.title = title ? title + " - " + root : "知识库阅读";
+
+      /* 地址栏更新（不刷新页面） */
+      const u = new URL(location.href);
+      u.searchParams.set("docSlug", slug);
+      history.pushState(null, "", u.pathname + u.search);
+
+      /* 通知 plugin-shiki 重新扫描并高亮新插入的代码块（SPA 官方钩子） */
+      window.dispatchEvent(new Event("pjax:complete"));
+
+      /* 回到正文顶部 */
+      mainEl?.scrollTo({ top: 0 });
+    } catch (err) {
+      console.error("[doc] switch doc failed", err);
+      toast("切换失败，请重试");
+    }
   }
 
   /* mermaid 预览/源码 tab（drives cherry-markdown 结构） */
@@ -424,7 +598,10 @@
     if (!prose) return;
     prose.addEventListener("click", (e) => {
       const target = e.target as HTMLElement | null;
-      const tab = target && target.closest ? target.closest(".cherry-mermaid-source-toolbar-tab[data-mode]") : null;
+      const tab =
+        target && target.closest
+          ? target.closest(".cherry-mermaid-source-toolbar-tab[data-mode]")
+          : null;
       if (!tab) return;
       const fig = tab.closest("figure");
       if (!fig) return;
@@ -442,7 +619,13 @@
 
   /* ================= 左右侧边栏拖拽拉宽 ================= */
   type ResizeDir = "left" | "right";
-  function initResizer(handle: HTMLElement, target: HTMLElement, dir: ResizeDir, min: number, max: number): void {
+  function initResizer(
+    handle: HTMLElement,
+    target: HTMLElement,
+    dir: ResizeDir,
+    min: number,
+    max: number,
+  ): void {
     handle.addEventListener("mousedown", (e) => {
       e.preventDefault();
       handle.classList.add("dragging");
