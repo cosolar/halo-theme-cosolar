@@ -6,10 +6,10 @@
 
 MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以 `@Component` + `@Bean RouterFunction` 注册，Halo 自动收集），主题可选择性用同名模板覆盖；未提供时使用插件内置默认模板 `docs.html` / `doc.html` / `doc_share.html`：
 
-| 路由                       | 渲染模板         | 说明                                                                                |
-| -------------------------- | ---------------- | ----------------------------------------------------------------------------------- |
-| `/docs`                    | `docs.html`      | 文档列表页（模板通过 `minidocsFinder` 自取当前用户可见的知识库与文档）              |
-| `/docs/view/{kbSlug}`      | `doc.html`       | 知识库阅读页；`kbSlug` 支持知识库 `metadata.name` 或 `spec.slug`                    |
+| 路由 | 渲染模板 | 说明 |
+| --- | --- | --- |
+| `/docs` | `docs.html` | 文档列表页（模板通过 `minidocsFinder` 自取当前用户可见的知识库与文档） |
+| `/docs/view/{kbSlug}` | `doc.html` | 知识库阅读页；`kbSlug` 支持知识库 `metadata.name` 或 `spec.slug` |
 | `/docs/share/{shareToken}` | `doc_share.html` | 知识库外链分享页（左侧文档树、中间阅读区、右侧大纲）；可选 `?docSlug=` 直接定位文档 |
 
 > **阅读页 / 列表页**走常规授权大门：服务端仅在路由入口做访问授权（按当前登录态校验公开 / 私有库与匿名开关），不向模板塞业务数据；知识库 / 文档树 / 文档数据由模板通过 `minidocsFinder` 自行查询（Finder 内部再做资源级可见性二次校验）。当前访问者不可访问的知识库返回 `404`。
@@ -45,10 +45,10 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 
 **参数**：
 
-| 参数   | 说明              |
-| ------ | ----------------- |
+| 参数 | 说明 |
+| --- | --- |
 | `page` | 页码，从 `1` 开始 |
-| `size` | 每页条数          |
+| `size` | 每页条数 |
 
 **返回值**：`ListResult<KnowledgeBase>`
 
@@ -69,8 +69,8 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 
 **参数**：
 
-| 参数     | 说明                                            |
-| -------- | ----------------------------------------------- |
+| 参数 | 说明 |
+| --- | --- |
 | `kbSlug` | 知识库标识，支持 `metadata.name` 或 `spec.slug` |
 
 **返回值**：`KnowledgeBase`（非公开 / 不存在时为空）
@@ -90,11 +90,11 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 
 **参数**：
 
-| 参数     | 说明                                            |
-| -------- | ----------------------------------------------- |
+| 参数 | 说明 |
+| --- | --- |
 | `kbSlug` | 知识库标识，支持 `metadata.name` 或 `spec.slug` |
-| `page`   | 页码，从 `1` 开始                               |
-| `size`   | 每页条数                                        |
+| `page` | 页码，从 `1` 开始 |
+| `size` | 每页条数 |
 
 **返回值**：`ListResult<KnowledgeBaseDoc>`
 
@@ -103,10 +103,7 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 ```html
 <ul>
   <li th:each="doc : ${minidocsFinder.listDocs(kbSlug, 1, 20).items}">
-    <a
-      th:href="'/docs/view/' + ${kbSlug} + '?docSlug=' + ${doc.spec.slug}"
-      th:text="${doc.spec.title}"
-    ></a>
+    <a th:href="'/docs/view/' + ${kbSlug} + '?docSlug=' + ${doc.spec.slug}" th:text="${doc.spec.title}"></a>
     <small th:text="${doc.spec.summary}"></small>
   </li>
 </ul>
@@ -118,10 +115,10 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 
 **参数**：
 
-| 参数      | 说明                                            |
-| --------- | ----------------------------------------------- |
-| `kbSlug`  | 知识库标识，支持 `metadata.name` 或 `spec.slug` |
-| `docSlug` | 文档的 `spec.slug`（URL 友好标识）              |
+| 参数 | 说明 |
+| --- | --- |
+| `kbSlug` | 知识库标识，支持 `metadata.name` 或 `spec.slug` |
+| `docSlug` | 文档的 `spec.slug`（URL 友好标识） |
 
 **返回值**：`KnowledgeBaseDoc`（不存在时为空）
 
@@ -141,8 +138,8 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 
 **参数**：
 
-| 参数     | 说明                                            |
-| -------- | ----------------------------------------------- |
+| 参数 | 说明 |
+| --- | --- |
 | `kbSlug` | 知识库标识，支持 `metadata.name` 或 `spec.slug` |
 
 **返回值**：`List<DocTreeNode>`
@@ -155,16 +152,10 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 <nav>
   <ul>
     <li th:each="node : ${minidocsFinder.getDocTree(kbSlug)}">
-      <a
-        th:href="'/docs/view/' + ${kbSlug} + '?docSlug=' + ${node.slug}"
-        th:text="${node.title}"
-      ></a>
+      <a th:href="'/docs/view/' + ${kbSlug} + '?docSlug=' + ${node.slug}" th:text="${node.title}"></a>
       <ul th:if="${node.children != null and !node.children.isEmpty()}">
         <li th:each="child : ${node.children}">
-          <a
-            th:href="'/docs/view/' + ${kbSlug} + '?docSlug=' + ${child.slug}"
-            th:text="${child.title}"
-          ></a>
+          <a th:href="'/docs/view/' + ${kbSlug} + '?docSlug=' + ${child.slug}" th:text="${child.title}"></a>
         </li>
       </ul>
     </li>
@@ -180,8 +171,8 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 
 **参数**：
 
-| 参数      | 说明               |
-| --------- | ------------------ |
+| 参数 | 说明 |
+| --- | --- |
 | `docSlug` | 文档的 `spec.slug` |
 
 **返回值**：`KnowledgeBaseDoc`（不存在时为空）
@@ -198,7 +189,6 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 > `docSlug` 变量由你的主题通过「页面 slug 约定」或「主题设置」传入模板（与内置路由 `/docs/view/{kbSlug}?docSlug=` 中的 `docSlug` 一致）。文档 `spec.raw` 为**原始 Markdown 文本**，需主题自行渲染（参考下方「Markdown 渲染」）。若希望直接输出已渲染 HTML，可直接使用文档的 `spec.content` 字段（编辑时由前端 Markdown 编辑器生成的 HTML）。
 
 > 取单篇文档有两个**同名重载**：
->
 > - `getDocBySlug(kbSlug, docSlug)`：限定知识库取文档（并校验归属该知识库）。
 > - `getDocBySlug(docSlug)`：按文档 slug 全局取（适合详情页只带一个 slug 的场景）。
 >
@@ -216,12 +206,12 @@ MiniDocs 内置了一组前台主题模板路由（由 `KnowledgeBaseRouter` 以
 <div id="doc-html" class="markdown-body"></div>
 <script th:inline="javascript">
   /*<![CDATA[*/
-  const DOC_MD = /*[[${doc.spec.raw}]]*/ "";
+  const DOC_MD = /*[[${doc.spec.raw}]]*/ '';
   /*]]>*/
 </script>
 <script type="module">
-  import { marked } from "https://esm.sh/marked";
-  document.getElementById("doc-html").innerHTML = marked.parse(DOC_MD);
+  import { marked } from 'https://esm.sh/marked';
+  document.getElementById('doc-html').innerHTML = marked.parse(DOC_MD);
 </script>
 ```
 

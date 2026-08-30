@@ -7427,3 +7427,8 @@ body.nav-open {
     display: none;
   }
 }
+
+/* 知识库页（知识库列表 / 文档阅读页）可根据设置隐藏整个页脚 */
+body:has(.docs-hide-footer) .site-footer {
+  display: none;
+}

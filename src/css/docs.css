@@ -87,6 +87,7 @@
 /* ---------- 应用容器：填满 header 之下视口、内部滚动 ---------- */
 .md-app {
   height: calc(100vh - var(--header-height) - 6px);
+  height: calc(100dvh - var(--header-height) - 6px);
   min-height: 480px;
   overflow: hidden;
   display: flex;
@@ -1260,49 +1261,183 @@ a.sb-item:hover,
   .md-sidebar {
     display: none;
   }
-  .md-stat {
-    padding: 10px 12px;
-    gap: 9px;
-    border-radius: 12px;
+  .md-main {
+    gap: 14px;
   }
-  .md-stat-ico {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
+  .md-content {
+    padding: 14px 16px 12px;
   }
-  .md-stat-ico svg {
-    width: 17px;
-    height: 17px;
+  .md-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   }
-  .md-stat-val {
-    font-size: 18px;
+}
+@media (max-width: 860px) {
+  .md-app {
+    min-height: 0;
   }
-  .md-stat-val.is-text {
-    font-size: 12.5px;
+  .md-toolbar {
+    gap: 10px;
   }
-  .md-stat-label {
-    font-size: 11px;
-    margin-top: 2px;
+  .md-toolbar-right {
+    margin-left: auto;
+  }
+  .md-count-line {
+    padding-top: 2px;
   }
 }
 @media (max-width: 640px) {
   .md-content {
-    padding: 12px 12px 8px;
+    padding: 10px 12px 8px;
   }
   .md-toolbar {
     flex-wrap: wrap;
+    gap: 8px;
   }
   .md-search {
     flex: 1 1 100%;
+    order: 3;
+    margin-left: 0;
+    width: 100%;
   }
+  .md-sec-title {
+    font-size: 15px;
+  }
+  .md-toolbar-right {
+    gap: 8px;
+    margin-left: auto;
+  }
+  /* 顶部看板横向滑动 */
   .md-stats {
     display: flex;
     overflow-x: auto;
     gap: 10px;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .md-stats::-webkit-scrollbar {
+    display: none;
   }
   .md-stat {
     flex: 0 0 auto;
-    min-width: 150px;
+    min-width: 142px;
   }
+  .md-stat:hover {
+    transform: none;
+  }
+  /* 卡片网格自适应列宽，避免横向溢出 */
+  .md-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .md-kb-card:hover {
+    transform: none;
+  }
+  .md-pager-wrap {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .md-pager-wrap .md-count {
+    width: 100%;
+  }
+}
+@media (max-width: 400px) {
+  .md-search .kbd {
+    display: none;
+  }
+  .md-stats .md-stat-ico {
+    width: 30px;
+    height: 30px;
+  }
+  .md-stats .md-stat {
+    min-width: 132px;
+    padding: 9px 11px;
+  }
+}
+
+/* ---------- 移动端知识库卡片美化（仅 ≤860px，不影响桌面） ---------- */
+@media (max-width: 860px) {
+  .md-grid {
+    gap: 12px;
+  }
+  .md-kb-card {
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  }
+  /* 封面更聚焦：比例略拉宽，顶部轻渐变遮罩提升角标/点赞的可读性 */
+  .md-grid.is-card .md-cover .img-inner {
+    aspect-ratio: 15 / 9;
+  }
+  .md-kb-card .md-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 42%);
+  }
+  /* 放大角标与点赞按钮的触控区域，与封面边缘对齐更协调 */
+  .md-grid.is-card .md-cover-chip {
+    top: 12px;
+    left: 12px;
+    padding: 3px 10px;
+  }
+  .md-grid.is-card .md-like-btn {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+  .md-grid.is-card .md-like-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+  /* 精简底部信息：仅保留“文档数 + 更新时间”，访问量/点赞计数交给封面心形，
+     避免移动端信息过载 */
+  .md-kb-card .md-title-badge:nth-child(n + 2) {
+    display: none;
+  }
+  .md-foot {
+    padding-top: 9px;
+  }
+  .md-title {
+    font-size: 14.5px;
+    min-height: 36px;
+  }
+  .md-desc {
+    font-size: 12px;
+  }
+  /* 无 hover，改用按压反馈 */
+  .md-kb-card:active {
+    transform: scale(0.985);
+  }
+}
+
+/* ---------- 知识库列表页轻量提示（toast） ---------- */
+.md-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 60px;
+  transform: translateX(-50%) translateY(16px);
+  z-index: 9999;
+  max-width: 78vw;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.74);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+.md-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

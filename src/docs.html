@@ -5,7 +5,10 @@
     <script type="module" src="./js/docs.ts"></script>
   </template>
 
-  <div class="layout-grid no-sidebar kb-page">
+  <div
+    class="layout-grid no-sidebar kb-page"
+    th:classappend="${theme.config?.docs?.show_footer == false ? ' docs-hide-footer' : ''}"
+  >
     <div class="content-area">
       <div class="md-app" th:with="result=${minidocsFinder.listKnowledgeBases(1, 1000)}">
         <div class="md-content">
@@ -310,7 +313,9 @@
                        data-access=${kb.spec?.accessCount != null ? kb.spec.accessCount : 0},
                        data-like=${kb.spec?.likeCount != null ? kb.spec.likeCount : 0},
                        data-update=${kb.spec?.updateTime != null ? kb.spec.updateTime : ''},
-                       data-created=${kb.spec?.creationTime != null ? kb.spec.creationTime : ''}"
+                       data-created=${kb.spec?.creationTime != null ? kb.spec.creationTime : ''},
+                       data-logged-in=${#authentication != null and #authentication.name != null and !#strings.equals(#authentication.name, 'anonymousUser') ? 'true' : 'false'},
+                       data-liked=${#authentication != null and #authentication.name != null and !#strings.equals(#authentication.name, 'anonymousUser') and kb.spec?.likedUsers != null and kb.spec.likedUsers.contains(#authentication.name) ? 'true' : 'false'}"
                     th:href="@{'/docs/view/' +
                                ${kb.spec?.slug != null and !kb.spec.slug.isEmpty()
                                  ? kb.spec.slug : kb.metadata.name}}"

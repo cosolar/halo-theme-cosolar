@@ -333,9 +333,24 @@
     el.setAttribute("title", chain.join(" / "));
   }
 
+  /* 表格：包裹为横向滚动容器，避免正文溢出造成页面横向滚动 */
+  function wrapDocTables(): void {
+    if (!prose) return;
+    prose.querySelectorAll<HTMLTableElement>("table").forEach((table) => {
+      if (table.closest(".md-table-wrap")) return;
+      const wrap = document.createElement("div");
+      wrap.className = "md-table-wrap";
+      table.parentNode?.insertBefore(wrap, table);
+      wrap.appendChild(table);
+    });
+  }
+
   /* 重建正文相关的所有增强（代码块 + 目录 + 底部统计 + 时间 + 路由） */
   function buildPostRender(): void {
     if (!prose) return;
+
+    /* 表格：包裹为横向滚动容器 */
+    wrapDocTables();
 
     /* 代码块：语言标签 + 复制按钮 */
     prose.querySelectorAll<HTMLElement>("pre").forEach((pre) => {
@@ -471,6 +486,12 @@
       if (tocList.children.length === 0) {
         if (tocRoot) tocRoot.style.display = "none";
         if (tocHandle) tocHandle.style.display = "none";
+        /* 无标题时隐藏移动端大纲抽屉按钮，避免打开空抽屉 */
+        const tocToggle = document.getElementById("md-toggle-toc");
+        if (tocToggle) tocToggle.style.display = "none";
+      } else {
+        const tocToggle = document.getElementById("md-toggle-toc");
+        if (tocToggle) tocToggle.style.display = "";
       }
     } else {
       currentHeads = [];
@@ -594,6 +615,9 @@
 
       /* 回到正文顶部 */
       mainEl?.scrollTo({ top: 0 });
+
+      /* 移动端切文后自动收起目录抽屉 */
+      if (window.matchMedia("(max-width: 860px)").matches) setDrawer(null);
     } catch (err) {
       console.error("[doc] switch doc failed", err);
       toast("切换失败，请重试");
@@ -665,4 +689,234 @@
   const tocHandle = document.querySelector<HTMLElement>(".resize-handle.toc-resize");
   const tocEl = document.getElementById("md-toc");
   if (tocHandle && tocEl) initResizer(tocHandle, tocEl, "right", 170, 480);
+
+  /* ===== 移动端：文档树 / 大纲抽屉 ===== */
+  const drawerSb = document.getElementById("md-sb");
+  const drawerToc = document.getElementById("md-toc");
+  const drawerBackdrop = document.getElementById("md-drawer-backdrop");
+  const toggleSb = document.getElementById("md-toggle-sb");
+  const toggleToc = document.getElementById("md-toggle-toc");
+
+  function setDrawer(kind: "sb" | "toc" | null): void {
+    drawerSb?.classList.toggle("open", kind === "sb");
+    drawerToc?.classList.toggle("open", kind === "toc");
+    drawerBackdrop?.classList.toggle("show", kind !== null);
+    const isMobile = window.matchMedia("(max-width: 860px)").matches;
+    if (isMobile) document.body.style.overflow = kind ? "hidden" : "";
+    if (toggleSb)
+      toggleSb.setAttribute(
+        "aria-label",
+        kind === "sb" ? "关闭文档目录" : "打开文档目录",
+      );
+    if (toggleToc)
+      toggleToc.setAttribute(
+        "aria-label",
+        kind === "toc" ? "关闭文章大纲" : "打开文章大纲",
+      );
+  }
+
+  // 记录当前打开的抽屉（供切文/大纲点击后自动收起）
+  const drawerKind = (): "sb" | "toc" | null => {
+    if (drawerSb?.classList.contains("open")) return "sb";
+    if (drawerToc?.classList.contains("open")) return "toc";
+    return null;
+  };
+
+  toggleSb?.addEventListener("click", () => {
+    setDrawer(drawerKind() === "sb" ? null : "sb");
+  });
+  toggleToc?.addEventListener("click", () => {
+    setDrawer(drawerKind() === "toc" ? null : "toc");
+  });
+  drawerBackdrop?.addEventListener("click", () => setDrawer(null));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drawerKind()) setDrawer(null);
+  });
+
+  /* 大纲抽屉里点击条目跳转后自动收起 */
+  const tocListEl = document.getElementById("md-toc-list");
+  tocListEl?.addEventListener("click", (e) => {
+    if (window.matchMedia("(max-width: 860px)").matches) {
+      const a = (e.target as HTMLElement).closest("a");
+      if (a && drawerKind() === "toc") setDrawer(null);
+    }
+  });
+
+  /* ===== 文档图片灯箱（放大缩小 / 拖动平移 / 双击复位 / 触摸缩放） ===== */
+  function initImageLightbox(): void {
+    const content = document.getElementById("md-prose");
+    if (!content) return;
+
+    const viewer = document.createElement("div");
+    viewer.className = "image-viewer md-image-viewer";
+    viewer.innerHTML =
+      '<div class="md-iv-toolbar" role="toolbar" aria-label="图片查看工具">' +
+      '<button type="button" data-act="out" title="缩小" aria-label="缩小"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></button>' +
+      '<button type="button" data-act="in" title="放大" aria-label="放大"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></button>' +
+      '<button type="button" data-act="reset" title="复位" aria-label="复位缩放"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg></button>' +
+      '<span class="iv-sep"></span>' +
+      '<button type="button" class="iv-close" data-act="close" title="关闭" aria-label="关闭图片查看"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>' +
+      "</div>" +
+      '<div class="image-viewer-tip">滚轮 / 双指缩放 · 拖动平移 · 双击复位 · 点击关闭</div>';
+    const img = document.createElement("img");
+    img.alt = "";
+    viewer.appendChild(img);
+    document.body.appendChild(viewer);
+
+    const MIN = 0.5;
+    const MAX = 6;
+    let scale = 1;
+    let x = 0;
+    let y = 0;
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startY = 0;
+    let startTX = 0;
+    let startTY = 0;
+    /* 触摸缩放：记录活动指针与起始距离 */
+    const pointers = new Map<number, { x: number; y: number }>();
+    let pinchDist = 0;
+    let pinchScale = 1;
+
+    function applyTransform(): void {
+      img.style.transform = "translate(" + x + "px, " + y + "px) scale(" + scale + ")";
+    }
+    function resetView(): void {
+      scale = 1;
+      x = 0;
+      y = 0;
+      applyTransform();
+    }
+    function zoomBy(factor: number, cx?: number, cy?: number): void {
+      const prev = scale;
+      scale = Math.min(MAX, Math.max(MIN, scale * factor));
+      const k = scale / prev;
+      if (cx != null && cy != null) {
+        // 以指针/光标为缩放中心，避免焦点漂移
+        x = cx - (cx - x) * k;
+        y = cy - (cy - y) * k;
+      }
+      applyTransform();
+    }
+
+    function open(src: string): void {
+      img.src = src;
+      resetView();
+      viewer.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function close(): void {
+      viewer.classList.remove("open");
+      document.body.style.overflow = "";
+      pointers.clear();
+    }
+
+    /* 点击正文任意图片打开灯箱（委托，SPA 切文后依然生效） */
+    content.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement | null;
+      if (!target || target.tagName !== "IMG") return;
+      if (target.closest(".cherry-mermaid-source-toolbar-panel")) return;
+      const src = (target as HTMLImageElement).currentSrc || (target as HTMLImageElement).src;
+      e.preventDefault();
+      open(src);
+    });
+
+    /* 点击背景/空白关闭；点击图片本身不关闭（拖动过也不关闭） */
+    viewer.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest(".md-iv-toolbar button")) return;
+      if (t === img) return;
+      if (moved) {
+        moved = false;
+        return;
+      }
+      close();
+    });
+
+    /* 滚轮缩放：始终以视口居中为基准（transform-origin:center），不随光标偏移 */
+    viewer.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15);
+    }, { passive: false });
+
+    viewer.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+      resetView();
+    });
+
+    /* 工具栏按钮 */
+    viewer.querySelectorAll<HTMLElement>(".md-iv-toolbar button[data-act]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const act = btn.getAttribute("data-act");
+        if (act === "in") zoomBy(1.3);
+        else if (act === "out") zoomBy(1 / 1.3);
+        else if (act === "reset") resetView();
+        else if (act === "close") close();
+      });
+    });
+
+    /* 指针事件：统一鼠标 / 触控（单手拖动、双指缩放） */
+    const dist = (a: { x: number; y: number }, b: { x: number; y: number }): number =>
+      Math.hypot(a.x - b.x, a.y - b.y);
+
+    viewer.addEventListener("pointerdown", (e) => {
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 1) {
+        dragging = true;
+        moved = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        startTX = x;
+        startTY = y;
+      } else if (pointers.size === 2) {
+        dragging = false;
+        const [a, b] = Array.from(pointers.values());
+        pinchDist = dist(a, b);
+        pinchScale = scale;
+      }
+    });
+    viewer.addEventListener("pointermove", (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      if (pointers.size === 2) {
+        const pts = Array.from(pointers.values());
+        const [a, b] = pts;
+        const d = dist(a, b);
+        if (pinchDist) {
+          const next = Math.min(MAX, Math.max(MIN, pinchScale * (d / pinchDist)));
+          const k = next / scale;
+          scale = next;
+          // 两指中点缩放
+          const cx = (a.x + b.x) / 2;
+          const cy = (a.y + b.y) / 2;
+          const rect = viewer.getBoundingClientRect();
+          x = cx - rect.left - (cx - rect.left - x) * k;
+          y = cy - rect.top - (cy - rect.top - y) * k;
+          applyTransform();
+        }
+        return;
+      }
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      x = startTX + dx;
+      y = startTY + dy;
+      applyTransform();
+    });
+    const releasePointer = (e: PointerEvent): void => {
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2) pinchDist = 0;
+      if (pointers.size === 0) dragging = false;
+    };
+    viewer.addEventListener("pointerup", releasePointer);
+    viewer.addEventListener("pointercancel", releasePointer);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && viewer.classList.contains("open")) close();
+    });
+  }
+  initImageLightbox();
 })();

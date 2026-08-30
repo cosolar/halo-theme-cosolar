@@ -48,7 +48,9 @@
    应用容器：占满 header 之下视口，内部滚动
    ============================================ */
 .kb-app {
+  position: relative;
   height: calc(100vh - var(--header-height) - 18px);
+  height: calc(100dvh - var(--header-height) - 18px);
   min-height: 480px;
   display: flex;
   flex-direction: column;
@@ -59,12 +61,20 @@
   border-radius: 12px;
   box-shadow: var(--md-card-shadow);
 }
+@media (max-width: 860px) {
+  .kb-app {
+    min-height: 0;
+    border-radius: 10px;
+  }
+}
 
 /* ============================================
    顶部工具条：返回知识库 / 书签 / 分享 / 点赞 / 访问量
    ============================================ */
 .md-topbar {
   flex: 0 0 auto;
+  position: relative;
+  z-index: 65;
   height: 46px;
   display: flex;
   align-items: center;
@@ -73,6 +83,13 @@
   padding: 0 14px;
   background: var(--md-card);
   border-bottom: 1px solid var(--md-border);
+}
+/* 仅移动端显示的抽屉开关按钮；限定 .md-topbar 提高特异性，避免被 .nav-btn 的 display 覆盖 */
+.md-topbar .mobile-only {
+  display: none;
+}
+.md-toggle-drawer {
+  width: 34px;
 }
 .nav-trails,
 .nav-stats {
@@ -314,6 +331,12 @@ figure[data-type="mermaid"] .cherry-mermaid-source-toolbar-panel[data-mode="prev
   min-height: 0;
   display: flex;
   min-width: 0;
+  position: relative;
+}
+
+/* 移动端抽屉遮罩（桌面端隐藏） */
+.md-drawer-backdrop {
+  display: none;
 }
 
 /* 左侧目录 */
@@ -713,6 +736,18 @@ li.md-leaf > a {
   color: var(--md-title);
   font-weight: 600;
 }
+/* 表格：包裹为横向滚动容器，防止正文溢出形成页面横向滚动 */
+.md-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1em 0;
+}
+.md-table-wrap table {
+  width: auto;
+  min-width: 100%;
+  margin: 0;
+}
 
 .md-content pre {
   position: relative;
@@ -996,17 +1031,25 @@ li.md-leaf > a {
   color: var(--md-border);
 }
 .md-back-top {
-  padding: 5px 14px;
-  font-size: 12px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--md-primary-deep);
   background: var(--md-primary-bg);
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 50%;
   cursor: pointer;
   transition:
     background 0.12s ease,
     color 0.12s ease;
   flex: 0 0 auto;
+}
+.md-back-top svg {
+  width: 15px;
+  height: 15px;
 }
 .md-back-top:hover {
   background: var(--md-primary);
@@ -1035,6 +1078,90 @@ li.md-leaf > a {
   transform: translate(-50%, 0);
 }
 
+/* ===== 图片灯箱（复用 main.css 的 .image-viewer 外壳，补充工具栏） ===== */
+.md-image-viewer {
+  touch-action: none;
+  overflow: hidden;
+}
+.md-image-viewer img {
+  transition: none;
+  will-change: transform;
+}
+.md-iv-toolbar {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.md-iv-toolbar button {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #e6edf3;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+}
+.md-iv-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.md-iv-toolbar button:active {
+  transform: scale(0.92);
+}
+.md-iv-toolbar button svg {
+  width: 18px;
+  height: 18px;
+}
+.md-iv-toolbar button.iv-close {
+  margin-left: 2px;
+  color: #fda4af;
+}
+.md-iv-toolbar button.iv-close:hover {
+  background: rgba(244, 63, 94, 0.22);
+  color: #fff;
+}
+.md-iv-toolbar .iv-sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 2px;
+}
+@media (max-width: 480px) {
+  .md-iv-toolbar {
+    top: 12px;
+    padding: 4px;
+    gap: 4px;
+    border-radius: 11px;
+  }
+  .md-iv-toolbar button {
+    width: 34px;
+    height: 34px;
+  }
+  .md-iv-toolbar button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 @media (max-width: 1024px) {
   .md-toc {
     display: none;
@@ -1048,10 +1175,77 @@ li.md-leaf > a {
     padding: 0;
     gap: 0;
   }
-  .md-sb {
+  /* 显示移动端抽屉开关按钮 */
+  .md-topbar .mobile-only {
+    display: inline-flex;
+  }
+  /* 移动端：隐藏加入书签按钮与访问量徽章，避免顶栏拥挤 */
+  .nav-btn.nav-btn--bm,
+  .nav-stat.nav-stat--view {
     display: none;
   }
-  .resize-handle.sb-resize {
+  /* 遮罩：覆盖阅读区，仅移动端生效 */
+  .md-drawer-backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    background: rgba(6, 11, 16, 0.5);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.22s ease,
+      visibility 0.22s;
+  }
+  .md-drawer-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* 左侧文档树 → 从左侧滑出的抽屉 */
+  .md-sb {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 84vw;
+    max-width: 340px;
+    z-index: 70;
+    border-right: 1px solid var(--md-border);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.18);
+    transform: translateX(-100%);
+    transition: transform 0.26s ease;
+    background: var(--md-card);
+  }
+  .md-sb.open {
+    transform: translateX(0);
+  }
+
+  /* 右侧大纲 → 从右侧滑出的抽屉 */
+  .md-toc {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 84vw;
+    max-width: 320px;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--md-border);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.18);
+    transform: translateX(100%);
+    transition: transform 0.26s ease;
+    background: var(--md-card);
+  }
+  .md-toc.open {
+    transform: translateX(0);
+  }
+
+  .resize-handle.sb-resize,
+  .resize-handle.toc-resize {
     display: none;
   }
   .md-main {
@@ -1065,10 +1259,45 @@ li.md-leaf > a {
     flex-wrap: wrap;
     padding: 6px 12px;
   }
+  /* 底部信息栏（移动端）：仅保留 标题(非路径) / 字数 / 行数 / 回到顶部 */
+  #md-route > span:first-child,
+  #md-route > .sep,
+  .md-bottom-info > .sep,
+  .md-bottom-info .md-mi {
+    display: none;
+  }
+  .md-bottom-title {
+    max-width: 52vw;
+  }
   .md-bottom-meta {
     display: none;
   }
   .md-title {
     font-size: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .md-topbar {
+    padding: 0 10px;
+    gap: 8px;
+  }
+  .nav-btn--kb span {
+    display: none;
+  }
+  .nav-btn--kb {
+    padding: 0;
+    width: 34px;
+    justify-content: center;
+  }
+  .nav-stat--view .nav-stat-num {
+    display: none;
+  }
+  .nav-stat.nav-stat--view {
+    padding: 0;
+    width: 34px;
+    justify-content: center;
+  }
+  .md-content {
+    font-size: 14.5px;
   }
 }

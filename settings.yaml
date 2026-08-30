@@ -936,6 +936,11 @@ spec:
           value: true
           help: 在知识库列表页顶部显示统计数据栏（知识库总数、文档总数、标签数量、访问量、点赞量）；关闭后隐藏整个统计栏
         - $formkit: switch
+          name: show_footer
+          label: 显示页脚
+          value: true
+          help: 在知识库页面（知识库列表页与文档阅读页）显示页脚；关闭后隐藏整个页脚
+        - $formkit: switch
           name: show_sidebar
           label: 显示左侧边栏
           value: true

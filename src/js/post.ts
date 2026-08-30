@@ -522,8 +522,9 @@ function initImageViewer(): void {
     }
   });
 
-  // 点击查看器关闭（拖动后不关）
-  viewer.addEventListener("click", function () {
+  // 点击背景/空白关闭；点击图片本身不关闭（拖动过也不关闭）
+  viewer.addEventListener("click", function (e: MouseEvent) {
+    if (e.target === img) return;
     if (moved) {
       moved = false;
       return;

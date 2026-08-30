@@ -7,6 +7,7 @@
 
   <div
     class="kb-app kb-page"
+    th:classappend="${theme.config?.docs?.show_footer == false ? ' docs-hide-footer' : ''}"
     th:with="
       knowledgeBase = ${kbSlug != null ? minidocsFinder.getKnowledgeBase(kbSlug) : null},
       docTree = ${kbSlug != null ? minidocsFinder.getDocTree(kbSlug) : null},
@@ -19,6 +20,26 @@
     <!-- 顶部工具条：返回知识库 / 书签 / 分享 / 点赞 / 访问量 -->
     <div class="md-topbar">
       <div class="nav-trails">
+        <button
+          class="nav-btn icon-only mobile-only md-toggle-drawer"
+          type="button"
+          id="md-toggle-sb"
+          title="文档目录"
+          aria-label="打开文档目录"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
         <a class="nav-btn nav-btn--kb" th:href="@{/docs}">
           <svg
             viewBox="0 0 24 24"
@@ -105,6 +126,29 @@
           </svg>
           <span class="nav-stat-num" id="md-view-count">0</span>
         </span>
+        <button
+          class="nav-btn icon-only mobile-only md-toggle-drawer"
+          type="button"
+          id="md-toggle-toc"
+          title="文章大纲"
+          aria-label="打开文章大纲"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3" y2="6"></line>
+            <line x1="3" y1="12" x2="3" y2="12"></line>
+            <line x1="3" y1="18" x2="3" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -244,7 +288,7 @@
         <span class="sep"></span>
         <span><b id="md-words">0</b> 字</span>
         <span class="sep"></span>
-        <span><b id="md-lines">0</b> 行</span>
+        <span class="md-bottom-lines"><b id="md-lines">0</b> 行</span>
         <span class="md-mi" th:if="${doc.spec.author != null and !doc.spec.author.isEmpty()}">
           <svg
             viewBox="0 0 24 24"
@@ -303,8 +347,29 @@
           ></span>
         </span>
       </div>
-      <button class="md-back-top" type="button" id="md-back-top">回到顶部</button>
+      <button
+        class="md-back-top"
+        type="button"
+        id="md-back-top"
+        title="回到顶部"
+        aria-label="回到顶部"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="19" x2="12" y2="5"></line>
+          <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+      </button>
     </div>
+
+    <!-- 移动端抽屉遮罩 -->
+    <div class="md-drawer-backdrop" id="md-drawer-backdrop"></div>
 
     <div class="md-toast" id="md-toast"></div>
   </div>

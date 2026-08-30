@@ -92,27 +92,53 @@
       return false;
     }
   }
+  /* 轻量提示（toast），动态创建，仅知识库列表页使用 */
+  let toastTimer = 0;
+  function toast(message: string): void {
+    let el = document.getElementById("md-toast");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "md-toast";
+      el.className = "md-toast";
+      document.body.appendChild(el);
+    }
+    el.textContent = message;
+    el.classList.add("show");
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => el!.classList.remove("show"), 1800);
+  }
+
   cards.forEach((card) => {
     const btn = card.el.querySelector<HTMLElement>(".md-like-btn") as HTMLElement | null;
     if (!btn) return;
     const slug = card.el.getAttribute("data-slug") || "";
     if (!slug) return;
     const badge = card.el.querySelector<HTMLElement>(".md-like-badge span");
-    function markLiked(): void {
+    function markActiveOnly(): void {
       btn!.classList.add("active");
+      btn!.classList.remove("popping");
+    }
+    function markPopping(): void {
       btn!.classList.remove("popping");
       void btn!.offsetWidth;
       btn!.classList.add("popping");
     }
-    if (locallyLiked(slug)) btn.classList.add("active");
+    /* 初始点赞态：登录用户以服务端 likedUsers 为准（人人独立，避免 shared localStorage 串号）；
+       匿名用户以本地 localStorage 为准 */
+    const loggedIn = card.el.getAttribute("data-logged-in") === "true";
+    const serverLiked = card.el.getAttribute("data-liked") === "true";
+    if (loggedIn ? serverLiked : locallyLiked(slug)) btn.classList.add("active");
     btn.setAttribute("aria-label", "点赞：" + card.title);
     btn.setAttribute("title", "点赞：" + card.title);
     function doLike(): void {
       /* 每个卡片每用户只点赞一次：未点赞时发起请求并保存；
          已点赞（本地标记）时不再重复请求，避免匿名用户无限 +1；
          登录用户另有后端 likedUsers 幂等兜底 */
-      if (locallyLiked(slug)) {
-        markLiked();
+      /* 匿名用户用本地存储去重拦截，防止无限 +1；
+         登录用户每次都请求后端，由服务端 likedUsers 幂等并返回 newLike 决定文案 */
+      if (!loggedIn && locallyLiked(slug)) {
+        markActiveOnly();
+        toast("已经点过赞了");
         return;
       }
       fetch(
@@ -120,31 +146,42 @@
         { method: "POST", credentials: "include" },
       )
         .then((r) => {
+          if (r.status === 403) throw 403;
           if (!r.ok) throw 0;
           return r.json();
         })
-        .then((data: { likeCount?: number }) => {
+        .then((data: { likeCount?: number; newLike?: boolean }) => {
           try {
             localStorage.setItem(likeKey(slug), "1");
           } catch {
             /* 忽略隐私模式 */
           }
-          markLiked();
+          /* newLike 用于区分「本次真正新增」与「幂等命中」：
+             true → 点赞成功（播放动效、看板 +1）；
+             false → 之前已点过，仅置已点赞态并提示，避免重复计数与误导性动效；
+             字段缺失（旧服务端）→ 按新增兼容处理 */
+          const isNew = data.newLike !== false;
+          markActiveOnly();
+          if (isNew) {
+            markPopping();
+            toast("点赞成功");
+          } else {
+            toast("已经点过赞了");
+          }
           if (data && typeof data.likeCount === "number") {
-            const oldVal = badge ? parseInt(badge.textContent || "0", 10) : 0;
+            /* 直接用服务端最新值覆盖数字，不做本地累加 */
             if (badge) badge.textContent = String(data.likeCount);
-            /* 顶部看板只按真实增量累加（登录用户重复点击幂等时为 0） */
-            if (data.likeCount > oldVal) {
+            /* 顶部看板仅当真实新增时 +1 */
+            if (isNew) {
               const stat = document.getElementById("md-stat-new");
               if (stat)
-                stat.textContent = String(
-                  (parseInt(stat.textContent, 10) || 0) + (data.likeCount - oldVal),
-                );
+                stat.textContent = String((parseInt(stat.textContent, 10) || 0) + 1);
             }
           }
         })
-        .catch(() => {
-          /* 点赞失败静默 */
+        .catch((err: unknown) => {
+          if (err === 403) toast("请先登录后再点赞");
+          /* 其它失败静默 */
         });
     }
     btn.addEventListener("click", (e) => {
