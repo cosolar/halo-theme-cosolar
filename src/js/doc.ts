@@ -171,7 +171,8 @@
     const tocList = document.getElementById("md-toc-list");
     if (!tocList || !currentHeads.length) return;
     let cur: HTMLHeadingElement | null = null;
-    const topBias = mainEl ? mainEl.getBoundingClientRect().top + 12 : 80;
+    /* 判定线与大纲点击滚动偏移(-16)统一并留容差，避免标题滚到顶部下方时高亮停在上一标题 */
+    const topBias = mainEl ? mainEl.getBoundingClientRect().top + 20 : 88;
     for (let i = 0; i < currentHeads.length; i++) {
       if (currentHeads[i].getBoundingClientRect().top <= topBias) cur = currentHeads[i];
     }
@@ -436,7 +437,13 @@
           link.addEventListener("click", (e) => {
             e.preventDefault();
             const t = document.getElementById(it.id);
-            if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+            /* 只滚动中间正文容器，不让页面跟着滚（scrollIntoView 会联动滚动 window） */
+            if (t && mainEl) {
+              const mainRect = mainEl.getBoundingClientRect();
+              const tRect = t.getBoundingClientRect();
+              const targetTop = mainEl.scrollTop + (tRect.top - mainRect.top) - 16;
+              mainEl.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+            }
             history.replaceState(null, "", location.pathname + location.search + "#" + it.id);
           });
           item.appendChild(link);

@@ -108,8 +108,13 @@
     btn.setAttribute("aria-label", "点赞：" + card.title);
     btn.setAttribute("title", "点赞：" + card.title);
     function doLike(): void {
-      /* 总是发起请求并保存：登录用户由后端 likedUsers 幂等去重（只+1一次），
-         匿名用户每次点击+1；本地标记仅用于刷新后红心的初始高亮 */
+      /* 每个卡片每用户只点赞一次：未点赞时发起请求并保存；
+         已点赞（本地标记）时不再重复请求，避免匿名用户无限 +1；
+         登录用户另有后端 likedUsers 幂等兜底 */
+      if (locallyLiked(slug)) {
+        markLiked();
+        return;
+      }
       fetch(
         "/apis/api.minidocs.halo.run/v1alpha1/knowledgebases/" + encodeURIComponent(slug) + "/like",
         { method: "POST", credentials: "include" },
