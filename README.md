@@ -8,7 +8,7 @@
 
 **青绿美学** · **明暗双模** · **精选轮播** · **分类导航** · **全局搜索** · **移动端适配**
 
-[![Halo](https://img.shields.io/badge/Halo-%3E%3D2.20-10B981?style=flat-square)](https://halo.run)
+[![Halo](https://img.shields.io/badge/Halo-%3E%3D2.25-10B981?style=flat-square)](https://halo.run)
 [![License](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.1.6-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -58,7 +58,7 @@
 
 | 依赖     | 版本        |
 | -------- | ----------- |
-| Halo     | `>= 2.20.0` |
+| Halo     | `>= 2.25.0` |
 | Node.js  | 推荐 LTS    |
 | 包管理器 | pnpm        |
 
