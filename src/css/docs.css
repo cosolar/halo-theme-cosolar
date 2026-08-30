@@ -856,7 +856,7 @@ a.sb-item:hover,
   font-size: 11px;
   font-weight: 700;
   color: #fff;
-  background: rgba(0, 0, 0, 0.34);
+  background: rgba(16, 185, 129, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(5px);
   padding: 2px 9px;

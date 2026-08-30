@@ -127,6 +127,8 @@ pnpm build        # 完整构建 + 打包 ZIP
 | `plugin-minidocs` | MiniDocs 知识库插件，提供知识库 / 文档模型与 `minidocsFinder`  | 知识库列表页 `/docs` 与阅读页**必需**                 |
 | `plugin-shiki`    | 代码高亮（亮 / 暗主题在插件设置中配置）                        | 代码高亮**必需**                                      |
 
+> 💾 `plugin-minidocs` 下载地址：[halo-plugin-minidocs Releases](https://github.com/cosolar/halo-plugin-minidocs/releases)
+
 > ⚠️ 未安装 `plugin-links` 时：友情链接页列表为空、RSS 资讯页提示「功能未启用」、侧边栏相关模块自动隐藏。安装后需在插件「RSS 订阅」中开启「公开 RSS 订阅动态」。
 >
 > ⚠️ 未安装 `plugin-minidocs` 时：`/docs` 与 `/docs/view/{kbSlug}` 不可用；安装后还需在插件设置中开启「允许未登录用户阅读」，并创建至少一个公开知识库与已发布文档。
@@ -166,7 +168,7 @@ Canvas 2D 渲染，粒子数随屏幕尺寸自适应（≤80 粒子 / ≤150 星
 
 **📚 知识库页（`/docs`）打不开或没有内容？**
 
-确认已安装并启用 `plugin-minidocs`，在插件设置中开启「允许未登录用户阅读」，并创建至少一个**公开知识库**与一篇**已发布**文档。未登录访客只能看到公开知识库。
+确认已安装并启用 `plugin-minidocs`（下载地址：[halo-plugin-minidocs Releases](https://github.com/cosolar/halo-plugin-minidocs/releases)），在插件设置中开启「允许未登录用户阅读」，并创建至少一个**公开知识库**与一篇**已发布**文档。未登录访客只能看到公开知识库。
 
 **📋 侧边栏模块顺序如何调整？**
 
