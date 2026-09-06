@@ -474,7 +474,8 @@
           li.appendChild(item);
           parentList.appendChild(li);
           if (hasKids) {
-            li.classList.add("toc-fold");
+            /* 默认折叠分组；仅 1 级标题默认展开其子级 */
+            if (it.lvl !== 1) li.classList.add("toc-fold");
             const childUl = document.createElement("ul");
             li.appendChild(childUl);
             build(it.children!, childUl);
