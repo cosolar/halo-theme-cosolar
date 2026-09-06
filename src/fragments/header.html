@@ -18,9 +18,7 @@
           >&lt;/&gt;</span
         >
         <span class="logo-text">
-          <span class="logo-name" th:text="${theme.config?.basic?.logo_text ?: ''}">
-            码迹志
-          </span>
+          <span class="logo-name" th:text="${theme.config?.basic?.logo_text ?: ''}"> 码迹志 </span>
           <span class="logo-tagline" th:text="${theme.config?.basic?.tagline ?: site.subtitle}">
             记录技术成长，分享解决方案
           </span>
@@ -213,9 +211,7 @@
         </button>
 
         <!-- Login / User Menu -->
-        <th:block
-          th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)}"
-        >
+        <th:block th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)}">
           <!-- 已登录 -->
           <div th:if="${!#strings.equals(currentUser.name, 'anonymousUser')}" class="user-menu">
             <button

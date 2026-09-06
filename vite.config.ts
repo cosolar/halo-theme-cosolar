@@ -16,6 +16,6 @@ export default defineConfig({
     ignorePatterns: [".agents"],
   },
   staged: {
-    "*.{js,ts,jsx,tsx,mjs,cjs,html,css}": ["vp check"],
+    "*.{js,ts,jsx,tsx,mjs,cjs,html,css}": ["vp check --fix"],
   },
 });

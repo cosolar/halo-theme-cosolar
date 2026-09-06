@@ -2,7 +2,10 @@
   <template name="head">
     <title>知识库阅读</title>
     <!-- KaTeX 样式：渲染 cherry-markdown 已生成的公式 HTML（内置 .katex / .katex-display 排版与 KaTeX 字体） -->
-    <link rel="stylesheet" th:href="@{/plugins/halo-plugin-minidocs/assets/static/katex/katex.min.css}" />
+    <link
+      rel="stylesheet"
+      th:href="@{/plugins/halo-plugin-minidocs/assets/static/katex/katex.min.css}"
+    />
     <link rel="stylesheet" href="./css/doc.css" />
     <script type="module" src="./js/doc.ts"></script>
   </template>

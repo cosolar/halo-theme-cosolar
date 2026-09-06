@@ -705,15 +705,9 @@
     const isMobile = window.matchMedia("(max-width: 860px)").matches;
     if (isMobile) document.body.style.overflow = kind ? "hidden" : "";
     if (toggleSb)
-      toggleSb.setAttribute(
-        "aria-label",
-        kind === "sb" ? "关闭文档目录" : "打开文档目录",
-      );
+      toggleSb.setAttribute("aria-label", kind === "sb" ? "关闭文档目录" : "打开文档目录");
     if (toggleToc)
-      toggleToc.setAttribute(
-        "aria-label",
-        kind === "toc" ? "关闭文章大纲" : "打开文章大纲",
-      );
+      toggleToc.setAttribute("aria-label", kind === "toc" ? "关闭文章大纲" : "打开文章大纲");
   }
 
   // 记录当前打开的抽屉（供切文/大纲点击后自动收起）
@@ -836,10 +830,14 @@
     });
 
     /* 滚轮缩放：始终以视口居中为基准（transform-origin:center），不随光标偏移 */
-    viewer.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15);
-    }, { passive: false });
+    viewer.addEventListener(
+      "wheel",
+      (e) => {
+        e.preventDefault();
+        zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15);
+      },
+      { passive: false },
+    );
 
     viewer.addEventListener("dblclick", (e) => {
       e.preventDefault();
@@ -920,4 +918,42 @@
     });
   }
   initImageLightbox();
+
+  /* 知识库名称/描述截断时，悬停用气泡显示完整内容 */
+  function initKbNameTips(): void {
+    const anchors = Array.from(
+      document.querySelectorAll<HTMLElement>(".md-sb-name h2, .md-sb-name p"),
+    );
+    if (!anchors.length) return;
+
+    const tip = document.createElement("div");
+    tip.className = "md-tip";
+    document.body.appendChild(tip);
+
+    const close = (): void => tip.classList.remove("is-open");
+    const place = (): void => {
+      if (!tip.classList.contains("is-open")) return;
+      const el = anchors.find((a) => a.matches(":hover"));
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      tip.style.left =
+        Math.min(Math.max(8, r.left), window.innerWidth - tip.offsetWidth - 8) + "px";
+      tip.style.top = r.bottom + 6 + "px";
+    };
+    const open = (el: HTMLElement): void => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      tip.textContent = el.textContent || "";
+      tip.classList.add("is-open");
+      requestAnimationFrame(place);
+    };
+
+    anchors.forEach((el) => {
+      el.addEventListener("mouseenter", () => open(el));
+      el.addEventListener("mousemove", place);
+      el.addEventListener("mouseleave", close);
+    });
+    window.addEventListener("resize", close);
+    window.addEventListener("scroll", close, true);
+  }
+  initKbNameTips();
 })();

@@ -275,42 +275,64 @@
 }
 
 .links-category-icon {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
-  color: #fff;
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-  border-radius: var(--radius-full);
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
-  transition: all var(--transition);
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(5, 105, 90, 0.08);
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .links-category-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
 }
 
 .links-category-icon iconify-icon,
 .links-category-icon i {
-  width: 16px;
-  height: 16px;
-  font-size: 16px;
+  width: 13px;
+  height: 13px;
+  font-size: 13px;
   line-height: 1;
   display: inline-flex;
 }
 
+.links-category-item:hover .links-category-icon {
+  background: color-mix(in srgb, var(--color-primary-bg) 72%, var(--color-primary) 28%);
+  border-color: color-mix(in srgb, var(--color-primary) 48%, transparent);
+}
+
+.links-category-item:active .links-category-icon {
+  transform: scale(0.94);
+}
+
 .links-category-item.active {
   color: var(--color-text);
-  background: var(--color-border-light);
+  background: linear-gradient(90deg, var(--color-primary-bg), transparent 88%);
   box-shadow: inset 3px 0 0 var(--color-primary);
 }
 
 .links-category-item.active .links-category-icon {
-  transform: scale(1.05);
-  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
+  color: #fff;
+  background: linear-gradient(160deg, #34d399 0%, #10b981 52%, #059669 100%);
+  border-color: rgba(5, 150, 105, 0.55);
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 3px rgba(16, 185, 129, 0.14),
+    0 4px 12px rgba(5, 150, 105, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .links-category-name {
@@ -336,31 +358,26 @@
   background: var(--color-primary-bg);
 }
 
-/* all category icons share the same green gradient */
-.links-category-item--all .links-category-icon {
-  background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%);
-  box-shadow:
-    0 0 0 2px rgba(16, 185, 129, 0.25),
-    0 2px 6px rgba(5, 150, 105, 0.4);
+/* 暗色模式：图标默认玻璃描边 → 选中青绿发光 */
+[data-theme="dark"] .links-category-icon {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.28);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.links-category-item--all.active .links-category-icon {
-  box-shadow:
-    0 0 0 2px rgba(16, 185, 129, 0.3),
-    0 3px 10px rgba(16, 185, 129, 0.4);
+[data-theme="dark"] .links-category-item:hover .links-category-icon {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: rgba(16, 185, 129, 0.4);
 }
 
-[data-theme="dark"] .links-category-item--all .links-category-icon {
-  background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+[data-theme="dark"] .links-category-item.active .links-category-icon {
+  color: #fff;
+  border-color: rgba(5, 150, 105, 0.55);
   box-shadow:
-    0 0 0 2px rgba(16, 185, 129, 0.2),
-    0 2px 6px rgba(5, 150, 105, 0.35);
-}
-
-[data-theme="dark"] .links-category-item--all.active .links-category-icon {
-  box-shadow:
-    0 0 0 2px rgba(16, 185, 129, 0.25),
-    0 3px 10px rgba(16, 185, 129, 0.35);
+    0 0 0 3px rgba(16, 185, 129, 0.2),
+    0 4px 12px rgba(5, 150, 105, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="dark"] .links-category-item.active {
@@ -1169,16 +1186,16 @@
   }
 
   .links-category-icon {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
 
   .links-category-icon svg,
   .links-category-icon iconify-icon,
   .links-category-icon i {
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
+    width: 12px;
+    height: 12px;
+    font-size: 12px;
   }
 }
 

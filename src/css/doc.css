@@ -1301,3 +1301,48 @@ li.md-leaf > a {
     font-size: 14.5px;
   }
 }
+
+/* 知识库名称/描述截断气泡 */
+.md-tip {
+  position: fixed;
+  z-index: 1200;
+  max-width: 300px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 7px;
+  box-shadow:
+    0 8px 24px rgba(2, 6, 23, 0.35),
+    0 2px 6px rgba(2, 6, 23, 0.2);
+  white-space: normal;
+  word-break: break-word;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0.15s ease;
+}
+.md-tip.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.md-tip::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 18px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid rgba(15, 23, 42, 0.94);
+}

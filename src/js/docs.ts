@@ -174,8 +174,7 @@
             /* 顶部看板仅当真实新增时 +1 */
             if (isNew) {
               const stat = document.getElementById("md-stat-new");
-              if (stat)
-                stat.textContent = String((parseInt(stat.textContent, 10) || 0) + 1);
+              if (stat) stat.textContent = String((parseInt(stat.textContent, 10) || 0) + 1);
             }
           }
         })
