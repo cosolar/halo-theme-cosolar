@@ -14,7 +14,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
-🚀 [在线预览](https://note.minims.cn) · 📘 [配置手册](docs/使用教程.md)
+🚀 [在线预览](https://note.minims.cn) · 📘 [配置手册](docs/usage-guide.md)
 
 </div>
 
@@ -87,7 +87,7 @@ pnpm build            # 产物：templates/ 目录 + halo-theme-cosolar-<version
 
 主题配置集中在 **Halo 后台 → 主题管理 → halo-theme-cosolar → 设置**，按分组管理：基础 / 页脚 / 主题样式 / 文章页 / 博主信息 / 首页轮播 / 侧边栏 / 分类 / 标签 / 归档 / 友链 / RSS / 瞬间 / 图库 / 知识库 / 页面背景 / 登录页。
 
-每个字段的类型、默认值、取值范围与配置建议见 [配置手册（使用教程.md）](docs/使用教程.md)。
+每个字段的类型、默认值、取值范围与配置建议见 [配置手册（usage-guide.md）](docs/usage-guide.md)。
 
 关键配置速览：
 

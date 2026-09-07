@@ -575,6 +575,8 @@ pnpm build
 
 ![img.png](img/feeds.png)
 
+![feeds_page.png](img/feeds_page.png)
+
 控制 RSS 资讯日报页面（自定义页面 `feeds.html`）的 Hero 区、标题与分页大小。**本页依赖 `plugin-links` 插件**，并在插件「RSS 订阅」中开启「公开 RSS 订阅动态」后才有内容。
 
 | 配置项       | 类型 | 默认值                             | 说明与建议                                   |
