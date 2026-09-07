@@ -362,26 +362,15 @@ figure[data-type="mermaid"] .cherry-mermaid-source-toolbar-panel[data-mode="prev
   flex: 0 0 auto;
   width: 36px;
   height: 36px;
-  border-radius: 9px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-.md-sb-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.md-sb-logo-fallback {
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #10b981, #059669);
+  color: var(--md-primary);
+}
+.md-sb-logo svg {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 .md-sb-name {
   min-width: 0;

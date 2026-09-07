@@ -163,17 +163,12 @@
       <aside class="md-sb" id="md-sb">
         <div class="md-sb-head">
           <span class="md-sb-logo">
-            <img
-              th:if="${knowledgeBase != null and knowledgeBase.spec.cover != null and !knowledgeBase.spec.cover.isEmpty()}"
-              th:src="${knowledgeBase.spec.cover}"
-              alt="知识库图标"
-            />
-            <span
-              class="md-sb-logo-fallback"
-              th:unless="${knowledgeBase != null and knowledgeBase.spec.cover != null and !knowledgeBase.spec.cover.isEmpty()}"
-              th:text="${knowledgeBase != null and knowledgeBase.spec.displayName != null and !knowledgeBase.spec.displayName.isEmpty() ? #strings.substring(knowledgeBase.spec.displayName, 0, 1) : '知'}"
-              >知</span
-            >
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path
+                d="M136.533333 170.666667a102.4 102.4 0 0 1 102.4-102.4h68.266667a238.7968 238.7968 0 0 1 204.8 115.780266A238.7968 238.7968 0 0 1 716.8 68.266667h68.266667a102.4 102.4 0 0 1 102.4 102.4v102.4a102.4 102.4 0 0 1 102.4 102.4v409.6a170.666667 170.666667 0 0 1-170.666667 170.666666H204.8a170.666667 170.666667 0 0 1-170.666667-170.666666V375.466667a102.4 102.4 0 0 1 102.4-102.4V170.666667z m0 170.666666a34.133333 34.133333 0 0 0-34.133333 34.133334v409.6a102.4 102.4 0 0 0 102.4 102.4h614.4a102.4 102.4 0 0 0 102.4-102.4V375.466667a34.133333 34.133333 0 0 0-34.133333-34.133334v409.6a102.4 102.4 0 0 1-102.4 102.4H238.933333a102.4 102.4 0 0 1-102.4-102.4V341.333333z m170.666667-204.8H238.933333a34.133333 34.133333 0 0 0-34.133333 34.133334v580.266666a34.133333 34.133333 0 0 0 34.133333 34.133334h238.933334V307.2a170.666667 170.666667 0 0 0-170.666667-170.666667z m477.866667 648.533334a34.133333 34.133333 0 0 0 34.133333-34.133334V170.666667a34.133333 34.133333 0 0 0-34.133333-34.133334h-68.266667a170.666667 170.666667 0 0 0-170.666667 170.666667v477.866667h238.933334z"
+                fill="currentColor"
+              ></path>
+            </svg>
           </span>
           <div class="md-sb-name">
             <h2 th:text="${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"></h2>
