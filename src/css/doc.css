@@ -234,14 +234,36 @@
   height: 16px;
 }
 .nav-btn--kb {
-  color: #059669;
+  position: relative;
+  color: #047857;
   border-color: #a7f3d0;
-  background: #ecfdf5;
+  background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%);
+  box-shadow: 0 1px 2px rgba(6, 151, 104, 0.08);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+.nav-btn--kb svg {
+  transition: transform 0.15s ease;
 }
 .nav-btn--kb:hover {
   color: #047857;
   border-color: #34d399;
-  background: #d1fae5;
+  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+  box-shadow:
+    0 4px 12px rgba(16, 185, 129, 0.22),
+    0 1px 2px rgba(16, 185, 129, 0.1);
+  transform: translateY(-1px);
+}
+.nav-btn--kb:hover svg {
+  transform: translateX(-2px);
+}
+.nav-btn--kb:active {
+  transform: translateY(0) scale(0.96);
+  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.12);
 }
 .nav-btn--bm {
   color: #b45309;
