@@ -160,6 +160,21 @@
     true,
   );
 
+  /* 文档树：默认仅展开一级目录，更深层级收起；并保持当前文档所在路径可见 */
+  (() => {
+    const hasChild = Array.from(document.querySelectorAll<HTMLElement>(".md-tree li.md-has-child"));
+    hasChild.forEach((li) => li.classList.add("md-fold"));
+    document
+      .querySelectorAll<HTMLElement>(".md-tree > li.md-has-child")
+      .forEach((li) => li.classList.remove("md-fold"));
+    const active = document.querySelector<HTMLElement>(".md-tree a.active");
+    let p = active ? active.closest<HTMLElement>("li.md-has-child") : null;
+    while (p) {
+      p.classList.remove("md-fold");
+      p = p.parentElement ? p.parentElement.closest<HTMLElement>("li.md-has-child") : null;
+    }
+  })();
+
   const prose = document.getElementById("md-prose");
 
   /* ===== 无刷新切文章（SPA 局部加载）状态 ===== */

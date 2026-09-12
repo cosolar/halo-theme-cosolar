@@ -367,6 +367,37 @@
           </div>
         </div>
       </th:block>
+
+      <!-- 广告位：用户可自定义 HTML 内容 -->
+      <th:block th:case="'ad'">
+        <div
+          class="widget widget-sidebar-ad"
+          th:if="${theme.config?.sidebar?.ad?.show_sidebar_ad == true and theme.config?.sidebar?.ad?.sidebar_ad_content != null and !#strings.isEmpty(theme.config.sidebar.ad?.sidebar_ad_content)}"
+        >
+          <div
+            class="widget-title"
+            th:if="${theme.config?.sidebar?.ad?.sidebar_ad_title != null and !#strings.isEmpty(theme.config.sidebar.ad?.sidebar_ad_title)}"
+          >
+            <span class="title-text">
+              <svg viewBox="0 0 1024 1024" fill="currentColor" width="16" height="16">
+                <path
+                  d="M843.2 134.4H198.4c-35.2 0-64 28.8-64 64V768c0 35.2 28.8 64 64 64h644.8c35.2 0 64-28.8 64-64V198.4c0-35.2-28.8-64-64-64z m0 601.6c0 17.6-14.4 32-32 32H230.4c-17.6 0-32-14.4-32-32V230.4c0-17.6 14.4-32 32-32h580.8c17.6 0 32 14.4 32 32V736zM721.6 856H320c-17.6 0-32 14.4-32 32s14.4 32 32 32h401.6c17.6 0 32-14.4 32-32s-14.4-32-32-32z"
+                  p-id="9399"
+                ></path>
+                <path
+                  d="M435.2 361.6c-1.6-4.8-6.4-8-11.2-8h-35.2c-4.8 0-9.6 3.2-11.2 8l-92.8 243.2c-1.6 3.2-1.6 8 1.6 11.2 1.6 3.2 6.4 4.8 9.6 4.8h33.6c4.8 0 9.6-3.2 11.2-8l24-65.6h84.8l25.6 65.6c1.6 4.8 6.4 8 11.2 8h36.8c4.8 0 8-1.6 9.6-4.8 1.6-3.2 3.2-8 1.6-11.2l-99.2-243.2z m-52.8 136l20.8-56c1.6-3.2 1.6-6.4 3.2-9.6 1.6 4.8 3.2 8 4.8 12.8l19.2 51.2h-48z m337.6-120c-11.2-9.6-25.6-16-40-20.8-11.2-3.2-25.6-3.2-46.4-3.2h-83.2c-6.4 0-12.8 4.8-12.8 12.8v243.2c0 6.4 4.8 12.8 12.8 12.8h88c16 0 30.4-1.6 41.6-4.8 12.8-3.2 24-8 33.6-14.4 9.6-6.4 17.6-14.4 25.6-25.6 8-11.2 14.4-24 17.6-38.4 4.8-16 6.4-33.6 6.4-52.8 0-22.4-3.2-43.2-9.6-62.4-8-19.2-19.2-33.6-33.6-46.4z m-20.8 152c-3.2 11.2-8 19.2-14.4 25.6-4.8 4.8-9.6 8-17.6 9.6-8 3.2-19.2 3.2-33.6 3.2h-40V406.4H632c22.4 0 32 1.6 36.8 4.8 9.6 3.2 17.6 11.2 24 22.4 6.4 11.2 11.2 28.8 11.2 52.8 1.6 16 0 30.4-4.8 43.2z"
+                  p-id="9400"
+                ></path>
+              </svg>
+              <span th:text="${theme.config?.sidebar?.ad?.sidebar_ad_title}">广告</span>
+            </span>
+          </div>
+          <div
+            class="sidebar-ad-content"
+            th:utext="${theme.config?.sidebar?.ad?.sidebar_ad_content}"
+          ></div>
+        </div>
+      </th:block>
     </th:block>
   </th:block>
 </aside>

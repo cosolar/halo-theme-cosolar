@@ -650,7 +650,7 @@ li.md-leaf > a {
 .md-content h6 {
   color: var(--md-title);
   line-height: 1.35;
-  margin: 1.5em 0 0.55em;
+  margin: 0.8em 0 0.5em;
   scroll-margin-top: 14px;
 }
 .md-content h1 {

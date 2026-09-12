@@ -495,7 +495,7 @@ spec:
               help: 拖动每行可调整模块上下顺序；点击删除可隐藏对应模块，点击"添加模块"可重新加入；模块需在下方各自设置中已开启才会显示
               addLabel: 添加模块
               min: 0
-              max: 8
+              max: 9
               value:
                 - module: author
                 - module: announcement
@@ -505,6 +505,7 @@ spec:
                 - module: recent
                 - module: links
                 - module: feeds
+                - module: ad
               children:
                 - $formkit: select
                   name: module
@@ -527,6 +528,8 @@ spec:
                       value: links
                     - label: 订阅资讯
                       value: feeds
+                    - label: 广告位
+                      value: ad
         - $formkit: group
           name: author
           label: 博主展示
@@ -695,6 +698,25 @@ spec:
               max: 30
               step: 1
               help: 侧边栏订阅资讯模块最多展示的资讯条目数量
+        - $formkit: group
+          name: ad
+          label: 广告位
+          children:
+            - $formkit: switch
+              name: show_sidebar_ad
+              label: 显示广告模块
+              value: false
+              help: 在侧边栏显示广告模块，用于展示自定义广告
+            - $formkit: text
+              name: sidebar_ad_title
+              label: 广告标题
+              value: ""
+              help: 显示在广告模块顶部的标题，留空则不显示标题栏
+            - $formkit: textarea
+              name: sidebar_ad_content
+              label: 广告内容（HTML）
+              value: ""
+              help: 广告展示内容，支持 HTML，可自由插入图片、链接、站外广告代码等
 
     - group: category
       label: 分类页设置

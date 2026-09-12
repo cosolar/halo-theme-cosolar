@@ -2182,6 +2182,45 @@ body.nav-open {
   color: var(--color-primary-hover);
 }
 
+/* Sidebar Ad Widget */
+.widget-sidebar-ad .sidebar-ad-content {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  word-break: break-word;
+}
+
+.widget-sidebar-ad .sidebar-ad-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.widget-sidebar-ad .sidebar-ad-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.widget-sidebar-ad .sidebar-ad-content a:hover {
+  color: var(--color-primary-hover);
+}
+
+.widget-sidebar-ad .sidebar-ad-content p:first-child {
+  margin-top: 0;
+}
+
+.widget-sidebar-ad .sidebar-ad-content p:last-child {
+  margin-bottom: 0;
+}
+
+.widget-sidebar-ad .sidebar-ad-content pre {
+  overflow-x: auto;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--color-bg-code, rgba(128, 128, 128, 0.08));
+}
+
 /* Sidebar Author Widget */
 .widget-author {
   padding: 24px 20px 0 !important;
