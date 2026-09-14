@@ -1,4 +1,25 @@
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="head-resources">
+  <!-- Open Graph / Twitter Card：用于微信、Telegram、QQ 等分享链接时的预览卡片。
+       post / singlePage 在非对应模板中为空，?. 与 ?: 自动回退，全站通用 -->
+  <meta property="og:site_name" th:content="${site.title}" />
+  <meta property="og:type" th:content="${post != null ? 'article' : 'website'}" />
+  <meta
+    property="og:title"
+    th:content="${post?.spec?.title ?: singlePage?.spec?.title ?: site.title}"
+  />
+  <meta
+    property="og:description"
+    th:content="${post?.status?.excerpt ?: singlePage?.status?.excerpt ?: site.subtitle}"
+  />
+  <meta
+    property="og:url"
+    th:content="${site.url + (post?.status?.permalink ?: singlePage?.status?.permalink ?: '')}"
+  />
+  <meta
+    property="og:image"
+    th:content="${post?.spec?.cover ?: singlePage?.spec?.cover ?: site.logo}"
+  />
+  <meta name="twitter:card" content="summary_large_image" />
   <!-- 图标库资源加载：Iconify 默认，iconfont 可自定义 CSS -->
   <th:block th:with="iconProvider=${theme.config?.style?.icon_provider ?: 'iconify'}">
     <script
