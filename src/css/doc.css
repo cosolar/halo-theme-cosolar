@@ -394,6 +394,12 @@ figure[data-type="mermaid"] .cherry-mermaid-source-toolbar-panel[data-mode="prev
   height: 32px;
   display: block;
 }
+.md-sb-logo img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
 .md-sb-name {
   min-width: 0;
 }

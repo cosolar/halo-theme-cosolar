@@ -35,8 +35,8 @@
         "heading-" +
         index +
         "-" +
-        heading
-          .textContent!.replace(/\s+/g, "-")
+        (heading.textContent ?? "")
+          .replace(/\s+/g, "-")
           .replace(/[^a-zA-Z0-9\u4e00-\u9fa5-]/g, "")
           .slice(0, 30);
     }

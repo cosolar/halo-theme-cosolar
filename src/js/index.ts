@@ -255,11 +255,11 @@
 
   // 重新应用当前激活的排序（加载新文章后保持顺序一致）
   function reapplySort(): void {
-    const active = contentArea!.querySelector(".filter-tab.active") as HTMLElement | null;
+    const active = contentArea?.querySelector(".filter-tab.active") as HTMLElement | null;
     const mode = (active?.dataset.sort as "latest" | "hot" | "recommend") || "latest";
     if (mode === "latest") return;
 
-    const cards = Array.from(articleList!.querySelectorAll(".article-card")) as HTMLElement[];
+    const cards = Array.from(articleList?.querySelectorAll(".article-card") ?? []) as HTMLElement[];
     const sorted = cards.sort((a, b) => {
       if (mode === "hot") {
         return parseInt(b.dataset.visit || "0", 10) - parseInt(a.dataset.visit || "0", 10);
@@ -269,7 +269,7 @@
       }
       return 0;
     });
-    sorted.forEach((card) => articleList!.appendChild(card));
+    sorted.forEach((card) => articleList?.appendChild(card));
   }
 
   async function fetchPageDoc(url: string): Promise<Document | null> {

@@ -127,7 +127,7 @@
     lightbox.addEventListener(
       "wheel",
       function (e: WheelEvent) {
-        if (!lightbox!.classList.contains("is-open")) return;
+        if (!lightbox || !lightbox.classList.contains("is-open")) return;
         // 触控板双指捏合会带 ctrlKey，普通滚轮不带；两者都用于缩放
         e.preventDefault();
         const factor = e.deltaY < 0 ? 1.12 : 0.89;
@@ -138,7 +138,7 @@
     );
 
     document.addEventListener("keydown", function (e: KeyboardEvent) {
-      if (!lightbox!.classList.contains("is-open")) return;
+      if (!lightbox || !lightbox.classList.contains("is-open")) return;
       if (e.key === "Escape") close();
       else if (e.key === "ArrowLeft") step(-1);
       else if (e.key === "ArrowRight") step(1);
@@ -886,10 +886,11 @@
       modal.classList.add("is-open");
 
       function cleanup(): void {
-        modal!.classList.remove("is-open");
-        modal!.hidden = true;
-        okBtn!.removeEventListener("click", onOk);
-        modal!.querySelectorAll("[data-modal-close]").forEach(function (el) {
+        if (!modal || !okBtn) return;
+        modal.classList.remove("is-open");
+        modal.hidden = true;
+        okBtn.removeEventListener("click", onOk);
+        modal.querySelectorAll("[data-modal-close]").forEach(function (el) {
           el.removeEventListener("click", onCancel);
         });
       }
