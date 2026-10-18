@@ -6,12 +6,12 @@
    ============================================ */
 
 :root {
-  /* 主色：emerald 绿 */
-  --md-primary: #10b981;
-  --md-primary-soft: #34d399;
-  --md-primary-deep: #059669;
-  --md-primary-ink: #047857;
-  --md-primary-glow: rgba(16, 185, 129, 0.14);
+  /* 主色：跟随全局主题色（--color-primary 可由后台配置） */
+  --md-primary: var(--color-primary);
+  --md-primary-soft: var(--color-primary-light);
+  --md-primary-deep: var(--color-primary-hover);
+  --md-primary-ink: color-mix(in srgb, var(--color-primary) 72%, #000);
+  --md-primary-glow: color-mix(in srgb, var(--color-primary) 14%, transparent);
 
   /* 功能色 */
   --md-c-green: #10b981;
@@ -35,20 +35,21 @@
   --md-sub: #6b7280;
   --md-desc: #6b7280;
   --md-muted: #9ca3af;
-  --md-tag-bg: rgba(16, 185, 129, 0.12);
-  --md-tag: #059669;
+  --md-tag-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --md-tag: var(--color-primary-hover);
   --md-chip-bg: #f2f6f4;
   --md-input-bg: #ffffff;
-  --md-scroll-thumb: rgba(5, 150, 105, 0.28);
+  --md-scroll-thumb: color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 [data-theme="dark"] {
   --md-bg1: #151b29;
   --md-bg2: #0e1420;
-  --md-primary: #34d399;
-  --md-primary-soft: #6ee7b7;
-  --md-primary-deep: #34d399;
-  --md-primary-ink: #a7f3d0;
-  --md-primary-glow: rgba(52, 211, 153, 0.16);
+  /* 暗色下主色向浅色派生，避免知识库页面变暗 */
+  --md-primary: var(--color-primary-light);
+  --md-primary-soft: var(--color-primary-light);
+  --md-primary-deep: var(--color-primary-light);
+  --md-primary-ink: var(--color-primary-light);
+  --md-primary-glow: color-mix(in srgb, var(--color-primary) 16%, transparent);
   --md-c-green: #34d399;
   --md-c-green-bg: rgba(52, 211, 153, 0.15);
   --md-c-blue: #60a5fa;
@@ -67,11 +68,11 @@
   --md-sub: #9aa5b8;
   --md-desc: #a3aebb;
   --md-muted: #6b7688;
-  --md-tag-bg: rgba(52, 211, 153, 0.16);
-  --md-tag: #6ee7b7;
+  --md-tag-bg: color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --md-tag: var(--color-primary-light);
   --md-chip-bg: #1c2536;
   --md-input-bg: #1a2233;
-  --md-scroll-thumb: rgba(52, 211, 153, 0.3);
+  --md-scroll-thumb: color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .kb-page .content-area {

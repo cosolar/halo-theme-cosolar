@@ -1,0 +1,1057 @@
+/* ============================================
+   RSS 资讯页专属样式 —— 由 feeds.html 引入，公共变量见 main.css
+   ============================================ */
+
+/* ==================== Feed Page (RSS 资讯) ==================== */
+
+/* Plugin Not Installed Notice */
+.feed-notice {
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.feed-notice-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+.feed-notice-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.feed-notice h2 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.feed-notice p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Hero Metrics */
+.feed-hero-inner {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.feed-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.feed-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.feed-hero-stat-num {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.feed-hero-stat-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.feed-hero-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--color-border);
+}
+
+/* Three-Column Feed Layout */
+.feed-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 260px;
+  gap: var(--content-gap);
+  align-items: start;
+  margin-top: var(--content-gap);
+}
+
+/* Sidebar (Left & Right) */
+.feed-sidebar--left {
+  position: sticky;
+  top: calc(var(--header-height) + 16px);
+}
+
+.feed-sidebar--right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: calc(var(--header-height) + 16px);
+}
+
+.feed-sidebar-inner {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.feed-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+  padding: 0 4px;
+  letter-spacing: 0.3px;
+}
+
+.feed-sidebar-title svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Channel Navigation */
+.feed-channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.feed-channel-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.feed-channel-list a:hover {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+.feed-channel-list a.active {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 500;
+}
+
+.feed-channel-list a small {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-light);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  transition: all var(--transition);
+}
+
+.feed-channel-list a:hover small {
+  background: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  color: var(--color-primary);
+}
+
+.feed-channel-list a.active small {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+/* Manage Button */
+.feed-manage-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  text-decoration: none;
+  transition: all var(--transition);
+  border: 1px solid transparent;
+}
+
+.feed-manage-btn:hover {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  border-color: var(--color-primary-border);
+}
+
+.feed-manage-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Feed Main (Center Column) */
+.feed-main {
+  min-width: 0;
+}
+
+/* Feed Section (header + list as one unit) — wrapped in a single bordered panel */
+.feed-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 24px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.feed-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feed-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.feed-section-title h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+.feed-toolbar-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-light);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.feed-toolbar-reset:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.feed-toolbar-reset svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Feed List — clean timeline style, no per-item cards */
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Feed Item — minimal, divided by hairline separators */
+.feed-item {
+  padding: 16px 8px;
+  margin: 0 -8px;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: all var(--transition);
+}
+
+.feed-item:last-child {
+  border-bottom: none;
+}
+
+.feed-item:hover {
+  background: var(--color-primary-bg);
+}
+
+.feed-item:hover .feed-item-title {
+  color: var(--color-primary);
+}
+
+.feed-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.feed-item-source {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+/* Colored rounded-square avatar like InfoQ style */
+.feed-item-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="dark"] .feed-item-avatar {
+  background: transparent;
+}
+
+.feed-item-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feed-item-author {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Time on right side */
+.feed-item-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.feed-item-time svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.6;
+}
+
+.feed-item-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.feed-item-time svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.7;
+}
+
+/* Title — bold, prominent */
+.feed-item-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-text);
+  text-decoration: none;
+  margin-bottom: 6px;
+  transition: color var(--transition);
+}
+
+.feed-item-title:hover {
+  color: var(--color-primary);
+}
+
+/* Summary — muted, multi-line clamp */
+.feed-item-summary {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Empty State — clean, no heavy card */
+.feed-empty {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.feed-empty svg {
+  width: 48px;
+  height: 48px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.feed-empty p {
+  font-size: 15px;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.feed-empty small {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  max-width: 360px;
+  display: block;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Load More — clean text link style */
+.feed-load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  background: var(--color-border-light);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.feed-load-more:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.feed-load-more svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition);
+}
+
+.feed-load-more:hover svg {
+  transform: translateY(2px);
+}
+
+.feed-load-more.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Right Sidebar Widgets */
+.feed-widget {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Overview Widget — minimal, no lines */
+.feed-overview-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: 8px;
+}
+
+.feed-overview-hero-num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+}
+
+.feed-overview-hero-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.feed-overview-hero-sub {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+.feed-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 8px;
+  margin-top: 10px;
+}
+
+.feed-overview-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 8px;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-bg);
+  transition: background var(--transition);
+  cursor: default;
+}
+
+.feed-overview-cell:hover {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.feed-overview-cell-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--color-primary);
+  opacity: 0.75;
+}
+
+.feed-overview-cell-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.feed-overview-cell-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.feed-overview-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.feed-overview-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.feed-overview-dot.is-ok {
+  background: #2ecc71;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #2ecc71 22%, transparent);
+}
+
+.feed-overview-dot.is-warn {
+  background: #f39c12;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #f39c12 22%, transparent);
+}
+
+/* Active Channels */
+.feed-active-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.feed-active-channel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.feed-active-channel:hover {
+  background: var(--color-border-light);
+}
+
+.feed-active-channel-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
+}
+
+.feed-active-channel-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feed-active-channel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.feed-active-channel-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-active-channel-info small {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.feed-active-channel-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 18px;
+}
+
+/* Verification status dot */
+.feed-verify-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.feed-verify-dot.is-ok {
+  background: #2ecc71;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #2ecc71 18%, transparent);
+}
+
+.feed-verify-dot.is-warn {
+  background: #e67e22;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #e67e22 18%, transparent);
+}
+
+.feed-verify-dot.is-gray {
+  background: var(--color-text-muted);
+  opacity: 0.35;
+}
+
+/* Status text */
+.feed-verify-text {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 450;
+}
+
+/* RSS feed count badge */
+.feed-rss-count {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+}
+
+/* Status code pill */
+.feed-verify-code {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: 0 5px;
+  background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  border-radius: 3px;
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
+}
+
+/* External arrow icon */
+.feed-verify-arrow {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.feed-active-channel:hover .feed-verify-arrow {
+  opacity: 0.6;
+}
+
+.feed-verify-arrow svg {
+  width: 12px;
+  height: 12px;
+  color: var(--color-primary);
+}
+
+/* Quote Widget */
+.feed-quote {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-bg),
+    color-mix(in srgb, var(--color-primary) 5%, var(--color-card))
+  );
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.feed-quote-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
+  opacity: 0.4;
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.feed-quote-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.feed-quote-author {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-style: normal;
+}
+
+/* Links CTA */
+.feed-links-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.feed-links-cta:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
+}
+
+.feed-links-cta svg {
+  width: 16px;
+  height: 16px;
+}
+
+.feed-links-cta svg:last-child {
+  transition: transform var(--transition);
+}
+
+.feed-links-cta:hover svg:last-child {
+  transform: translateX(3px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+  .feed-layout {
+    grid-template-columns: 200px 1fr 240px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .feed-layout {
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+
+  .feed-sidebar--left,
+  .feed-sidebar--right {
+    position: static;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .feed-sidebar--left .feed-sidebar-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .feed-channel-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+    flex: 1;
+  }
+
+  .feed-channel-list a {
+    white-space: nowrap;
+  }
+
+  .feed-sidebar-title {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .feed-manage-btn {
+    margin-left: auto;
+  }
+
+  .feed-sidebar--right {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .feed-widget,
+  .feed-quote,
+  .feed-links-cta {
+    flex: 1 1 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .feed-hero-inner {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .feed-hero-stats {
+    gap: 12px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .feed-hero-stats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .feed-hero-stat {
+    flex-shrink: 0;
+  }
+
+  .feed-hero-stat-num {
+    font-size: 1.3rem;
+  }
+
+  .feed-hero-stat-label {
+    font-size: 11px;
+  }
+
+  .feed-hero-stat-divider {
+    height: 24px;
+  }
+
+  /* 左侧频道导航：单行横向滚动标签栏 */
+  .feed-sidebar--left .feed-sidebar-inner {
+    display: block;
+    padding: 8px 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* 移动端隐藏"我的频道"标题和"管理订阅源"按钮 */
+  .feed-sidebar--left .feed-sidebar-title,
+  .feed-sidebar--left .feed-manage-btn {
+    display: none;
+  }
+
+  .feed-channel-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-width: 0;
+    padding: 0 12px;
+    margin-bottom: 0;
+  }
+
+  .feed-channel-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .feed-channel-list a {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: var(--radius-full);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: all var(--transition);
+  }
+
+  .feed-channel-list a:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary-border);
+  }
+
+  .feed-channel-list a.active {
+    color: #fff;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* 移动端隐藏频道标签内数字计数 */
+  .feed-channel-list a small {
+    display: none;
+  }
+
+  /* 右侧统计面板：隐藏引言和CTA，保留概览 */
+  .feed-sidebar--right {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .feed-quote,
+  .feed-links-cta {
+    display: none;
+  }
+}
+
+/* RESPONSIVE（由 main.css RESPONSIVE 拆出，保持原 @media 条件与顺序） */
+
+@media (max-width: 480px) {
+  /* ===== feeds 页小屏适配 ===== */
+  .feed-hero-inner {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .feed-hero-stat-num {
+    font-size: 1.1rem;
+  }
+
+  .feed-hero-stat-label {
+    font-size: 10px;
+  }
+
+  .feed-section {
+    padding: 12px 12px;
+    gap: 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .feed-item {
+    padding: 10px 4px;
+    margin: 0 -4px;
+  }
+
+  .feed-item-avatar {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .feed-item-author {
+    font-size: 12px;
+    max-width: 100px;
+  }
+
+  .feed-item-time {
+    font-size: 10px;
+  }
+
+  .feed-item-time svg {
+    display: none;
+  }
+
+  .feed-item-title {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  .feed-item-summary {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+
+  /* 隐藏活跃频道列表，仅保留概览 */
+  .feed-widget:not(.feed-overview-widget) {
+    display: none;
+  }
+
+  .feed-overview-hero-num {
+    font-size: 1.5rem;
+  }
+
+  .feed-overview-cell {
+    padding: 8px 4px;
+  }
+
+  .feed-overview-cell-num {
+    font-size: 1rem;
+  }
+
+  .feed-overview-cell-label {
+    font-size: 9px;
+  }
+
+  .feed-overview-cell-icon {
+    width: 14px;
+    height: 14px;
+  }
+}

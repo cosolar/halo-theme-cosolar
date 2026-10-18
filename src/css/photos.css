@@ -691,10 +691,10 @@
 
 .photo-detail-btn:hover,
 .photo-zoom-btn:hover {
-  background: #34d399;
+  background: var(--color-primary-light);
   transform: translateY(-2px) scale(1.08);
   box-shadow:
-    0 6px 18px rgba(16, 185, 129, 0.55),
+    0 6px 18px color-mix(in srgb, var(--color-primary) 55%, transparent),
     0 0 0 1px rgba(255, 255, 255, 0.25) inset;
 }
 
@@ -916,7 +916,12 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), #3b82f6, var(--color-primary));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-primary),
+    var(--color-primary)
+  );
   background-size: 200% 100%;
   animation: photo-stats-shimmer 3s ease-in-out infinite;
 }
@@ -1490,8 +1495,8 @@
 }
 
 .photo-copy-btn.copied {
-  color: #10b981;
-  border-color: #10b981;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 /* ===== Detail: Nav Widget ===== */
@@ -1505,7 +1510,7 @@
 
 .widget-photo-nav-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), #3b82f6);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary));
   border-radius: var(--radius-full);
   transition: width var(--transition);
 }
@@ -1721,7 +1726,7 @@
   height: 100%;
   width: 0%;
   border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--color-primary), #3b82f6);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary));
   transition: width 0.3s ease;
 }
 
@@ -1750,8 +1755,8 @@
 }
 
 .photo-toast--success {
-  border-color: #10b981;
-  color: #10b981;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .photo-toast--error {

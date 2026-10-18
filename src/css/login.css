@@ -6,10 +6,10 @@
 /* ========== 设计变量 ========== */
 :root {
   --c-primary: #10b981;
-  --c-phover: #059669;
-  --c-plight: #34d399;
-  --c-pbg: #ecfdf5;
-  --c-pborder: #a7f3d0;
+  --c-phover: color-mix(in srgb, var(--c-primary, #10b981) 82%, #000);
+  --c-plight: color-mix(in srgb, var(--c-primary, #10b981) 88%, #fff);
+  --c-pbg: color-mix(in srgb, var(--c-primary, #10b981) 8%, var(--c-card, #fff));
+  --c-pborder: color-mix(in srgb, var(--c-primary, #10b981) 32%, var(--c-card, #fff));
   --c-danger: #ef4444;
   --c-danger-hover: #dc2626;
   --c-bg: #f8fafc;
@@ -31,11 +31,11 @@
 }
 
 [data-theme="dark"] {
-  --c-primary: #10b981;
-  --c-phover: #34d399;
-  --c-plight: #6ee7b7;
-  --c-pbg: rgba(16, 185, 129, 0.12);
-  --c-pborder: rgba(16, 185, 129, 0.28);
+  /* 基色由 :root 注入提供，此处仅调整派生方向 */
+  --c-phover: color-mix(in srgb, var(--c-primary, #10b981) 85%, #fff);
+  --c-plight: color-mix(in srgb, var(--c-primary, #10b981) 72%, #fff);
+  --c-pbg: color-mix(in srgb, var(--c-primary, #10b981) 12%, transparent);
+  --c-pborder: color-mix(in srgb, var(--c-primary, #10b981) 28%, transparent);
   --c-danger: #f87171;
   --c-danger-hover: #ef4444;
   --c-bg: #0f172a;
@@ -177,7 +177,7 @@ body {
   border-radius: 13px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  color: #059669;
+  color: var(--c-phover);
   font-size: 20px;
   font-weight: 700;
   font-family: "Cascadia Code", "JetBrains Mono", monospace;
