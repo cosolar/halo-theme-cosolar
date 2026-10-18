@@ -6,10 +6,11 @@
    ============================================ */
 
 :root {
-  --md-primary: #10b981;
-  --md-primary-deep: #059669;
-  --md-primary-ink: #065f46;
-  --md-primary-bg: rgba(16, 185, 129, 0.12);
+  /* 主色：跟随全局主题色（--color-primary 可由后台配置） */
+  --md-primary: var(--color-primary);
+  --md-primary-deep: var(--color-primary-hover);
+  --md-primary-ink: color-mix(in srgb, var(--color-primary) 72%, #000);
+  --md-primary-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
   --md-bg1: #ffffff;
   --md-bg2: #f6f8f9;
   --md-card: #ffffff;
@@ -29,7 +30,7 @@
   --md-title: #eaf3f1;
   --md-body: #c3d2cf;
   --md-sub: #93a5a3;
-  --md-primary-bg: rgba(16, 185, 129, 0.18);
+  --md-primary-bg: color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 .kb-app {
@@ -126,10 +127,10 @@
 }
 .nav-stat.nav-stat--view:hover {
   color: var(--md-body);
-  border-color: #93c5fd;
+  border-color: var(--color-primary-border);
 }
 .nav-stat.nav-stat--view:hover svg {
-  color: #3b82f6;
+  color: var(--color-primary);
 }
 .nav-stat--view .nav-stat-num {
   font-weight: 600;
@@ -235,10 +236,10 @@
 }
 .nav-btn--kb {
   position: relative;
-  color: #047857;
-  border-color: #a7f3d0;
-  background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%);
-  box-shadow: 0 1px 2px rgba(6, 151, 104, 0.08);
+  color: var(--md-primary-ink);
+  border-color: var(--color-primary-border);
+  background: linear-gradient(180deg, #ffffff 0%, var(--color-primary-bg) 100%);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-primary) 8%, transparent);
   transition:
     color 0.15s ease,
     border-color 0.15s ease,
@@ -250,12 +251,16 @@
   transition: transform 0.15s ease;
 }
 .nav-btn--kb:hover {
-  color: #047857;
-  border-color: #34d399;
-  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+  color: var(--md-primary-ink);
+  border-color: var(--color-primary-light);
+  background: linear-gradient(
+    180deg,
+    var(--color-primary-bg) 0%,
+    color-mix(in srgb, var(--color-primary) 16%, #fff) 100%
+  );
   box-shadow:
-    0 4px 12px rgba(16, 185, 129, 0.22),
-    0 1px 2px rgba(16, 185, 129, 0.1);
+    0 4px 12px color-mix(in srgb, var(--color-primary) 22%, transparent),
+    0 1px 2px color-mix(in srgb, var(--color-primary) 10%, transparent);
   transform: translateY(-1px);
 }
 .nav-btn--kb:hover svg {
@@ -263,7 +268,7 @@
 }
 .nav-btn--kb:active {
   transform: translateY(0) scale(0.96);
-  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.12);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 .nav-btn--bm {
   color: #b45309;
@@ -276,14 +281,14 @@
   background: #fef3c7;
 }
 .nav-btn--sh {
-  color: #2563eb;
-  border-color: #93c5fd;
-  background: #eff6ff;
+  color: var(--color-primary);
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-bg);
 }
 .nav-btn--sh:hover {
-  color: #1d4ed8;
-  border-color: #60a5fa;
-  background: #dbeafe;
+  color: var(--color-primary-hover);
+  border-color: var(--color-primary-light);
+  background: color-mix(in srgb, var(--color-primary) 16%, #fff);
 }
 
 /* mermaid 预览/源码 tab（drives cherry-markdown 结构） */

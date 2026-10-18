@@ -456,8 +456,8 @@
 }
 
 .moment-level--2 {
-  background: #ecfdf5;
-  color: #10b981;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
 }
 
 .moment-level--3 {
@@ -486,8 +486,8 @@
 }
 
 [data-theme="dark"] .moment-level--2 {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  background: var(--color-primary-bg);
+  color: var(--color-primary-light);
 }
 
 [data-theme="dark"] .moment-level--3 {
@@ -732,7 +732,7 @@
 }
 
 .moment-share:hover {
-  color: #10b981;
+  color: var(--color-primary);
 }
 
 .moment-interaction svg {

@@ -20,6 +20,12 @@
 
     <!-- Cosolar 登录页样式（退出页复用同一套分栏布局） -->
     <link rel="stylesheet" href="css/login.css" />
+    <!-- 主题色注入：跟随后台「主题样式 → 主题色」配置 -->
+    <style th:inline="text">
+      :root {
+        [(${theme.config?.style?.primary_color != null ? '--c-primary: ' + theme.config.style.primary_color + ' !important;' : ''})]
+      }
+    </style>
   </head>
   <th:block th:fragment="body">
     <div

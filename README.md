@@ -10,7 +10,7 @@
 
 [![Halo](https://img.shields.io/badge/Halo-%3E%3D2.26-10B981?style=flat-square)](https://halo.run)
 [![License](https://img.shields.io/badge/License-GPL--3.0-10B981?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.1.7-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases)
+[![Version](https://img.shields.io/badge/Version-1.1.10-10B981?style=flat-square)](https://github.com/cosolar/halo-theme-cosolar/releases)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-Next-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 
@@ -41,7 +41,7 @@
 ## 💻 环境要求
 
 | 依赖     | 版本        |
-| -------- |-------------|
+| -------- | ----------- |
 | Halo     | `>= 2.26.0` |
 | Node.js  | 推荐 LTS    |
 | 包管理器 | pnpm        |

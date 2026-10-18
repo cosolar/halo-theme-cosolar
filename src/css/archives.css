@@ -1,0 +1,177 @@
+/* ============================================
+   归档页专属样式（时间线布局）—— 由 archives.html 引入，公共变量见 main.css
+   ============================================ */
+
+/* ============================================
+   ARCHIVES PAGE — 时间线布局
+   ============================================ */
+.archive-timeline {
+  position: relative;
+  padding-left: 28px;
+  margin-top: 24px;
+}
+
+.archive-timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-primary-border));
+  border-radius: 1px;
+}
+
+.archive-year-dot {
+  position: absolute;
+  left: -28px;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 3px solid var(--color-primary-bg);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
+  z-index: 1;
+}
+
+.archive-year-label {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.archive-month-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.archive-month-dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-card);
+  box-shadow: 0 0 0 2px var(--color-primary-border);
+  z-index: 1;
+}
+
+.archive-month-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.archive-post-list {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 4px 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.archive-post-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background var(--transition);
+}
+
+.archive-post-list li:last-child {
+  border-bottom: none;
+}
+
+.archive-post-list li:hover {
+  background: var(--color-primary-bg);
+  border-radius: var(--radius-sm);
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.archive-post-date {
+  font-size: 13px;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  width: 50px;
+}
+
+.archive-post-title {
+  font-size: 14px;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.archive-post-title a {
+  color: inherit;
+  transition: color var(--transition);
+}
+
+.archive-post-title a:hover {
+  color: var(--color-primary);
+}
+
+/* RESPONSIVE（由 main.css RESPONSIVE 拆出，保持原 @media 条件与顺序） */
+
+@media (max-width: 768px) {
+  .archive-post-date {
+    width: auto;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .archive-post-list li {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    padding: 10px 14px;
+  }
+
+  .archive-post-date {
+    width: auto;
+    font-size: 12px;
+  }
+
+  .archive-post-title {
+    font-size: 13px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .archive-timeline {
+    padding-left: 18px;
+  }
+
+  .archive-timeline::before {
+    left: 4px;
+  }
+
+  .archive-year-dot {
+    left: -18px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .archive-month-dot {
+    left: -15px;
+    width: 6px;
+    height: 6px;
+  }
+
+  .archive-year-label {
+    font-size: 16px;
+  }
+}
