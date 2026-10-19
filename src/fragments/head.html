@@ -88,6 +88,14 @@
       }
     </style>
   </th:block>
+  <!-- Live2D 看板娘隐藏开关：插件停用或未安装时页面不存在 live2d-context，该样式无副作用 -->
+  <th:block th:if="${theme.config?.basic?.hide_live2d ?: false}">
+    <style>
+      live2d-context {
+        display: none !important;
+      }
+    </style>
+  </th:block>
   <!-- 代码高亮由 Halo plugin-shiki (shiki-code Web Component) 负责，主题不再加载 Prism -->
   <!-- 主题色防闪烁：必须在 head 同步执行，仅读 data-color-scheme 设 data-theme，auto 时跟随系统 -->
   <script>

@@ -38,6 +38,11 @@ spec:
           label: 站点标语
           value: 记录技术成长，分享解决方案
           help: 显示在 Logo 下方的副标题
+        - $formkit: checkbox
+          name: hide_live2d
+          label: 隐藏 Live2D 看板娘
+          value: false
+          help: 安装并启用 plugin-live2d 插件后生效；开启后全站隐藏看板娘及其切换按钮
 
     - group: footer
       label: 页脚设置
