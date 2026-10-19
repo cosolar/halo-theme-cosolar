@@ -110,12 +110,15 @@ pnpm build        # 完整构建 + 打包 ZIP
 | `plugin-photos`   | 官方图库插件，提供照片管理与分组                               | 图库页**必需**                                        |
 | `plugin-minidocs` | MiniDocs 知识库插件，提供知识库 / 文档模型与 `minidocsFinder`  | 知识库列表页 `/docs` 与阅读页**必需**                 |
 | `plugin-shiki`    | 代码高亮（亮 / 暗主题在插件设置中配置）                        | 代码高亮**必需**                                      |
+| `plugin-live2d`   | 左下角 Live2D 看板娘（主题内置 TIPS 文案适配）                 | **可选**，未安装无影响                                |
 
 > 💾 `plugin-minidocs` 下载地址：[halo-plugin-minidocs Releases](https://github.com/cosolar/halo-plugin-minidocs/releases)
 
 > ⚠️ 未安装 `plugin-links` 时：友情链接页列表为空、RSS 资讯页提示「功能未启用」、侧边栏相关模块自动隐藏。安装后需在插件「RSS 订阅」中开启「公开 RSS 订阅动态」。
 >
 > ⚠️ 未安装 `plugin-minidocs` 时：`/docs` 与 `/docs/view/{kbSlug}` 不可用；安装后还需在插件设置中开启「允许未登录用户阅读」，并创建至少一个公开知识库与已发布文档。
+>
+> ⚠️ `plugin-live2d` 为**可选**增强：未安装时无任何影响（主题模板不引用其 API）。安装并启用后，页面左下角出现看板娘，鼠标悬停 / 点击主题元素会显示主题内置文案（9 组悬停 + 9 组点击）。文案优先级：插件设置的「选择器提示语」 > 主题内置 `assets/live2d/tips.json` > 插件默认；如需自定义 `seasons` / `time` / `message`，请在插件「事件及提示语绑定 → 自定义提示语文件」中全量替换。
 >
 > ⚠️ 知识库与友链的插件 API 说明见 [`docs/minidocs-theme-api.md`](docs/minidocs-theme-api.md) 与 [`docs/links-theme-api.md`](docs/links-theme-api.md)。
 
