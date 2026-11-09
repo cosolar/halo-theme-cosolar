@@ -262,6 +262,7 @@ public class MarkdownRender {
     "displayName": "产品手册",
     "description": "公司内部产品文档",
     "publicVisible": true,
+    "docMode": "hierarchy",
     "members": ["alice", "bob"],
     "tags": ["产品", "对外"],
     "priority": 0,
@@ -292,6 +293,7 @@ public class MarkdownRender {
 `spec` 补充说明：
 
 - `logo` / `cover`：知识库图标与封面图片地址。
+- `docMode`：文档组织模式。`catalog` = 目录模式（父文档仅作为目录展示，阅读页左侧树中父节点显示目录标识；点击目录仅展开 / 折叠，点击子文档才打开阅读，首次打开知识库默认展开第一个目录并打开其下第一个文档）；`hierarchy`（默认）= 父子文档模式（父文档本身也是可阅读文档）。
 - `accessCount` / `likeCount` / `likedUsers`：访问量、点赞数与已点赞用户名列表（系统维护）。
 - `shareEnabled` / `shareToken` / `sharePassword` / `shareExpiresAt`：外链分享设置。开启分享后外链为 `/docs/share/{shareToken}`；`sharePassword` 为空表示无密码访问，`shareExpiresAt` 为空表示永久有效。**注意：主题模板中请勿直接输出 `sharePassword`**；对外渲染分享入口时使用 `/docs/share/{shareToken}` 链接即可。
 

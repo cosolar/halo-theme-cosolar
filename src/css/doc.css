@@ -40,9 +40,11 @@
   box-sizing: border-box;
 }
 
-/* 知识库阅读页占满 header 之下视口，收紧主题 site-main 的上下留白，使整体贴合 */
+/* 知识库阅读页占满 header 之下视口，收紧主题 site-main 的上下留白，使整体贴合。
+   底部留白 = 12px - header 下边框 1px，用于抵消 header 实际渲染高度比 --header-height 多出的 1px，
+   否则总高恰好多 1px 会出现页面级滚动条 */
 .site-main:has(.kb-page) {
-  padding: 6px 0 12px;
+  padding: 6px 0 11px;
 }
 
 /* ============================================
@@ -377,50 +379,43 @@ figure[data-type="mermaid"] .cherry-mermaid-source-toolbar-panel[data-mode="prev
   background: var(--md-card);
   border-right: 1px solid var(--md-border);
 }
-.md-sb-head {
-  flex: 0 0 auto;
+/* 顶部工具条左侧：知识库图标 + 名称 */
+.md-kb-id {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px 10px;
-  border-bottom: 1px solid var(--md-border);
+  gap: 8px;
+  min-width: 0;
 }
-.md-sb-logo {
+.md-kb-logo {
   flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--md-primary);
 }
-.md-sb-logo svg {
-  width: 32px;
-  height: 32px;
+.md-kb-logo svg {
+  width: 24px;
+  height: 24px;
   display: block;
 }
-.md-sb-logo img {
-  width: 32px;
-  height: 32px;
+.md-kb-logo img {
+  width: 24px;
+  height: 24px;
   object-fit: contain;
   display: block;
+  border-radius: 5px;
 }
-.md-sb-name {
+.md-kb-name {
   min-width: 0;
 }
-.md-sb-name h2 {
+.md-kb-name h2 {
   margin: 0;
-  font-size: 15px;
+  max-width: 36vw;
+  font-size: 14px;
   font-weight: 700;
   color: var(--md-title);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.md-sb-name p {
-  margin: 3px 0 0;
-  font-size: 12px;
-  color: var(--md-sub);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -428,7 +423,7 @@ figure[data-type="mermaid"] .cherry-mermaid-source-toolbar-panel[data-mode="prev
 .md-sb-search {
   position: relative;
   flex: 0 0 auto;
-  margin: 10px 12px 4px;
+  margin: 12px 12px 6px;
 }
 .md-sb-search svg {
   position: absolute;
@@ -557,6 +552,65 @@ li.md-leaf > a {
 }
 .md-tree li.md-has-child > a .md-title-text {
   font-weight: 600;
+}
+/* 目录模式：父文档仅作目录展示 —— 文件夹标识 + 弱化链接感 */
+.md-tree .md-folder {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-primary);
+}
+.md-tree .md-folder svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+/* 目录模式：可阅读子文档的文档标识（与目录图标同为主题色） */
+.md-tree .md-doc-ico {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-primary);
+  transition: color 0.12s ease;
+}
+.md-tree .md-doc-ico svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.md-tree a:hover .md-doc-ico,
+.md-tree a.active .md-doc-ico {
+  color: var(--md-primary);
+}
+/* 目录模式：目录无内容可显示，等待 JS 打开其下第一个文档的加载态 */
+.md-doc-loading .md-loading-spin {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid var(--md-primary-bg);
+  border-top-color: var(--md-primary);
+  border-radius: 50%;
+  animation: md-spin 0.8s linear infinite;
+}
+@keyframes md-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.md-doc-loading.is-hidden {
+  display: none;
+}
+.md-tree a.md-catalog-link .md-title-text {
+  color: var(--md-sub);
+  font-weight: 600;
+}
+.md-tree a.md-catalog-link:hover .md-title-text {
+  color: var(--md-primary-deep);
 }
 
 /* 中间正文 */
@@ -1008,6 +1062,7 @@ li.md-leaf > a {
   color: var(--md-sub);
 }
 .md-bottom-info {
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -1021,6 +1076,15 @@ li.md-leaf > a {
 .md-bottom-info .md-mi svg {
   width: 13px;
   height: 13px;
+}
+.md-bottom-count {
+  color: var(--md-title);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.md-bottom-count b {
+  font-weight: 700;
+  color: var(--md-primary-ink);
 }
 .md-bottom .md-back-top {
   margin-left: auto;
@@ -1048,6 +1112,10 @@ li.md-leaf > a {
 .md-bottom-meta svg {
   width: 13px;
   height: 13px;
+}
+.md-bottom-meta .md-mi-label {
+  color: var(--md-title);
+  font-weight: 600;
 }
 .md-bottom-meta .sep {
   color: var(--md-border);

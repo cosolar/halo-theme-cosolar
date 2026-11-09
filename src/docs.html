@@ -7,10 +7,18 @@
 
   <div
     class="layout-grid no-sidebar kb-page"
-    th:classappend="${theme.config?.docs?.show_footer == false ? ' docs-hide-footer' : ''}"
+    th:classappend="${theme.config?.docs?.show_footer_list == false ? ' docs-hide-footer' : ''}"
   >
     <div class="content-area">
-      <div class="md-app" th:with="result=${minidocsFinder.listKnowledgeBases(1, 1000)}">
+      <div
+        class="md-app"
+        th:classappend="${listMode == 'scroll' ? ' docs-scroll-mode' : ''}"
+        th:with="result=${minidocsFinder.listKnowledgeBases(1, 1000)},
+                 listMode=${theme.config?.docs?.list_mode ?: 'pager'},
+                 pageSize=${theme.config?.docs?.page_size != null ? theme.config.docs.page_size : 9}"
+        th:attr="data-list-mode=${listMode},
+                 data-page-size=${pageSize}"
+      >
         <div class="md-content">
           <!-- ===== 顶部看板 ===== -->
           <div class="md-stats" th:if="${theme.config?.docs?.show_stats != false}">
@@ -149,17 +157,6 @@
             </div>
             <div class="md-toolbar-right">
               <label class="md-sort">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M8 3v3l-4 8h8l-4-8V3" />
-                  <path d="M16 12h6M19 9v6" />
-                </svg>
                 <select id="md-sort" aria-label="排序方式">
                   <option value="update" selected>最近更新</option>
                   <option value="docs">文档最多</option>
@@ -454,10 +451,19 @@
                 </div>
               </div>
 
-              <nav class="md-pager-wrap">
-                <div class="md-pager" id="md-pager"></div>
-                <span class="md-count" id="md-count-total"></span>
+              <nav class="md-pager-wrap" th:if="${listMode == 'pager'}">
+                <div class="md-pager md-pager-pill" id="md-pager"></div>
+                <span class="md-pager-size" th:text="${pageSize} + ' 条/页'"></span>
               </nav>
+              <div
+                class="md-load-more"
+                id="md-load-more"
+                th:if="${listMode == 'scroll'}"
+                style="display: none"
+              >
+                <span class="md-load-info" id="md-load-info"></span>
+                <button type="button" class="md-load-btn" id="md-load-btn">加载更多</button>
+              </div>
             </section>
           </div>
         </div>

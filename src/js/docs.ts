@@ -25,7 +25,11 @@
   }
 
   const all = Array.from(grid.querySelectorAll<HTMLElement>(".md-kb-card"));
-  const state = { q: "", tag: "", owner: "", sort: "update", page: 1, perPage: 9, view: "card" };
+  /* 加载方式与每页条数：由服务端从主题配置注入（缺失时回退默认值） */
+  const appEl = grid.closest<HTMLElement>(".md-app");
+  const listMode = appEl?.getAttribute("data-list-mode") === "scroll" ? "scroll" : "pager";
+  const perPage = Math.max(1, Number(appEl?.getAttribute("data-page-size")) || 9);
+  const state = { q: "", tag: "", owner: "", sort: "update", page: 1, perPage, view: "card" };
 
   const PALETTE = [
     "linear-gradient(135deg,#e11d48,#fb7185)",
@@ -239,12 +243,14 @@
   /* 元素引用 */
   const inputEl = document.getElementById("md-search-input") as HTMLInputElement | null;
   const countEl = document.getElementById("md-count");
-  const countTotalEl = document.getElementById("md-count-total");
   const emptyEl = document.getElementById("md-empty");
   const emptyBtnEl = document.getElementById("md-empty-reset");
   const listArea = document.getElementById("md-list-area");
   const pagerEl = document.getElementById("md-pager");
   const gridEl = document.getElementById("md-grid");
+  const loadMoreEl = document.getElementById("md-load-more");
+  const loadInfoEl = document.getElementById("md-load-info");
+  const loadBtnEl = document.getElementById("md-load-btn");
 
   /* 侧栏配置：条数限制（服务端注入，缺失时用默认值） */
   const sbEl = document.getElementById("md-sidebar");
@@ -383,20 +389,19 @@
   function render(): void {
     const pool = cards.filter(matches);
     pool.sort(sorter);
-    const pages = Math.max(1, Math.ceil(pool.length / state.perPage));
+    const total = pool.length;
+    const pages = Math.max(1, Math.ceil(total / state.perPage));
     if (state.page > pages) state.page = pages;
-    const start = (state.page - 1) * state.perPage;
-    const shown = pool.slice(start, start + state.perPage);
+    /* 分页模式：显示当前页；滚动加载模式：累计显示前 N 页 */
+    const shown =
+      listMode === "scroll"
+        ? pool.slice(0, state.page * state.perPage)
+        : pool.slice((state.page - 1) * state.perPage, state.page * state.perPage);
 
     cards.forEach((c) => c.el.classList.add("is-hidden"));
     shown.forEach((c) => c.el.classList.remove("is-hidden"));
 
-    const total = pool.length;
     if (countEl) countEl.textContent = String(total);
-    if (countTotalEl)
-      countTotalEl.textContent = total
-        ? start + 1 + "-" + (start + shown.length) + " / " + total
-        : "0";
     if (emptyEl) {
       emptyEl.style.display = total ? "none" : "flex";
       if (!total) {
@@ -417,7 +422,15 @@
     }
     if (emptyBtnEl)
       emptyBtnEl.style.display = state.q || state.tag || state.owner ? "inline-flex" : "none";
-    buildPager(pages);
+    if (listMode === "pager") {
+      buildPager(pages);
+    } else if (loadMoreEl) {
+      const hasMore = shown.length < total;
+      loadMoreEl.style.display = total ? "flex" : "none";
+      if (loadBtnEl) loadBtnEl.style.display = hasMore ? "inline-flex" : "none";
+      if (loadInfoEl)
+        loadInfoEl.textContent = total ? "已加载 " + shown.length + " / " + total + " 个" : "";
+    }
     /* 按当前排序/筛选物理重排卡片节点，使顺序变化在视觉上可见 */
     const order: HTMLElement[] = shown.map((c) => c.el);
     cards.forEach((c) => {
@@ -428,65 +441,39 @@
       order.forEach((el) => {
         gridEl.appendChild(el);
       });
-    if (listArea) listArea.scrollTop = 0;
+    /* 滚动加载追加内容时不回滚到顶部，仅翻页模式复位 */
+    if (listArea && listMode !== "scroll") listArea.scrollTop = 0;
   }
 
   function buildPager(pages: number): void {
-    const buttons: HTMLButtonElement[] = [];
+    if (!pagerEl) return;
+    pagerEl.innerHTML = "";
     const cur = state.page;
-    const add = (b: HTMLButtonElement): HTMLButtonElement => {
-      buttons.push(b);
-      return b;
-    };
     const nav = (label: string, dir: number, disabled: boolean): void => {
       const b = document.createElement("button");
       b.type = "button";
-      b.innerHTML = dir < 0 ? "‹" : "›";
+      /* SVG 箭头，不随站点字体变形 */
+      b.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" aria-hidden="true">' +
+        (dir < 0
+          ? '<polyline points="15 18 9 12 15 6"></polyline>'
+          : '<polyline points="9 18 15 12 9 6"></polyline>') +
+        "</svg>";
       b.setAttribute("aria-label", label);
-      if (disabled) b.disabled = true;
-      else
+      b.disabled = disabled;
+      if (!disabled)
         b.addEventListener("click", () => {
           state.page = cur + dir;
           render();
         });
-      add(b);
+      pagerEl!.appendChild(b);
     };
-    const num = (n: number, active: boolean): void => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = String(n);
-      if (active) b.className = "active";
-      b.addEventListener("click", () => {
-        state.page = n;
-        render();
-      });
-      add(b);
-    };
-    const sep = (): void => {
-      const s = document.createElement("button");
-      s.type = "button";
-      s.className = "sep";
-      s.textContent = "…";
-      s.disabled = true;
-      add(s);
-    };
-
     nav("上一页", -1, cur <= 1);
-    if (pages <= 7) {
-      for (let i = 1; i <= pages; i++) num(i, i === cur);
-    } else {
-      num(1, cur === 1);
-      if (cur > 3) sep();
-      for (let j = Math.max(2, cur - 1); j <= Math.min(pages - 1, cur + 1); j++) num(j, j === cur);
-      if (cur < pages - 2) sep();
-      num(pages, cur === pages);
-    }
+    const lbl = document.createElement("span");
+    lbl.className = "md-pager-label";
+    lbl.textContent = cur + " / " + pages + " 页";
+    pagerEl.appendChild(lbl);
     nav("下一页", 1, cur >= pages);
-
-    if (pagerEl) {
-      pagerEl.innerHTML = "";
-      buttons.forEach((b) => pagerEl!.appendChild(b));
-    }
   }
 
   /* 清除全部筛选 */
@@ -526,6 +513,12 @@
 
   /* 清除筛选 */
   if (emptyBtnEl) emptyBtnEl.addEventListener("click", resetFilters);
+
+  /* 滚动加载模式：点击追加下一页 */
+  loadBtnEl?.addEventListener("click", () => {
+    state.page += 1;
+    render();
+  });
 
   /* 视图切换 */
   const viewBtns = document.querySelectorAll<HTMLElement>(".md-view button");

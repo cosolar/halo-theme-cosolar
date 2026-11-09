@@ -160,18 +160,62 @@
     true,
   );
 
-  /* 文档树：默认仅展开一级目录，更深层级收起；并保持当前文档所在路径可见 */
+  /* 文档组织模式：catalog=目录模式（父文档仅作目录，点击打开其下第一个文档）；hierarchy=父子文档模式 */
+  const docMode =
+    document.querySelector<HTMLElement>(".kb-app")?.getAttribute("data-doc-mode") === "catalog"
+      ? "catalog"
+      : "hierarchy";
+
+  /* 取目录模式下某父节点下第一个可阅读文档（递归下钻到叶子） */
+  function firstLeafLink(li: HTMLElement): HTMLElement | null {
+    const childUl = li.querySelector<HTMLElement>(":scope > ul");
+    if (!childUl) return null;
+    const first = childUl.querySelector<HTMLElement>(":scope > li > a.md-tree-link");
+    if (!first) return null;
+    /* 只看 first 自己所属的 li（closest 会越级匹配到外层目录导致无限递归） */
+    const ownLi = first.closest("li");
+    if (!ownLi) return first;
+    return ownLi.classList.contains("md-has-child") ? firstLeafLink(ownLi) : first;
+  }
+
+  /* 文档树：默认仅展开第一个父目录，其余折叠；并保持当前文档所在路径可见 */
   (() => {
     const hasChild = Array.from(document.querySelectorAll<HTMLElement>(".md-tree li.md-has-child"));
     hasChild.forEach((li) => li.classList.add("md-fold"));
-    document
-      .querySelectorAll<HTMLElement>(".md-tree > li.md-has-child")
-      .forEach((li) => li.classList.remove("md-fold"));
+    const firstParent = document.querySelector<HTMLElement>(".md-tree > li.md-has-child");
+    if (firstParent) firstParent.classList.remove("md-fold");
     const active = document.querySelector<HTMLElement>(".md-tree a.active");
     let p = active ? active.closest<HTMLElement>("li.md-has-child") : null;
     while (p) {
       p.classList.remove("md-fold");
       p = p.parentElement ? p.parentElement.closest<HTMLElement>("li.md-has-child") : null;
+    }
+    /* 目录模式约定：
+       - 点击目录（父文档）仅展开 / 折叠，不打开文档（见下方点击拦截）
+       - 首次打开（URL 无 docSlug）默认展开第一个目录并打开其下第一个文档 */
+    if (docMode === "catalog") {
+      const hasDocParam = new URLSearchParams(window.location.search).get("docSlug");
+      if (!hasDocParam) {
+        const root = document.querySelector<HTMLElement>(".md-tree > li.md-has-child");
+        if (root) {
+          root.classList.remove("md-fold");
+          const leaf = firstLeafLink(root);
+          const slug = leaf?.getAttribute("data-slug") || leaf?.getAttribute("data-name") || "";
+          if (leaf && slug) void switchDoc(slug, leaf);
+        }
+      } else if (active) {
+        /* 直链访问的是目录父文档时：清空父文档内容（目录不是文档），改打开其下第一个可阅读文档 */
+        const parentLi = active.closest<HTMLElement>("li.md-has-child");
+        if (parentLi) {
+          const leaf = firstLeafLink(parentLi);
+          const slug = leaf?.getAttribute("data-slug") || leaf?.getAttribute("data-name") || "";
+          if (leaf && slug) {
+            const proseEl = document.getElementById("md-prose");
+            if (proseEl) proseEl.innerHTML = "";
+            void switchDoc(slug, leaf);
+          }
+        }
+      }
     }
   })();
 
@@ -219,9 +263,22 @@
         : null;
     if (!link) return;
     e.preventDefault();
+    /* 目录模式约定：点击目录（父文档）仅展开 / 折叠当前目录，不打开文档。
+       注意只看链接自己直属的 li，closest 越级匹配会把叶子文档误判为目录 */
+    if (docMode === "catalog") {
+      const ownLi = link.closest("li");
+      if (ownLi && ownLi.classList.contains("md-has-child")) {
+        e.preventDefault();
+        ownLi.classList.toggle("md-fold");
+        return;
+      }
+    }
+    /* 父子文档模式：点击有子文章的父目录且处于折叠态时，同时展开该父目录 */
+    const linkLi = link.closest<HTMLElement>("li.md-has-child");
+    if (linkLi) linkLi.classList.remove("md-fold");
     const slug = link.getAttribute("data-slug") || link.getAttribute("data-name") || "";
     if (!slug) return;
-    switchDoc(slug, link);
+    void switchDoc(slug, link);
   });
 
   if (prose) {
@@ -278,6 +335,12 @@
   /* ===== 分享 / 书签 ===== */
   const shareBtn = document.getElementById("md-share");
   shareBtn?.addEventListener("click", () => {
+    /* 知识库开启了外链分享时，直接跳转分享页；否则复制当前链接 */
+    const shareUrl = shareBtn.getAttribute("data-share-url") || "";
+    if (shareUrl) {
+      window.location.assign(shareUrl);
+      return;
+    }
     copyText(location.href);
     toast("链接已复制");
   });
@@ -592,6 +655,9 @@
 
       /* 正文（#md-prose 常驻容器，仅替换 innerHTML） */
       if (prose) prose.innerHTML = (spec.content as string) || "";
+      /* 目录模式首次加载：隐藏「正在打开文档」提示 */
+      const loadingEl = document.querySelector<HTMLElement>(".md-doc-loading");
+      if (loadingEl) loadingEl.classList.add("is-hidden");
 
       /* 树高亮 + 展开祖先链，确保新文档可见 */
       document
@@ -934,11 +1000,9 @@
   }
   initImageLightbox();
 
-  /* 知识库名称/描述截断时，悬停用气泡显示完整内容 */
+  /* 知识库名称截断时，悬停用气泡显示完整内容 */
   function initKbNameTips(): void {
-    const anchors = Array.from(
-      document.querySelectorAll<HTMLElement>(".md-sb-name h2, .md-sb-name p"),
-    );
+    const anchors = Array.from(document.querySelectorAll<HTMLElement>(".md-kb-name h2"));
     if (!anchors.length) return;
 
     const tip = document.createElement("div");

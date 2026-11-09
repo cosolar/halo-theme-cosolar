@@ -1,4 +1,4 @@
-﻿apiVersion: v1alpha1
+apiVersion: v1alpha1
 kind: Setting
 metadata:
   name: cosolar-setting
@@ -963,15 +963,38 @@ spec:
           value: true
           help: 在知识库列表页顶部显示统计数据栏（知识库总数、文档总数、标签数量、访问量、点赞量）；关闭后隐藏整个统计栏
         - $formkit: switch
-          name: show_footer
-          label: 显示页脚
+          name: show_footer_list
+          label: 显示列表页页脚
           value: true
-          help: 在知识库页面（知识库列表页与文档阅读页）显示页脚；关闭后隐藏整个页脚
+          help: 在知识库列表页（/docs）显示页脚；关闭后仅隐藏列表页页脚，阅读页不受影响
+        - $formkit: switch
+          name: show_footer
+          label: 显示阅读页页脚
+          value: true
+          help: 在文档阅读页（/docs/view/{kbSlug}）显示页脚；关闭后仅隐藏阅读页页脚，列表页不受影响
         - $formkit: switch
           name: show_sidebar
           label: 显示左侧边栏
           value: true
           help: 在知识库列表页左侧显示信息侧栏（今日动态、最近更新、标签分类）；关闭后隐藏整个侧栏，内容区占满宽度
+        - $formkit: select
+          name: list_mode
+          label: 列表加载方式
+          value: pager
+          options:
+            - label: 分页模式
+              value: pager
+            - label: 滚动加载模式
+              value: scroll
+          help: 分页模式按页码翻页浏览；滚动加载模式在列表底部显示「加载更多」按钮，点击追加下一页知识库
+        - $formkit: number
+          name: page_size
+          label: 每页条数
+          value: 9
+          min: 3
+          max: 50
+          step: 1
+          help: 知识库列表每页显示的条数，分页与滚动加载两种模式均使用该值
         - $formkit: number
           name: recent_count
           label: 最近更新显示条数

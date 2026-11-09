@@ -4117,6 +4117,65 @@ body.nav-open {
   }
 }
 
+/* ====== 窄屏桌面导航（769–1279px）：紧凑单行，避免菜单文字竖排换行 ====== */
+@media (max-width: 1279px) and (min-width: 769px) {
+  .header-inner {
+    gap: 10px;
+  }
+  .header-nav {
+    gap: 1px;
+    margin-left: 4px;
+  }
+  /* 菜单项禁止收缩换行，文字保持单行 */
+  .header-nav > .nav-item,
+  .header-nav > a {
+    flex-shrink: 0;
+  }
+  .header-nav > .nav-item > a,
+  .header-nav > a {
+    gap: 5px;
+    padding: 7px 8px;
+    font-size: 13.5px;
+  }
+  .header-nav > .nav-item > a > span,
+  .header-nav > a > span {
+    white-space: nowrap;
+  }
+  .search-box {
+    flex: 0 0 auto;
+  }
+  .search-box .search-placeholder,
+  .search-box .search-kbd {
+    display: none;
+  }
+}
+
+/* 1081–1279px：空间尚可，保留图标 */
+@media (max-width: 1279px) and (min-width: 1081px) {
+  .header-nav > .nav-item > a .iconfont,
+  .header-nav > a .iconfont,
+  .header-nav > .nav-item > a iconify-icon,
+  .header-nav > a iconify-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+  }
+  .header-nav > .nav-item.has-children > a .nav-caret {
+    display: none;
+  }
+}
+
+/* 769–1080px：空间紧张，收起图标与箭头，仅保留文字 */
+@media (max-width: 1080px) and (min-width: 769px) {
+  .header-nav > .nav-item > a .iconfont,
+  .header-nav > a .iconfont,
+  .header-nav > .nav-item > a iconify-icon,
+  .header-nav > a iconify-icon,
+  .header-nav > .nav-item.has-children > a .nav-caret {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
   .container {
     padding: 0 14px;
@@ -4271,4 +4330,11 @@ body.nav-open {
 /* 知识库页（知识库列表 / 文档阅读页）可根据设置隐藏整个页脚 */
 body:has(.docs-hide-footer) .site-footer {
   display: none;
+}
+
+/* 小屏模式下隐藏 Live2D 看板娘（宿主元素由 plugin-live2d 注入 body，主题 CSS 可作用于其上） */
+@media (max-width: 768px) {
+  live2d-context {
+    display: none !important;
+  }
 }

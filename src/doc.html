@@ -17,13 +17,20 @@
       knowledgeBase = ${kbSlug != null ? minidocsFinder.getKnowledgeBase(kbSlug) : null},
       docTree = ${kbSlug != null ? minidocsFinder.getDocTree(kbSlug) : null},
       treeList = ${docTree != null ? docTree : null},
+      docMode = ${knowledgeBase != null and knowledgeBase.spec != null and knowledgeBase.spec.docMode != null and !#strings.isEmpty(knowledgeBase.spec.docMode) ? knowledgeBase.spec.docMode : 'hierarchy'},
       defaultDocSlug = ${treeList != null and !treeList.isEmpty() ? treeList[0].slug : null},
       docSlug = ${docSlug != null ? docSlug : defaultDocSlug},
+      docSlugParam = ${param.docSlug != null and !#strings.isEmpty(param.docSlug) ? param.docSlug : null},
+      renderDoc = ${docMode != 'catalog' or docSlugParam != null},
       doc = ${docSlug != null ? minidocsFinder.getDocBySlug(docSlug) : null}
     "
+    th:attr="data-doc-mode=${docMode}"
   >
-    <!-- 顶部工具条：返回知识库 / 书签 / 分享 / 点赞 / 访问量 -->
-    <div class="md-topbar">
+    <!-- 顶部工具条：左侧知识库标识，右侧 点赞 / 访问量 / 返回 / 书签 / 分享 -->
+    <div
+      class="md-topbar"
+      th:with="kbLogo=${knowledgeBase != null and knowledgeBase.spec != null and !#strings.isEmpty(knowledgeBase.spec.logo) ? knowledgeBase.spec.logo : null}"
+    >
       <div class="nav-trails">
         <button
           class="nav-btn icon-only mobile-only md-toggle-drawer"
@@ -45,7 +52,32 @@
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
-        <a class="nav-btn nav-btn--kb" th:href="@{/docs}">
+        <div class="md-kb-id">
+          <span class="md-kb-logo">
+            <img
+              th:if="${kbLogo != null and !#strings.isEmpty(kbLogo)}"
+              th:src="${kbLogo}"
+              alt=""
+            />
+            <svg
+              th:unless="${kbLogo != null and !#strings.isEmpty(kbLogo)}"
+              viewBox="0 0 1024 1024"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M136.533333 170.666667a102.4 102.4 0 0 1 102.4-102.4h68.266667a238.7968 238.7968 0 0 1 204.8 115.780266A238.7968 238.7968 0 0 1 716.8 68.266667h68.266667a102.4 102.4 0 0 1 102.4 102.4v102.4a102.4 102.4 0 0 1 102.4 102.4v409.6a170.666667 170.666667 0 0 1-170.666667 170.666666H204.8a170.666667 170.666667 0 0 1-170.666667-170.666666V375.466667a102.4 102.4 0 0 1 102.4-102.4V170.666667z m0 170.666666a34.133333 34.133333 0 0 0-34.133333 34.133334v409.6a102.4 102.4 0 0 0 102.4 102.4h614.4a102.4 102.4 0 0 0 102.4-102.4V375.466667a34.133333 34.133333 0 0 0-34.133333-34.133334v409.6a102.4 102.4 0 0 0-102.4 102.4H238.933333a102.4 102.4 0 0 1-102.4-102.4V341.333333z m170.666667-204.8H238.933333a34.133333 34.133333 0 0 0-34.133333 34.133334v580.266666a34.133333 34.133333 0 0 0 34.133333 34.133334h238.933334V307.2a170.666667 170.666667 0 0 0-170.666667-170.666667z m477.866667 648.533334a34.133333 34.133333 0 0 0 34.133333-34.133334V170.666667a34.133333 34.133333 0 0 0-34.133333-34.133334h-68.266667a170.666667 170.666667 0 0 0-170.666667 170.666667v477.866667h238.933334z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </span>
+          <div class="md-kb-name">
+            <h2 th:text="${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"></h2>
+          </div>
+        </div>
+      </div>
+      <div class="nav-stats">
+        <a class="nav-btn nav-btn--kb" th:href="@{/docs}" title="返回知识库列表">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -81,8 +113,10 @@
           class="nav-btn icon-only nav-btn--sh"
           type="button"
           id="md-share"
-          title="复制链接"
-          aria-label="复制链接"
+          th:with="shareUrl=${knowledgeBase != null and knowledgeBase.spec != null and knowledgeBase.spec.shareEnabled == true and !#strings.isEmpty(knowledgeBase.spec.shareToken) ? '/docs/share/' + knowledgeBase.spec.shareToken : null}"
+          th:attr="data-share-url=${shareUrl}"
+          th:title="${shareUrl != null ? '打开分享页' : '复制链接'}"
+          aria-label="分享"
         >
           <svg
             viewBox="0 0 24 24"
@@ -99,8 +133,6 @@
             <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line>
           </svg>
         </button>
-      </div>
-      <div class="nav-stats">
         <button class="nav-btn nav-btn--like" id="md-like" type="button" title="点赞这个知识库">
           <svg
             class="heart"
@@ -158,50 +190,9 @@
     </div>
 
     <!-- 三栏阅读区 -->
-    <div
-      class="md-read"
-      th:attr="data-kb-slug=${kbSlug}"
-      th:with="kbLogo=${knowledgeBase != null and knowledgeBase.spec != null and !#strings.isEmpty(knowledgeBase.spec.logo) ? knowledgeBase.spec.logo : null}"
-    >
+    <div class="md-read" th:attr="data-kb-slug=${kbSlug}">
       <!-- 左侧：文档树 -->
       <aside class="md-sb" id="md-sb">
-        <div class="md-sb-head">
-          <span class="md-sb-logo">
-            <img
-              th:if="${kbLogo != null and !#strings.isEmpty(kbLogo)}"
-              th:src="${kbLogo}"
-              alt=""
-            />
-            <svg
-              th:unless="${kbLogo != null and !#strings.isEmpty(kbLogo)}"
-              viewBox="0 0 1024 1024"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M136.533333 170.666667a102.4 102.4 0 0 1 102.4-102.4h68.266667a238.7968 238.7968 0 0 1 204.8 115.780266A238.7968 238.7968 0 0 1 716.8 68.266667h68.266667a102.4 102.4 0 0 1 102.4 102.4v102.4a102.4 102.4 0 0 1 102.4 102.4v409.6a170.666667 170.666667 0 0 1-170.666667 170.666666H204.8a170.666667 170.666667 0 0 1-170.666667-170.666666V375.466667a102.4 102.4 0 0 1 102.4-102.4V170.666667z m0 170.666666a34.133333 34.133333 0 0 0-34.133333 34.133334v409.6a102.4 102.4 0 0 0 102.4 102.4h614.4a102.4 102.4 0 0 0 102.4-102.4V375.466667a34.133333 34.133333 0 0 0-34.133333-34.133334v409.6a102.4 102.4 0 0 1-102.4 102.4H238.933333a102.4 102.4 0 0 1-102.4-102.4V341.333333z m170.666667-204.8H238.933333a34.133333 34.133333 0 0 0-34.133333 34.133334v580.266666a34.133333 34.133333 0 0 0 34.133333 34.133334h238.933334V307.2a170.666667 170.666667 0 0 0-170.666667-170.666667z m477.866667 648.533334a34.133333 34.133333 0 0 0 34.133333-34.133334V170.666667a34.133333 34.133333 0 0 0-34.133333-34.133334h-68.266667a170.666667 170.666667 0 0 0-170.666667 170.666667v477.866667h238.933334z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </span>
-          <div class="md-sb-name">
-            <h2 th:text="${knowledgeBase != null ? knowledgeBase.spec.displayName : ''}"></h2>
-            <p>
-              <span
-                th:text="${knowledgeBase != null and knowledgeBase.status != null and knowledgeBase.status.docCount != null ? '共 ' + knowledgeBase.status.docCount + ' 篇' : ''}"
-              ></span>
-              <span th:if="${knowledgeBase != null and knowledgeBase.spec.updateTime != null}">
-                · 更新
-                <span
-                  class="md-ts"
-                  th:attr="data-ts=${knowledgeBase.spec.updateTime}"
-                  th:text="${knowledgeBase.spec.updateTime}"
-                ></span>
-              </span>
-            </p>
-          </div>
-        </div>
-
         <div class="md-sb-search">
           <svg
             viewBox="0 0 24 24"
@@ -218,7 +209,11 @@
         </div>
 
         <div class="md-tree-wrap">
-          <ul class="md-tree">
+          <ul
+            class="md-tree"
+            th:with="isCatalog=${docMode == 'catalog'}"
+            th:attr="data-doc-mode=${docMode}"
+          >
             <th:block th:if="${treeList != null}" th:each="rootNode : ${treeList}">
               <th:block th:replace="~{:: treenode(node=${rootNode})}"></th:block>
             </th:block>
@@ -237,8 +232,17 @@
 
       <!-- 中间：正文 -->
       <main class="md-main" id="md-main">
-        <div th:if="${doc}">
-          <div class="md-content" id="md-prose" th:utext="${doc.spec.content}"></div>
+        <div th:if="${doc != null}">
+          <div
+            class="md-content"
+            id="md-prose"
+            th:utext="${doc != null and renderDoc ? doc.spec.content : ''}"
+          ></div>
+          <!-- 目录模式：目录不是文档，右侧无内容可显示，等待 JS 打开其下第一个子文档 -->
+          <div class="md-empty md-doc-loading" th:if="${!renderDoc}">
+            <span class="md-loading-spin" aria-hidden="true"></span>
+            <span>正在打开文档...</span>
+          </div>
         </div>
 
         <div th:unless="${doc}" class="md-empty">
@@ -286,9 +290,16 @@
       </nav>
     </div>
 
-    <!-- 底部：文章信息栏 -->
+    <!-- 底部：知识库统计 + 文章信息栏 -->
     <div class="md-bottom" th:if="${doc}">
       <div class="md-bottom-info">
+        <span
+          class="md-bottom-count"
+          th:if="${knowledgeBase != null and knowledgeBase.status != null and knowledgeBase.status.docCount != null}"
+        >
+          共 <b th:text="${knowledgeBase.status.docCount}"></b> 篇
+        </span>
+        <span class="sep"></span>
         <span
           class="md-bottom-title"
           id="md-route"
@@ -334,6 +345,7 @@
             <line x1="8" y1="2" x2="8" y2="6"></line>
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
+          <span class="md-mi-label">创建</span>
           <span
             class="md-ts"
             id="md-created"
@@ -353,6 +365,7 @@
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
+          <span class="md-mi-label">更新</span>
           <span
             class="md-ts"
             id="md-updated"
@@ -400,7 +413,7 @@
           th:attr="data-slug=${node.slug},
                     data-name=${node.name},
                     data-title=${node.title}"
-          th:classappend="${docSlug != null and docSlug == node.slug} ? ' active' : ''"
+          th:classappend="${(docSlug != null and docSlug == node.slug) ? ' active' : ''} + ${(isCatalog and node.children != null and !node.children.isEmpty()) ? ' md-catalog-link' : ''}"
         >
           <span
             class="md-tree-caret"
@@ -418,9 +431,46 @@
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </span>
+          <!-- 目录模式：父文档仅作目录展示，用文件夹标识 -->
+          <span
+            class="md-folder"
+            th:if="${isCatalog and node.children != null and !node.children.isEmpty()}"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+          </span>
+          <!-- 目录模式：可阅读子文档用文档标识 -->
+          <span
+            class="md-doc-ico"
+            th:if="${isCatalog and (node.children == null or node.children.isEmpty())}"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326z m1.8 562H232V136h302v216c0 23.2 18.8 42 42 42h216v494z"
+                fill="currentColor"
+              ></path>
+              <path
+                d="M429 481.2c-1.9-4.4-6.2-7.2-11-7.2h-35c-6.6 0-12 5.4-12 12v272c0 6.6 5.4 12 12 12h27.1c6.6 0 12-5.4 12-12V582.1l66.8 150.2c1.9 4.3 6.2 7.1 11 7.1H524c4.7 0 9-2.8 11-7.1l66.8-150.6V758c0 6.6 5.4 12 12 12H641c6.6 0 12-5.4 12-12V486c0-6.6-5.4-12-12-12h-34.7c-4.8 0-9.1 2.8-11 7.2l-83.1 191-83.2-191z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </span>
+          <!-- 父子文档模式：维持原有圆点标识 -->
           <span
             class="md-dot"
-            th:unless="${node.children != null and !node.children.isEmpty()}"
+            th:if="${!isCatalog and (node.children == null or node.children.isEmpty())}"
           ></span>
           <span class="md-title-text" th:text="${node.title}"></span>
         </a>
